@@ -23,15 +23,46 @@
 */
 package java_.awt;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+
+import junit.ikvm.ReferenceData;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-    GraphicsDeviceTest.class,
-    FontTest.class
-})
-public class AllTests{
-    //Nothing
+
+
+/**
+ * @author Volker Berlin
+ */
+public class FontTest{
+    
+    private static ReferenceData reference;
+
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception{
+        reference = new ReferenceData(FontTest.class);
+    }
+
+
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception{
+        if(reference != null){
+            reference.save();
+        }
+    }
+
+    
+    @Test
+    public void getStringBounds(){
+        Font font = new Font("Arial", 0, 12);
+        Rectangle2D bounds = font.getStringBounds("any text", new FontRenderContext(null, false, false) );
+        reference.assertEquals("getStringBounds", (Rectangle2D.Float)bounds);
+    }
+
 }
