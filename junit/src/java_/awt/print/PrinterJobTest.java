@@ -25,7 +25,6 @@ package java_.awt.print;
 
 import java.awt.print.*;
 import java.io.File;
-import java.net.URI;
 
 import javax.print.PrintService;
 import javax.print.attribute.HashPrintRequestAttributeSet;
@@ -114,9 +113,13 @@ public class PrinterJobTest{
         PrinterJob job = PrinterJob.getPrinterJob();
         HashPrintRequestAttributeSet attrs = new HashPrintRequestAttributeSet();
         File file = new File("temp.prn").getAbsoluteFile();
+        file.delete();
         try{
+            assertFalse("exist",file.exists());
             attrs.add(new Destination(file.toURI()));
+            job.setPrintable(new DummyPrintable() );
             job.print(attrs);
+            assertTrue("exist",file.exists());
         }finally{
             file.delete();
         }
