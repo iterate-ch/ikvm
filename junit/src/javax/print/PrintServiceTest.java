@@ -27,6 +27,8 @@ package javax.print;
 import java.util.Arrays;
 
 import javax.print.attribute.Attribute;
+import javax.print.attribute.PrintServiceAttribute;
+import javax.print.attribute.standard.*;
 
 import junit.ikvm.ReferenceData;
 
@@ -61,6 +63,33 @@ public class PrintServiceTest{
     
     
     @Test
+    public void getAttribute(){
+        PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+        assertGetAttribute(service, ColorSupported.class);
+        assertGetAttribute(service, PagesPerMinute.class);
+        assertGetAttribute(service, PagesPerMinuteColor.class);
+        assertGetAttribute(service, PDLOverrideSupported.class);
+        assertGetAttribute(service, PrinterInfo.class);
+        assertGetAttribute(service, PrinterIsAcceptingJobs.class);
+        assertGetAttribute(service, PrinterLocation.class);
+        assertGetAttribute(service, PrinterMakeAndModel.class);
+        assertGetAttribute(service, PrinterMessageFromOperator.class);
+        assertGetAttribute(service, PrinterMoreInfo.class);
+        assertGetAttribute(service, PrinterMoreInfoManufacturer.class);
+        assertGetAttribute(service, PrinterName.class);
+        assertGetAttribute(service, PrinterState.class);
+        assertGetAttribute(service, PrinterStateReasons.class);
+        assertGetAttribute(service, PrinterURI.class);
+        assertGetAttribute(service, QueuedJobCount.class);
+    }
+
+
+    private void assertGetAttribute(PrintService service, Class<? extends PrintServiceAttribute> category){
+        reference.assertEquals(category.getName(), service.getAttribute(category));
+    }
+    
+    
+    @Test
     public void getAttributes(){
         PrintService service = PrintServiceLookup.lookupDefaultPrintService();
         Attribute[] attrs = service.getAttributes().toArray();
@@ -79,9 +108,78 @@ public class PrintServiceTest{
     
     
     @Test
+    public void getDefaultAttributeValue(){
+        PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+        Class<?>[] categories = service.getSupportedAttributeCategories();
+        for(int i = 0; i < categories.length; i++){
+            Class clazz = categories[i];
+            Object attribute = service.getDefaultAttributeValue(clazz);
+            reference.assertEquals("DefaultAttribute-"+clazz.getName(), String.valueOf(attribute));
+        }
+    }
+    
+    
+    @Test
+    public void getName(){
+        PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+        reference.assertEquals("getName", service.getName() );
+    }
+    
+    
+    @Test
+    public void getSupportedAttributeCategories(){
+        PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+        Class<?>[] categories = service.getSupportedAttributeCategories();
+        String[] strings = new String[categories.length];
+        for(int i = 0; i < strings.length; i++){
+            strings[i] = categories[i].getName();
+        }
+        Arrays.sort(strings);
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < strings.length; i++){
+            builder.append(strings[i]);
+            builder.append(",");
+        }
+        reference.assertEquals("getSupportedAttributeCategories", builder.toString() );
+    }
+    
+    
+    @Test
+    public void getSupportedAttributeValues(){
+        PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+        Class<?>[] categories = service.getSupportedAttributeCategories();
+        for(int i = 0; i < categories.length; i++){
+            Class<? extends Attribute> category = (Class<? extends Attribute>)categories[i];
+            Object obj = service.getSupportedAttributeValues(category, null, null);
+            reference.assertEquals("SupportedValues-"+category, toString(obj));
+        }
+    }
+    
+    
+    @Test
     public void isDocFlavorSupported(){
         PrintService service = PrintServiceLookup.lookupDefaultPrintService();
         reference.assertEquals("DocFlavorPAGEABLE", service.isDocFlavorSupported(DocFlavor.SERVICE_FORMATTED.PAGEABLE) );
         reference.assertEquals("DocFlavorPRINTABLE", service.isDocFlavorSupported(DocFlavor.SERVICE_FORMATTED.PRINTABLE) );
+    } 
+    
+    
+    private static String toString(Object obj){
+        if(obj instanceof Object[]){
+            Object[] data = (Object[])obj;
+            String[] strings = new String[data.length];
+            for(int i = 0; i < strings.length; i++){
+                strings[i] = String.valueOf(data[i]);
+            }
+            Arrays.sort(strings);
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < strings.length; i++){
+                builder.append(strings[i]);
+                builder.append(",");
+            }
+            return builder.toString();
+        } else {
+            return String.valueOf(obj);
+        }
     }
 }
