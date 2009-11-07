@@ -26,14 +26,9 @@ package java_.text;
 
 import java.text.*;
 
-import javax.print.PrintServiceTest;
-
 import junit.ikvm.ReferenceData;
 
 import org.junit.*;
-
-import com.sun.org.apache.regexp.internal.CharacterArrayCharacterIterator;
-
 
 public class BidiTest{
 
