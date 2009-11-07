@@ -23,8 +23,11 @@
 */
 package junit.ikvm;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 import junit.framework.Assert;
 import static junit.framework.Assert.fail;
@@ -39,7 +42,7 @@ public class ReferenceData{
     
     private static final String NO_DATA_MSG = " Please run the test first with a Sun Java VM to create reference data for your system.";
 
-    private final HashMap<String, Object> data;
+    private final HashMap<String, Serializable> data;
     private final File file;
     
     public ReferenceData(Class<? extends Object> clazz) throws Exception{
@@ -52,10 +55,10 @@ public class ReferenceData{
             }
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            data = (HashMap<String, Object>)ois.readObject();
+            data = (HashMap<String, Serializable>)ois.readObject();
             fis.close();
         }else{
-            data = new HashMap<String, Object>();
+            data = new HashMap<String, Serializable>();
         }
     }
     
@@ -70,7 +73,7 @@ public class ReferenceData{
         }
     }
     
-    public boolean isIkvm(){
+    public static boolean isIkvm(){
         return IKVM;
     }
 
@@ -88,4 +91,28 @@ public class ReferenceData{
             data.put(key, value);
         }
     }
+    
+    
+    public void assertEquals(String key, BufferedImage img) throws Exception{
+        if(key == null){
+            fail("Key is null.");
+        }
+        if(IKVM){
+            BufferedImage expected = ImageIO.read(new File(file.getParent(), key + ".png"));
+            if(expected == null){
+                fail("No Reference value for key:" + key + NO_DATA_MSG);
+                return;
+            }
+            Assert.assertEquals(key + " width", expected.getWidth(), img.getWidth());
+            Assert.assertEquals(key + " height", expected.getHeight(), img.getHeight());
+            for(int x = 0; x < expected.getWidth(); x++){
+                for(int y = 0; y < expected.getHeight(); y++){
+                    Assert.assertEquals(key + " pixel " + x + "," + y, expected.getRGB(x, y), img.getRGB(x, y));
+                }
+            }
+        }else{
+            ImageIO.write(img, "png", new File(file.getParent(), key + ".png"));
+        }
+    }
+
 }

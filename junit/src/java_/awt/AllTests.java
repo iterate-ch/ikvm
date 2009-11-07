@@ -29,8 +29,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    GraphicsDeviceTest.class,
-    FontTest.class
+    FontTest.class,
+    GraphicsTest.class,
+    GraphicsDeviceTest.class
 })
 public class AllTests{
     //Nothing
