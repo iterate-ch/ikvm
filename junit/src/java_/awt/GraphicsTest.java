@@ -74,7 +74,17 @@ public class GraphicsTest{
     @Test
     public void copyArea() throws Exception{
         g.setColor(Color.RED);
-        g.fillRect(0, 0, 5, 5);
+        g.fillRect(0, 0, 6, 6);
+        g.setColor(Color.BLUE);
+        g.fillRect(1, 1, 5, 5);
+        g.setColor(Color.GREEN);
+        g.fillRect(2, 2, 4, 4);
+        g.setColor(Color.CYAN);
+        g.fillRect(3, 3, 3, 3);
+        g.setColor(Color.YELLOW);
+        g.fillRect(4, 4, 2, 2);
+        g.setColor(Color.GRAY);
+        g.fillRect(5, 5, 1, 1);
         g.copyArea(1, 2, 5, 5, 3, 3);
         reference.assertEquals("copyArea", img);
     }
