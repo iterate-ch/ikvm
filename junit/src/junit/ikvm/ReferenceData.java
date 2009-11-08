@@ -99,16 +99,24 @@ public class ReferenceData{
         }
         if(IKVM){
             BufferedImage expected = ImageIO.read(new File(file.getParent(), key + ".png"));
+            File file_ikvm = new File(file.getParent(), key + "_ikvm.png");
+            file_ikvm.delete();
             if(expected == null){
                 fail("No Reference value for key:" + key + NO_DATA_MSG);
                 return;
             }
-            Assert.assertEquals(key + " width", expected.getWidth(), img.getWidth());
-            Assert.assertEquals(key + " height", expected.getHeight(), img.getHeight());
-            for(int x = 0; x < expected.getWidth(); x++){
-                for(int y = 0; y < expected.getHeight(); y++){
-                    Assert.assertEquals(key + " pixel " + x + "," + y, expected.getRGB(x, y), img.getRGB(x, y));
+            try{
+                Assert.assertEquals(key + " width", expected.getWidth(), img.getWidth());
+                Assert.assertEquals(key + " height", expected.getHeight(), img.getHeight());
+                for(int x = 0; x < expected.getWidth(); x++){
+                    for(int y = 0; y < expected.getHeight(); y++){
+                        Assert.assertEquals(key + " pixel " + x + "," + y, expected.getRGB(x, y), img.getRGB(x, y));
+                    }
                 }
+            }catch (Error ex) {
+                //save the IKVM result for better compare the differences
+                ImageIO.write(img, "png", file_ikvm);
+                throw ex;
             }
         }else{
             ImageIO.write(img, "png", new File(file.getParent(), key + ".png"));
