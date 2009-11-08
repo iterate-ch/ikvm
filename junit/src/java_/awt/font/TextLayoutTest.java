@@ -30,9 +30,7 @@ import junit.ikvm.ReferenceData;
 
 import org.junit.*;
 
-/**
- * @author Volker Berlin
- */
+
 public class TextLayoutTest{
 
     private static ReferenceData reference;

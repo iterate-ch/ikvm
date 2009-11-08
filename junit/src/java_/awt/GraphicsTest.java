@@ -34,9 +34,6 @@ import org.junit.*;
 
 
 
-/**
- * @author Volker Berlin
- */
 public class GraphicsTest{
 
     private static ReferenceData reference;

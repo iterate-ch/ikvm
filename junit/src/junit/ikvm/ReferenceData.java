@@ -33,9 +33,6 @@ import junit.framework.Assert;
 import static junit.framework.Assert.fail;
 
 
-/**
- * @author Volker Berlin
- */
 public class ReferenceData{
     
     private static final boolean IKVM = System.getProperty("java.vm.name").equals("IKVM.NET");

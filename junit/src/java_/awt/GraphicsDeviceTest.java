@@ -32,9 +32,6 @@ import org.junit.*;
 
 
 
-/**
- * @author Volker Berlin
- */
 public class GraphicsDeviceTest{
 
     private static ReferenceData reference;

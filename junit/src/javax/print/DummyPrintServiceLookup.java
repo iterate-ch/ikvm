@@ -26,10 +26,6 @@ package javax.print;
 import javax.print.attribute.AttributeSet;
 
 
-
-/**
- * @author Volker Berlin
- */
 public class DummyPrintServiceLookup extends PrintServiceLookup{
 
     @Override

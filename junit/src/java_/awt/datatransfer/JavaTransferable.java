@@ -27,9 +27,6 @@ import java.awt.datatransfer.*;
 
 
 
-/**
- * @author Volker Berlin
- */
 public class JavaTransferable implements Transferable{
 
     public final static DataFlavor DATA_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType+";class=java.lang.Object", null);

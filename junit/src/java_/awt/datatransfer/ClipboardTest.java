@@ -34,9 +34,6 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 
-/**
- * @author Volker Berlin
- */
 public class ClipboardTest{
 
     private static ReferenceData reference;

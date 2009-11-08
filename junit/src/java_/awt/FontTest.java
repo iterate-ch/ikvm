@@ -35,10 +35,6 @@ import org.junit.Test;
 
 
 
-
-/**
- * @author Volker Berlin
- */
 public class FontTest{
     
     private static ReferenceData reference;

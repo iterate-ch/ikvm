@@ -30,10 +30,6 @@ import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.event.PrintServiceAttributeListener;
 
 
-
-/**
- * @author Volker Berlin
- */
 public class DummyPrintService implements PrintService{
 
     @Override
