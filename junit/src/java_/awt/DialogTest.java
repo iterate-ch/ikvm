@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 /**
  * @author Volker Berlin
  */
-public class FrameTest extends WindowTest{
+public class DialogTest extends WindowTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
@@ -51,6 +51,8 @@ public class FrameTest extends WindowTest{
 
     @Override
     protected Window createWindow(){
-        return new Frame();
+        return new Dialog((Frame)null);
     }
+
+
 }

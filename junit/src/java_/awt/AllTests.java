@@ -29,10 +29,12 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+    DialogTest.class,
     FontTest.class,
     FrameTest.class,
     GraphicsTest.class,
-    GraphicsDeviceTest.class
+    GraphicsDeviceTest.class,
+    WindowTest.class
 })
 public class AllTests{
     //Nothing
