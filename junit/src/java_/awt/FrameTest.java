@@ -23,20 +23,20 @@
 */
 package java_.awt;
 
+
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
 
 import junit.ikvm.ReferenceData;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 
 
-public class FontTest{
-    
+/**
+ * @author Volker Berlin
+ */
+public class FrameTest{
+
     private static ReferenceData reference;
 
 
@@ -52,13 +52,36 @@ public class FontTest{
             reference.save();
         }
     }
-
     
+
     @Test
-    public void getStringBounds(){
-        Font font = new Font("Arial", 0, 12);
-        Rectangle2D bounds = font.getStringBounds("any text", new FontRenderContext(null, false, false) );
-        reference.assertEquals("getStringBounds", (Rectangle2D.Float)bounds);
+    public void getBackground(){
+        Frame frame = new Frame();
+        frame.addNotify();
+        Color color = frame.getBackground();
+        frame.dispose();
+        reference.assertEquals("getBackground", color);
     }
+        
+
+    @Test
+    public void getForeground(){
+        Frame frame = new Frame();
+        frame.addNotify();
+        Color color = frame.getForeground();
+        frame.dispose();
+        reference.assertEquals("getForeground", color);
+    }
+    
+
+    @Test
+    public void getFont(){
+        Frame frame = new Frame();
+        frame.addNotify();
+        Font font = frame.getFont();
+        frame.dispose();
+        reference.assertEquals("getFont", font);
+    }
+
 
 }

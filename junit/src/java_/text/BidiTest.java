@@ -37,7 +37,7 @@ public class BidiTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(BidiTest.class);
+        reference = new ReferenceData();
     }
 
 

@@ -41,7 +41,7 @@ public class ClipboardTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(ClipboardTest.class);
+        reference = new ReferenceData();
     }
 
 

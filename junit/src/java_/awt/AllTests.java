@@ -30,6 +30,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     FontTest.class,
+    FrameTest.class,
     GraphicsTest.class,
     GraphicsDeviceTest.class
 })

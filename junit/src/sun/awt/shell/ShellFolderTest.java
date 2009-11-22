@@ -42,7 +42,7 @@ public class ShellFolderTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(ShellFolderTest.class);
+        reference = new ReferenceData();
         originalLaF = UIManager.getLookAndFeel().getClass().getName();
         String laf = UIManager.getSystemLookAndFeelClassName();
         UIManager.setLookAndFeel(laf);

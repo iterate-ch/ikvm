@@ -33,11 +33,11 @@ import javax.print.attribute.standard.Destination;
 import junit.ikvm.ReferenceData;
 
 import org.junit.*;
+
+import sun.print.RasterPrinterJob;
 import static org.junit.Assert.*;
 
-/**
- * @author Volker Berlin
- */
+
 public class PrinterJobTest{
 
     private static ReferenceData reference;
@@ -45,7 +45,7 @@ public class PrinterJobTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(PrinterJobTest.class);
+        reference = new ReferenceData();
     }
 
 
@@ -115,6 +115,7 @@ public class PrinterJobTest{
         File file = new File("temp.prn").getAbsoluteFile();
         file.delete();
         try{
+            RasterPrinterJob.debugPrint = true;
             assertFalse("exist",file.exists());
             attrs.add(new Destination(file.toURI()));
             job.setPrintable(new DummyPrintable() );

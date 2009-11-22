@@ -38,7 +38,7 @@ public class TextLayoutTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(TextLayoutTest.class);
+        reference = new ReferenceData();
     }
 
 

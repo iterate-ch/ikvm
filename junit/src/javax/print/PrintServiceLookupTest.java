@@ -40,7 +40,7 @@ public class PrintServiceLookupTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(PrintServiceLookupTest.class);
+        reference = new ReferenceData();
     }
 
 

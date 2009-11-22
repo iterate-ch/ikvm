@@ -39,7 +39,7 @@ public class GraphicsDeviceTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(GraphicsDeviceTest.class);
+        reference = new ReferenceData();
     }
 
 

@@ -42,7 +42,7 @@ public class PrintServiceTest{
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData(PrintServiceTest.class);
+        reference = new ReferenceData();
     }
 
 

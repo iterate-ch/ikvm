@@ -20,7 +20,7 @@
   Jeroen Frijters
   jeroen@frijters.net
   
-*/
+ */
 package junit.ikvm;
 
 import java.awt.image.BufferedImage;
@@ -32,18 +32,31 @@ import javax.imageio.ImageIO;
 import junit.framework.Assert;
 import static junit.framework.Assert.fail;
 
-
+/**
+ * RefererenceData to compare. With Sun Java it will save the data. With IKVM it will read the data.
+ */
 public class ReferenceData{
-    
+
     private static final boolean IKVM = System.getProperty("java.vm.name").equals("IKVM.NET");
-    
+
     private static final String NO_DATA_MSG = " Please run the test first with a Sun Java VM to create reference data for your system.";
 
     private final HashMap<String, Serializable> data;
+
     private final File file;
-    
-    public ReferenceData(Class<? extends Object> clazz) throws Exception{
-        String name = clazz.getName();
+
+
+    /**
+     * Create ReferenceData for the calling class. The class is reading from stacktrace. All keys must be unique for the
+     * calling class. It should be called in a method which is marked with @BeforeClass. Typical this method is named
+     * setUpBeforeClass().
+     * 
+     * @throws Exception
+     *             If it run with IKVM and the data can not be read.
+     */
+    public ReferenceData() throws Exception{
+        StackTraceElement ste = new Throwable().getStackTrace()[1];
+        String name = ste.getClassName();
         String path = "references/" + name.replace('.', '/');
         file = new File(path).getAbsoluteFile();
         if(IKVM){
@@ -58,7 +71,15 @@ public class ReferenceData{
             data = new HashMap<String, Serializable>();
         }
     }
-    
+
+
+    /**
+     * Save the data if it is a Sun VM. It should be called in a method which is marked with @AfterClass. Typical this
+     * method is named tearDownAfterClass().
+     * 
+     * @throws Exception
+     *             If it run with Sun VM and can not save this reference data.
+     */
     public void save() throws Exception{
         if(!IKVM){
             file.getParentFile().mkdirs();
@@ -69,11 +90,22 @@ public class ReferenceData{
             oos.close();
         }
     }
-    
+
+
     public static boolean isIkvm(){
         return IKVM;
     }
 
+
+    /**
+     * Asserts that two objects are equal which come from Sun VM and IKVM run.
+     * 
+     * @param key
+     *            The key in the reference data. It must be unique for the class that create this ReferenceData
+     * @param value
+     *            the value will be saved in Sun VM and compared in IKVM. It must be Serializable that it can be saved
+     *            and loaded on hard disk.
+     */
     public void assertEquals(String key, Serializable value){
         if(key == null){
             fail("Key is null.");
@@ -88,8 +120,18 @@ public class ReferenceData{
             data.put(key, value);
         }
     }
-    
-    
+
+
+    /**
+     * Asserts that two images are equal which come from Sun VM and IKVM run.
+     * 
+     * @param key
+     *            The key in the reference data. It must be unique for the class that create this ReferenceData
+     * @param value
+     *            the value will be saved in Sun VM and compared in IKVM. The value will be saved as png image. If a
+     *            difference occur then a second png file will be saved which ended with _ikvm. This make it easer to
+     *            see the image differences.
+     */
     public void assertEquals(String key, BufferedImage img) throws Exception{
         if(key == null){
             fail("Key is null.");
@@ -110,8 +152,8 @@ public class ReferenceData{
                         Assert.assertEquals(key + " pixel " + x + "," + y, expected.getRGB(x, y), img.getRGB(x, y));
                     }
                 }
-            }catch (Error ex) {
-                //save the IKVM result for better compare the differences
+            }catch(Error ex){
+                // save the IKVM result for better compare the differences
                 ImageIO.write(img, "png", file_ikvm);
                 throw ex;
             }
