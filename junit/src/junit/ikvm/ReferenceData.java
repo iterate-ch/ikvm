@@ -29,8 +29,8 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-import junit.framework.Assert;
-import static junit.framework.Assert.fail;
+import org.junit.Assert;
+import static org.junit.Assert.fail;
 
 /**
  * RefererenceData to compare. With Sun Java it will save the data. With IKVM it will read the data.
@@ -114,6 +114,9 @@ public class ReferenceData{
             Object expected = data.get(key);
             if(expected == null && !data.containsKey(key)){
                 fail("No Reference value for key:" + key + NO_DATA_MSG);
+            }
+            if(expected instanceof float[]){
+                Assert.assertArrayEquals(key, (float[])expected, (float[])value, 0.0F);
             }
             Assert.assertEquals(key, expected, value);
         }else{

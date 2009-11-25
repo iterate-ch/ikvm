@@ -21,25 +21,16 @@
   jeroen@frijters.net
   
 */
+package sun.font;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * To run this test cases you need call first
- *      java -cp junit.jar;. org.junit.runner.JUnitCore AllTests
- * and then 
- *      ikvm -cp junit.jar;. org.junit.runner.JUnitCore AllTests
- */
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    java_.awt.AllTests.class,
-    java_.awt.datatransfer.AllTests.class,
-    java_.awt.font.AllTests.class,
-    java_.awt.print.AllTests.class,
-    java_.text.AllTests.class,
-    javax.print.AllTests.class,
-    sun.awt.shell.AllTests.class,
-    sun.font.AllTests.class,
+    FontStrikeTest.class,
+    StandardGlyphVectorTest.class,
 })
 public class AllTests{
     //Nothing

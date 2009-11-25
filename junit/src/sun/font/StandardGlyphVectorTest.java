@@ -20,27 +20,41 @@
   Jeroen Frijters
   jeroen@frijters.net
   
-*/
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
-/**
- * To run this test cases you need call first
- *      java -cp junit.jar;. org.junit.runner.JUnitCore AllTests
- * and then 
- *      ikvm -cp junit.jar;. org.junit.runner.JUnitCore AllTests
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-    java_.awt.AllTests.class,
-    java_.awt.datatransfer.AllTests.class,
-    java_.awt.font.AllTests.class,
-    java_.awt.print.AllTests.class,
-    java_.text.AllTests.class,
-    javax.print.AllTests.class,
-    sun.awt.shell.AllTests.class,
-    sun.font.AllTests.class,
-})
-public class AllTests{
-    //Nothing
+package sun.font;
+
+import java.awt.*;
+import java.awt.font.*;
+
+import junit.ikvm.ReferenceData;
+
+import org.junit.*;
+
+public class StandardGlyphVectorTest{
+
+    private static ReferenceData reference;
+
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception{
+        reference = new ReferenceData();
+    }
+
+
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception{
+        if(reference != null){
+            reference.save();
+        }
+    }
+
+
+    @Test
+    public void getGlyphInfo() throws Exception{
+        Font font = new Font("Dialog", 0, 12);
+        FontRenderContext frc = new FontRenderContext(null, false, false);
+        StandardGlyphVector sgv = new StandardGlyphVector( font, "any Text", frc );
+        float[] info = sgv.getGlyphInfo();
+        reference.assertEquals("getGlyphInfo", info);
+    }
 }
