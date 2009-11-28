@@ -49,6 +49,9 @@ public class PreferencesTest{
         if(reference != null){
             reference.save();
         }
+        Preferences user = Preferences.userRoot();
+        Preferences node = user.node(PATH_NAME);
+        node.parent().removeNode();
     }
 
 
