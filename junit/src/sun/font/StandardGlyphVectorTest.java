@@ -25,6 +25,7 @@ package sun.font;
 
 import java.awt.*;
 import java.awt.font.*;
+import java.awt.geom.Rectangle2D;
 
 import junit.ikvm.ReferenceData;
 
@@ -45,16 +46,37 @@ public class StandardGlyphVectorTest{
     public static void tearDownAfterClass() throws Exception{
         if(reference != null){
             reference.save();
+            reference = null;
         }
     }
 
+    
+    private StandardGlyphVector create(String text, boolean useFractional){
+        Font font = new Font("Arial", 0, 12);
+        FontRenderContext frc = new FontRenderContext(null, false, useFractional);
+        return new StandardGlyphVector( font, text, frc );
+    }
 
     @Test
     public void getGlyphInfo() throws Exception{
-        Font font = new Font("Dialog", 0, 12);
-        FontRenderContext frc = new FontRenderContext(null, false, false);
-        StandardGlyphVector sgv = new StandardGlyphVector( font, "any Text", frc );
+        StandardGlyphVector sgv = create( "any Text", false );
         float[] info = sgv.getGlyphInfo();
         reference.assertEquals("getGlyphInfo", info);
+    }
+    
+    
+    @Test
+    public void getLogicalBounds_Fixed() throws Exception{
+        StandardGlyphVector sgv = create( "any Text", false );
+        Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
+        reference.assertEquals("getLogicalBounds_Fixed", bounds);
+    }
+    
+    
+    @Test
+    public void getLogicalBounds_Fractional() throws Exception{
+        StandardGlyphVector sgv = create( "any Text", true );
+        Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
+        reference.assertEquals("getLogicalBounds_Fractional", bounds);
     }
 }
