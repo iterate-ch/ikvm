@@ -29,6 +29,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+    Font2DTest.class,
     FontStrikeTest.class,
     StandardGlyphVectorTest.class,
 })
