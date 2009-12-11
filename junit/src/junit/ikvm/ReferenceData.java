@@ -161,6 +161,7 @@ public class ReferenceData{
                 throw ex;
             }
         }else{
+        	file.getParentFile().mkdirs();
             ImageIO.write(img, "png", new File(file.getParent(), key + ".png"));
         }
     }
