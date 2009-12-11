@@ -47,12 +47,12 @@ public class GraphicsDeviceTest{
     public static void tearDownAfterClass() throws Exception{
         if(reference != null){
             reference.save();
+            reference = null;
         }
     }
 
     private GraphicsDevice getFirstDevice(){
-        GraphicsEnvironment ge = GraphicsEnvironment.
-        getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gs = ge.getScreenDevices();
         return gs[0];
     }

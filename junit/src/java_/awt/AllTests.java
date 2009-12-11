@@ -34,6 +34,7 @@ import org.junit.runners.Suite;
     FrameTest.class,
     GraphicsTest.class,
     GraphicsDeviceTest.class,
+    GraphicsEnvironmentTest.class,
     WindowTest.class
 })
 public class AllTests{
