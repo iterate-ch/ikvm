@@ -26,12 +26,14 @@ package java_.awt;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import junit.ikvm.ReferenceData;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 
 
@@ -61,4 +63,21 @@ public class FontTest{
         reference.assertEquals("getStringBounds", (Rectangle2D.Float)bounds);
     }
 
+
+    @Test
+    public void createFontFromFile() throws Exception{
+    	String windir = System.getenv("windir");
+    	File file = new File(windir + "/fonts/Arial.ttf");
+    	Font font = Font.createFont(Font.TRUETYPE_FONT, file);
+    	assertEquals( 1, font.getSize());
+    }
+
+
+    @Test
+    public void createFontFromStream() throws Exception{
+    	String windir = System.getenv("windir");
+    	File file = new File(windir + "/fonts/Arial.ttf");
+    	Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(file));
+    	assertEquals( 1, font.getSize());
+    }
 }
