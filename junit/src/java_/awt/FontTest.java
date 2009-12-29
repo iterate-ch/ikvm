@@ -25,10 +25,14 @@ package java_.awt;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
+import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.AttributedCharacterIterator.Attribute;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.ikvm.ReferenceData;
 
@@ -79,5 +83,32 @@ public class FontTest{
     	File file = new File(windir + "/fonts/Arial.ttf");
     	Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(file));
     	assertEquals( 1, font.getSize());
+    }
+    
+    @Test
+    public void getFamilyAndNameLogical(){
+    	getFamilyAndName(Font.DIALOG);
+    	getFamilyAndName(Font.DIALOG_INPUT);
+    	getFamilyAndName(Font.MONOSPACED);
+    	getFamilyAndName(Font.SERIF);
+    	getFamilyAndName(Font.SANS_SERIF);
+    }
+    
+    @Test
+    public void getFamilyAndNameReal(){
+    	Font font = new Font("Arial Bold", 0, 1);
+    	assertEquals("Arial Bold", font.getName());
+    	assertEquals("Arial", font.getFamily());
+    	
+    	font = new Font("Arial Black Standard", 0, 1);
+    	assertEquals("Arial Black Standard", font.getName());
+    	assertEquals("Arial Black", font.getFamily());
+    	
+    }
+    
+    private void getFamilyAndName(String name){
+    	Font font = new Font(name, 0, 1);
+    	assertEquals(name, font.getName());
+    	assertEquals(name, font.getFamily());
     }
 }
