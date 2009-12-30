@@ -38,6 +38,7 @@ import org.junit.runners.Suite;
     java_.awt.print.AllTests.class,
     java_.text.AllTests.class,
     java_.util.prefs.PreferencesTest.class,
+    javax.imageio.ImageIOTest.class,
     javax.print.AllTests.class,
     sun.awt.shell.AllTests.class,
     sun.font.AllTests.class,
