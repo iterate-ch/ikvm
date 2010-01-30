@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -21,28 +21,15 @@
   jeroen@frijters.net
   
 */
+package sun.misc;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * To run this test cases you need call first
- *      java -cp junit.jar;. org.junit.runner.JUnitCore AllTests
- * and then 
- *      ikvm -cp junit.jar;. org.junit.runner.JUnitCore AllTests
- */
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    java_.awt.AllTests.class,
-    java_.awt.datatransfer.AllTests.class,
-    java_.awt.font.AllTests.class,
-    java_.awt.print.AllTests.class,
-    java_.text.AllTests.class,
-    java_.util.prefs.PreferencesTest.class,
-    javax.imageio.ImageIOTest.class,
-    javax.print.AllTests.class,
-    sun.awt.shell.AllTests.class,
-    sun.font.AllTests.class,
-    sun.misc.AllTests.class,
+    SignalTest.class,
 })
 public class AllTests{
     //Nothing
