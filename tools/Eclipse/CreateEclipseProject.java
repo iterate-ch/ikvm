@@ -80,7 +80,7 @@ public class CreateEclipseProject{
         this.src = src;
         URL srcURL = new URL("file", null, src);
         openjdk = new URL(srcURL, "openjdk/");
-        String allSourcesName = new URL(openjdk, "allsources.lst").getFile();
+        String allSourcesName = new URL(openjdk, "allsources.gen.lst").getFile();
         File allSourcesFile = new File(allSourcesName);
         if(!allSourcesFile.exists()){
             usage();
@@ -120,7 +120,8 @@ public class CreateEclipseProject{
         System.out.println();
         
         while(line != null){
-            URL fileURL = new URL(openjdk, line);
+            URL fileURL;
+			fileURL = line.indexOf(':') > 0 ? new URL("file", null, line) : new URL(openjdk, line);
             File file = new File(fileURL.getFile());
             if(!file.exists()){
                 System.err.println("\nFile not found:"+file);
@@ -147,10 +148,11 @@ public class CreateEclipseProject{
      */
     private String destFolder(String line){
         boolean isTop = false;
-        while(line.startsWith("../")){
-            isTop = true;
-            line = line.substring(3);
-        }
+		int topIdx = line.lastIndexOf("../");
+		if (topIdx >= 0) {
+			isTop = true;
+			line = line.substring(topIdx + 3);
+		}
         String folder;
         if(!isTop){
             if(line.startsWith("icedtea")){
@@ -172,7 +174,7 @@ public class CreateEclipseProject{
      * @return the content of the source file
      * @throws IOException if an I/O error occurs.
      */
-    private static byte[] readFile(File file) throws IOException{
+    private byte[] readFile(File file) throws IOException{
         InputStream stream = new FileInputStream(file);
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
@@ -191,9 +193,9 @@ public class CreateEclipseProject{
      * @param data the content of a Java source file
      * @return
      */
-    private static String findPackage(byte[] data){
+    private String findPackage(byte[] data){
         String fileData = new String(data, 0);
-        Pattern pattern = Pattern.compile("^\\s*package\\s.*?;", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile("(?<!//\\s)package\\s.*?;");
         Matcher matcher = pattern.matcher(fileData);
         if(matcher.find()){
             String match = fileData.substring(matcher.start(), matcher.end() - 1);
@@ -238,6 +240,17 @@ public class CreateEclipseProject{
         
         String baseDir = src + "classpath/";
         String[] files = new File(baseDir).list();
+        for(int i = 0; i < files.length; i++){
+            String file = files[i];
+            if(file.endsWith(".jar")){
+                builder.append("<classpathentry kind=\"lib\" path=\"");
+                builder.append(baseDir);
+                builder.append(file);
+                builder.append("\"/>\n");
+            }
+        }
+        baseDir = src + "openjdk/";
+        files = new File(baseDir).list();
         for(int i = 0; i < files.length; i++){
             String file = files[i];
             if(file.endsWith(".jar")){
