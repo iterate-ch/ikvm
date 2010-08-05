@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -49,6 +49,7 @@ public class WindowTest{
         if(reference != null){
             reference.save();
         }
+        reference = null;
     }
 
 
@@ -107,4 +108,15 @@ public class WindowTest{
         window.dispose();
     }
 
+    @Test
+    public void setMinimumSize(){
+    	Window window = createWindow();
+        window.addNotify();
+        window.setMinimumSize( new Dimension(0,0) );
+        reference.assertEquals("setMinimumSize0_0", window.getMinimumSize());
+        window.setMinimumSize( new Dimension(5,5) );
+        reference.assertEquals("setMinimumSize5_5", window.getMinimumSize());
+        window.setMinimumSize( new Dimension(100,100) );
+        reference.assertEquals("setMinimumSize100_100", window.getMinimumSize());
+    }
 }
