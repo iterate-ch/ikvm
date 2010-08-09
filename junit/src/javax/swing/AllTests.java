@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -21,7 +21,7 @@
   jeroen@frijters.net
   
 */
-package java_.awt;
+package javax.swing;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -29,14 +29,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    DialogTest.class,
-    FontTest.class,
-    FrameTest.class,
-    GraphicsTest.class,
-    GraphicsDeviceTest.class,
-    GraphicsEnvironmentTest.class,
-    ToolkitTest.class,
-    WindowTest.class
+    JButtonTest.class,
 })
 public class AllTests{
     //Nothing

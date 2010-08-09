@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,24 +20,33 @@
   Jeroen Frijters
   jeroen@frijters.net
   
-*/
-package java_.awt;
+ */
+package javax.swing;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+import junit.ikvm.ReferenceData;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
+public abstract class AbstractButtonTest<T extends AbstractButton>{
+
+    protected static ReferenceData reference;
 
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-    DialogTest.class,
-    FontTest.class,
-    FrameTest.class,
-    GraphicsTest.class,
-    GraphicsDeviceTest.class,
-    GraphicsEnvironmentTest.class,
-    ToolkitTest.class,
-    WindowTest.class
-})
-public class AllTests{
-    //Nothing
+    protected abstract T createButton();
+
+
+    @Test
+    public void getDisabledIcon() throws Exception{
+        AbstractButton button = createButton();
+        button.setIcon(new ImageIcon(getClass().getResource("icon.gif")));
+        Icon icon = button.getDisabledIcon();
+        BufferedImage img = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = img.getGraphics();
+        icon.paintIcon(button, g, 0, 0);
+        reference.assertEquals("getDisabledIcon", img);
+    }
 }
