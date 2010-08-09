@@ -83,9 +83,17 @@ public class ToolkitTest{
                 ic.setDimensions( 20, 20);
                 // negative offsets are ignored
                 ic.setPixels(-1, -1, 8, 1, ColorModel.getRGBdefault(), new byte[100], 0, 10);
+                ic.setPixels( 0, 0, -1, -1, ColorModel.getRGBdefault(), new byte[100], 0, 10);
                 
                 try{
-                	// data to small
+                	// Data offset out of bounds.
+                    ic.setPixels( 0, 0, 8, 1, ColorModel.getRGBdefault(), new byte[100], -1, 10);
+                    fail("ArrayIndexOutOfBoundsException should occur");
+                }catch(ArrayIndexOutOfBoundsException ex){
+                    // expected
+                }
+                try{
+                	// Data array is too short.
                     ic.setPixels(0, 0, 10, 10, ColorModel.getRGBdefault(), new byte[10], 0, 10);
                     fail("ArrayIndexOutOfBoundsException should occur");
                 }catch(ArrayIndexOutOfBoundsException ex){
