@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2010 Karsten Heinrich (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -23,11 +24,19 @@
  */
 package sun.awt.shell;
 
+import static sun.awt.shell.Win32ShellFolder2.DRIVES;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.Permission;
 import java.util.Arrays;
 
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileSystemView;
 
 import junit.ikvm.ReferenceData;
 
@@ -157,5 +166,26 @@ public class ShellFolderTest{
             builder.append(",");
         }
         return builder.toString();
+    }
+    
+    @Test
+    public void isFileSystemRoot() throws Throwable{
+    	// assert that the drives list is complete
+    	Class<?> clazz = Class.forName("sun.awt.shell.Win32ShellFolder2");
+    	Constructor ctr = (Constructor) clazz.getDeclaredConstructor( int.class );
+    	ctr.setAccessible(true);
+    	Object drives = ctr.newInstance(Integer.valueOf( Win32ShellFolder2.DRIVES ) );
+    	Method[] methods = clazz.getDeclaredMethods();
+    	Method m = clazz.getDeclaredMethod( "listFiles", boolean.class );
+    	m.setAccessible(true);
+    	File[] files = (File[]) m.invoke(drives, Boolean.TRUE );    	
+    	for( int i = 0; i < files.length; i++ ){
+    		reference.assertEquals( "drive#"+i, files[i].getPath() );
+    	}
+    	
+    	// check that c:\ is identified as a fs-root - should work, if the drives list contains c:\
+    	File f = new File("C:\\");
+    	boolean result = new Win32ShellFolderManager2().isFileSystemRoot(f);
+    	reference.assertEquals( "isFileSystemRoot", Boolean.valueOf( result ) );
     }
 }
