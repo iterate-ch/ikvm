@@ -139,8 +139,12 @@ public class ReferenceData{
         if(key == null){
             fail("Key is null.");
         }
+        File imgFile = new File(file.getParent(), key + ".png");
         if(IKVM){
-            BufferedImage expected = ImageIO.read(new File(file.getParent(), key + ".png"));
+            if( imgFile.length() == 0 ){
+                Assert.assertEquals( key, null, img );
+            }
+            BufferedImage expected = ImageIO.read( imgFile );
             File file_ikvm = new File(file.getParent(), key + "_ikvm.png");
             file_ikvm.delete();
             if(expected == null){
@@ -162,7 +166,13 @@ public class ReferenceData{
             }
         }else{
         	file.getParentFile().mkdirs();
-            ImageIO.write(img, "png", new File(file.getParent(), key + ".png"));
+        	if( img == null ){
+        	    // create a empty file
+        	    imgFile.delete();
+        	    imgFile.createNewFile();
+        	} else {
+        	    ImageIO.write( img, "png", imgFile );
+        	}
         }
     }
 
