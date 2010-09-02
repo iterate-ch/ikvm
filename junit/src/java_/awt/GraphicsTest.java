@@ -26,6 +26,8 @@ package java_.awt;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 
 import junit.ikvm.ReferenceData;
@@ -38,9 +40,6 @@ public class GraphicsTest{
 
     private static ReferenceData reference;
 
-    private BufferedImage img;
-    private Graphics g;
-    
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
         reference = new ReferenceData();
@@ -55,34 +54,42 @@ public class GraphicsTest{
     }
     
     
-    @Before
-    public void setUp() {
-        img = new BufferedImage(10,10,BufferedImage.TYPE_INT_ARGB);
-        g = img.getGraphics();
-    }
-    
-    
-    @After
-    public void tearDown (){
+    private BufferedImage createTestImage() throws Exception{
+        BufferedImage img = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+        Graphics g = img.getGraphics();
+        g.setColor( Color.RED );
+        g.fillRect( 0, 0, 60, 60 );
+        g.setColor( Color.BLUE );
+        g.fillRect( 10, 10, 50, 50 );
+        g.setColor( Color.GREEN );
+        g.fillRect( 20, 20, 40, 40 );
+        g.setColor( Color.CYAN );
+        g.fillRect( 30, 30, 30, 30 );
+        g.setColor( Color.YELLOW );
+        g.fillRect( 40, 40, 20, 20 );
+        g.setColor( Color.GRAY );
+        g.fillRect( 50, 50, 10, 10 );
         g.dispose();
+        reference.assertEquals("TestImage", img);
+        return img;
     }
-
 
     @Test
     public void copyArea() throws Exception{
-        g.setColor(Color.RED);
-        g.fillRect(0, 0, 6, 6);
-        g.setColor(Color.BLUE);
-        g.fillRect(1, 1, 5, 5);
-        g.setColor(Color.GREEN);
-        g.fillRect(2, 2, 4, 4);
-        g.setColor(Color.CYAN);
-        g.fillRect(3, 3, 3, 3);
-        g.setColor(Color.YELLOW);
-        g.fillRect(4, 4, 2, 2);
-        g.setColor(Color.GRAY);
-        g.fillRect(5, 5, 1, 1);
-        g.copyArea(1, 2, 5, 5, 3, 3);
-        reference.assertEquals("copyArea", img);
+        BufferedImage img = createTestImage();
+        Graphics g = img.getGraphics();
+        g.copyArea( 10, 20, 50, 50, 30, 30 );
+        reference.assertEquals( "copyArea", img );
+        g.dispose();
+    }
+    
+    @Test
+    public void drawImageWithAffineTransform() throws Exception{
+        BufferedImage img = createTestImage();
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        AffineTransform transform = new AffineTransform(0.0, -1.0, 1.0, 0.0, 0.0, img.getWidth() );
+        g.drawImage( createTestImage(), transform, null );
+        reference.assertEquals( "drawImageWithAffineTransform", img );
+        g.dispose();
     }
 }
