@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -31,52 +31,83 @@ import junit.ikvm.ReferenceData;
 
 import org.junit.*;
 
-public class StandardGlyphVectorTest{
+public class StandardGlyphVectorTest {
 
     private static ReferenceData reference;
 
-
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception{
+    public static void setUpBeforeClass() throws Exception {
         reference = new ReferenceData();
     }
 
-
     @AfterClass
-    public static void tearDownAfterClass() throws Exception{
-        if(reference != null){
+    public static void tearDownAfterClass() throws Exception {
+        if( reference != null ) {
             reference.save();
             reference = null;
         }
     }
 
-    
-    private StandardGlyphVector create(String text, boolean useFractional){
-        Font font = new Font("Arial", 0, 12);
-        FontRenderContext frc = new FontRenderContext(null, false, useFractional);
+    private StandardGlyphVector create( String text, boolean antialias, boolean useFractional ) {
+        Font font = new Font( "Arial", 0, 12 );
+        FontRenderContext frc = new FontRenderContext( null, antialias, useFractional );
         return new StandardGlyphVector( font, text, frc );
     }
 
     @Test
-    public void getGlyphInfo() throws Exception{
-        StandardGlyphVector sgv = create( "any Text", false );
+    public void getGlyphInfo() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, false );
         float[] info = sgv.getGlyphInfo();
-        reference.assertEquals("getGlyphInfo", info);
+        reference.assertEquals( "getGlyphInfo", info );
     }
-    
-    
+
     @Test
-    public void getLogicalBounds_Fixed() throws Exception{
-        StandardGlyphVector sgv = create( "any Text", false );
+    public void getLogicalBounds_Fixed() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, false );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
-        reference.assertEquals("getLogicalBounds_Fixed", bounds);
+        reference.assertEquals( "getLogicalBounds_Fixed", bounds );
     }
-    
-    
+
     @Test
-    public void getLogicalBounds_Fractional() throws Exception{
-        StandardGlyphVector sgv = create( "any Text", true );
+    public void getLogicalBounds_Fractional() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, true );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
-        reference.assertEquals("getLogicalBounds_Fractional", bounds);
+        reference.assertEquals( "getLogicalBounds_Fractional", bounds );
+        
+        sgv = create( "any large Text with many fffffffffffffffffffffffffffffff's and some spaces    ", false, true );
+        bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
+        reference.assertEquals( "getLogicalBounds_Fractional large", bounds );
+    }
+
+    @Test
+    public void getLogicalBounds_Antialias() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", true, false );
+        Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
+        reference.assertEquals( "getLogicalBounds_Antialias", bounds );
+    }
+
+    @Test
+    public void getLogicalBounds_Antialias_Fractional() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", true, true );
+        Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
+        reference.assertEquals( "getLogicalBounds_Antialias_Fractional", bounds );
+        
+        sgv = create( "any large Text with many fffffffffffffffffffffffffffffff's and some spaces    ", true, true );
+        bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
+        reference.assertEquals( "getLogicalBounds_Antialias_Fractional large", bounds );
+    }
+
+    @Test
+    public void getVisualBounds_Fixed() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, false );
+        Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getVisualBounds();
+        reference.assertEquals( "getgetVisualBounds_Fractional", bounds );
+    }
+
+    @Test
+    public void getVisualBounds_Fractional() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, true );
+        Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getVisualBounds();
+        reference.assertEquals( "getgetVisualBounds_Fractional", bounds );
     }
 }
