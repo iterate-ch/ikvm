@@ -158,7 +158,7 @@ public class SignalTest{
             try{
                 SignalHandler oldHandler = Signal.handle(signal, handler);
                 Signal.raise(signal);
-                Thread.sleep(1);
+                Thread.sleep(5);
                 Signal.handle(signal, oldHandler);
                 assertEquals(name, handleResult.toString());
                 reference.assertEquals(name + "_handle", "true");
