@@ -1,0 +1,31 @@
+Test Count: 108
+
+Java 6 VM:
+	Errors: 1
+		IPv6Test.udp
+	Failures: 0
+
+
+IKVM:
+	Errors: 5
+		FontTest.createFontFromFile: not implemented 
+		FontTest.createFontFromStream: not implemented
+		PrinterJobTest.print: ???
+		IPv6Test.tcp: IPv6 problem
+		IPv6Test.udp: IPv6 problem
+	Failures: 20
+		GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
+		GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
+		PrinterJobTest.defaultPage: integer instead floats
+		PrintServiceTest.getAttribute: expected:<null> but was:<unknown>
+		PrintServiceTest.getAttributes: null versus unknown
+		PrintServiceTest.getDefaultAttributeValue: JobName expected:<[Java Printing]> but was:<[null]>
+		PrintServiceTest.getSupportedAttributeValues: JobName expected:<[Java Printing]> but was:<[null]>
+		ShellFolderTest.getRoots(): Java list also files for "C:\Users\Public" for the Desktop
+		....
+		StandardGlyphVectorTest.getGlyphInfo: arrays first differed at element [4]; expected:<0.4375> but was:<0.0>
+		StandardGlyphVectorTest.getVisualBounds_Fixed: returns Logical Bounds
+		StandardGlyphVectorTest.getVisualBounds_Fractional: returns Logical Bounds
+
+
+		
