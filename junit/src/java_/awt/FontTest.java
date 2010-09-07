@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -61,10 +61,18 @@ public class FontTest{
 
     
     @Test
-    public void getStringBounds(){
+    public void getStringBounds_Fixed(){
         Font font = new Font("Arial", 0, 12);
         Rectangle2D bounds = font.getStringBounds("any text", new FontRenderContext(null, false, false) );
         reference.assertEquals("getStringBounds", (Rectangle2D.Float)bounds);
+    }
+
+
+    @Test
+    public void getStringBounds_Fractional(){
+        Font font = new Font("Arial", 0, 12);
+        Rectangle2D bounds = font.getStringBounds("any text", new FontRenderContext(null, false, true) );
+        reference.assertEquals("getStringBounds_Fixed", (Rectangle2D.Float)bounds);
     }
 
 
