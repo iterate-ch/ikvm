@@ -7,11 +7,10 @@ Java 6 VM:
 
 
 IKVM:
-	Errors: 5
+	Errors: 4
 		FontTest.createFontFromFile: not implemented 
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
-		IPv6Test.tcp: IPv6 problem
 		IPv6Test.udp: IPv6 problem
 	Failures: 20
 		GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
