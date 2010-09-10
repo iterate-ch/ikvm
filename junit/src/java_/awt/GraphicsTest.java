@@ -24,6 +24,7 @@
 package java_.awt;
 
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -90,6 +91,17 @@ public class GraphicsTest{
         AffineTransform transform = new AffineTransform(0.0, -1.0, 1.0, 0.0, 0.0, img.getWidth() );
         g.drawImage( createTestImage(), transform, null );
         reference.assertEquals( "drawImageWithAffineTransform", img );
+        g.dispose();
+    }
+    
+    @Test
+    public void setComposite_Alpha_SRC_OVER() throws Exception {
+        BufferedImage img = createTestImage();
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 0.5F ) );
+        g.setColor( Color.BLUE );
+        g.fillRect( 30, 0, 40, 100 );
+        reference.assertEquals( "setComposite_Alpha_SRC_OVER", img );
         g.dispose();
     }
 }
