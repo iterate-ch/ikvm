@@ -74,7 +74,7 @@ public class ShellFolderTest{
         reference.assertEquals("roots names", toString(roots));
         for(int i = 0; i < roots.length; i++){
             File file = roots[i];
-            reference.assertEquals("roots list names", toString(file.listFiles()));
+            reference.assertEquals("roots list names " + file, toString(file.listFiles()));
         }
     }
 
