@@ -1,4 +1,4 @@
-Test Count: 113
+Test Count: 115
 
 Java 6 VM:
 	Errors: 1
@@ -12,7 +12,7 @@ IKVM:
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
 		IPv6Test.udp: IPv6 problem
-	Failures: 21
+	Failures: 24
 	    java.awt.GraphicsTest.setComposite_Alpha_SRC_OVER: Composite not implemented and will be ignored
 		GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
 		GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
@@ -23,6 +23,8 @@ IKVM:
 		PrintServiceTest.getSupportedAttributeValues: JobName expected:<[Java Printing]> but was:<[null]>
 		ShellFolderTest.getRoots(): Java list also files for "C:\Users\Public" for the Desktop
 		....
+		FontDesignMetricsTest.stringWidth: rounding problem, one pixel
+		FontStrikeTest.getGlyphMetrics: floating instead of integer value
 		StandardGlyphVectorTest.getGlyphInfo: arrays first differed at element [4]; expected:<0.4375> but was:<0.0>
 		StandardGlyphVectorTest.getVisualBounds_Fixed: returns Logical Bounds
 		StandardGlyphVectorTest.getVisualBounds_Fractional: returns Logical Bounds

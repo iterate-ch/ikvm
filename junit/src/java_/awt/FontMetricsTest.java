@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 
 public class FontMetricsTest {
 
-    private static ReferenceData reference;
+    protected static ReferenceData reference;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -53,7 +53,7 @@ public class FontMetricsTest {
     }
 
     @SuppressWarnings( "deprecation" )
-    private FontMetrics getFontMetrics() {
+    protected FontMetrics getFontMetrics() {
         Font font = new Font( "Arial", 0, 12 );
         return Toolkit.getDefaultToolkit().getFontMetrics( font );
     }

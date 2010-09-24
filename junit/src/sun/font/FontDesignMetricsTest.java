@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
+  Copyright (C) 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,20 +20,28 @@
   Jeroen Frijters
   jeroen@frijters.net
   
-*/
+ */
 package sun.font;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Toolkit;
 
+import org.junit.BeforeClass;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-    Font2DTest.class,
-    FontDesignMetricsTest.class,
-    FontStrikeTest.class,
-    StandardGlyphVectorTest.class,
-})
-public class AllTests{
-    //Nothing
+import java_.awt.FontMetricsTest;
+import junit.ikvm.ReferenceData;
+
+public class FontDesignMetricsTest extends FontMetricsTest{
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        reference = new ReferenceData();
+    }
+
+    @Override
+    protected FontMetrics getFontMetrics() {
+        Font font = new Font( "Arial", 0, 12 );
+        return FontDesignMetrics.getMetrics( font );
+    }
 }
