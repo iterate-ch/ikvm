@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2009, 2010 Volker Berlin (i-net software)
+  Copyright (C) 2010 Karsten Heinrich (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +38,9 @@ import org.junit.runners.Suite;
     GraphicsDeviceTest.class,
     GraphicsEnvironmentTest.class,
     ToolkitTest.class,
-    WindowTest.class
+    WindowTest.class,
+    LabelTest.class,
+    ButtonTest.class
 })
 public class AllTests{
     //Nothing
