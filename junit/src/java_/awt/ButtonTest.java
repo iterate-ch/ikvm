@@ -26,7 +26,7 @@ package java_.awt;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.Button;
-import java.awt.Rectangle;
+import java.awt.Point;
 import java.awt.peer.ComponentPeer;
 import java.awt.peer.ButtonPeer;
 
@@ -69,16 +69,16 @@ public class ButtonTest {
 	}
 	
 	@Test
-	public void setBounds(){
+	public void getLocation() throws Exception{
 		// basically check ComponentPeer.reshape
-		Frame f = new Frame();		
+		Frame f = new Frame();	
 		Button l = new Button("label");
 		f.add( l );
 		try{
 			f.setVisible( true );
-			Rectangle newbounds = l.getBounds();
-			reference.assertEquals("ButtonBounds", newbounds.toString() );
-			System.out.println(newbounds);
+			f.pack();
+			Point location = l.getLocation();
+			reference.assertEquals("getLocation", location );
 		} finally {
 			f.setVisible(false);
 			f.dispose();

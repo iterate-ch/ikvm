@@ -12,11 +12,10 @@ IKVM:
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
 		IPv6Test.udp: IPv6 problem
-	Failures: 22
+	Failures: 21
 	    java.awt.GraphicsTest.setComposite_Alpha_SRC_OVER: Composite not implemented and will be ignored
 		GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
 		GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
-		ButtonTest.setBounds: thread problem
 		PrinterJobTest.defaultPage: integer instead floats
 		PrintServiceTest.getAttribute: expected:<null> but was:<unknown>
 		PrintServiceTest.getAttributes: null versus unknown
