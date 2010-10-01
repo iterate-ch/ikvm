@@ -26,14 +26,18 @@ package java_.awt;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 
 import junit.ikvm.ReferenceData;
 
 import org.junit.*;
+
+import sun.font.StandardGlyphVector;
 
 
 
@@ -103,5 +107,31 @@ public class GraphicsTest{
         g.fillRect( 30, 0, 40, 100 );
         reference.assertEquals( "setComposite_Alpha_SRC_OVER", img );
         g.dispose();
+    }
+    
+    @Test
+    public void drawString() throws Exception{
+        Font font = new Font( "Arial", 0, 12 );
+        
+        BufferedImage img = new BufferedImage( 100, 25, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setFont(font);
+        g.drawString( "any text", 10, 20 );
+        g.dispose();
+        reference.assertEqualsMetrics( "drawString", img );
+        
+    }
+    
+    @Test
+    public void drawGlyphVector() throws Exception{
+        Font font = new Font( "Arial", 0, 12 );
+        FontRenderContext frc = new FontRenderContext( null, true, true );
+        StandardGlyphVector gv = new StandardGlyphVector( font, "any text", frc );
+        
+        BufferedImage img = new BufferedImage( 100, 25, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.drawGlyphVector( gv, 10, 20 );
+        g.dispose();
+        reference.assertEqualsMetrics( "drawGlyphVector", img );
     }
 }

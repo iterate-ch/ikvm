@@ -12,22 +12,23 @@ IKVM:
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
 		IPv6Test.udp: IPv6 problem
-	Failures: 24
+	Failures: 25
 	    java.awt.GraphicsTest.setComposite_Alpha_SRC_OVER: Composite not implemented and will be ignored
-		GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
-		GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
-		PrinterJobTest.defaultPage: integer instead floats
-		PrintServiceTest.getAttribute: expected:<null> but was:<unknown>
-		PrintServiceTest.getAttributes: null versus unknown
-		PrintServiceTest.getDefaultAttributeValue: JobName expected:<[Java Printing]> but was:<[null]>
-		PrintServiceTest.getSupportedAttributeValues: JobName expected:<[Java Printing]> but was:<[null]>
-		ShellFolderTest.getRoots(): Java list also files for "C:\Users\Public" for the Desktop
+	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
+		java.awt.GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
+		java.awt.GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
+		java.awt.print.PrinterJobTest.defaultPage: integer instead floats
+		javax.print.PrintServiceTest.getAttribute: expected:<null> but was:<unknown>
+		javax.print.PrintServiceTest.getAttributes: null versus unknown
+		javax.print.PrintServiceTest.getDefaultAttributeValue: JobName expected:<[Java Printing]> but was:<[null]>
+		javax.print.PrintServiceTest.getSupportedAttributeValues: JobName expected:<[Java Printing]> but was:<[null]>
+		sun.awt.shell.ShellFolderTest.getRoots(): Java list also files for "C:\Users\Public" for the Desktop
 		....
-		FontDesignMetricsTest.stringWidth: rounding problem, one pixel
-		FontStrikeTest.getGlyphMetrics: floating instead of integer value
-		StandardGlyphVectorTest.getGlyphInfo: arrays first differed at element [4]; expected:<0.4375> but was:<0.0>
-		StandardGlyphVectorTest.getVisualBounds_Fixed: returns Logical Bounds
-		StandardGlyphVectorTest.getVisualBounds_Fractional: returns Logical Bounds
+		sun.font.FontDesignMetricsTest.stringWidth: rounding problem, one pixel
+		sun.font.FontStrikeTest.getGlyphMetrics: floating instead of integer value
+		sun.font.StandardGlyphVectorTest.getGlyphInfo: arrays first differed at element [4]; expected:<0.4375> but was:<0.0>
+		sun.font.StandardGlyphVectorTest.getVisualBounds_Fixed: returns Logical Bounds
+		sun.font.StandardGlyphVectorTest.getVisualBounds_Fractional: returns Logical Bounds
 
 
 		

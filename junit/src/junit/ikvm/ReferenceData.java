@@ -23,6 +23,7 @@
  */
 package junit.ikvm;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 import org.junit.Assert;
+
 import static org.junit.Assert.fail;
 
 /**
@@ -174,6 +176,57 @@ public class ReferenceData{
         	    ImageIO.write( img, "png", imgFile );
         	}
         }
+    }
+    
+    /**
+     * Asserts that the size of the draw object in the middle of the images are equal with which come from Sun VM and IKVM run.
+     * @param key The key in the reference data. It must be unique for the class that create this ReferenceData
+     * @param img A Image that contain some graphics object. The border pixel must be identical color.
+     */
+    public void assertEqualsMetrics( String key, BufferedImage img ) throws Exception{
+        int color = img.getRGB(0, 0);
+        int height = img.getHeight();
+        int width = img.getWidth();
+        
+        int y1 = 0;       
+        L: for(; y1 < height; y1++){
+            for(int x = 0; x < width; x++){
+                if(img.getRGB(x, y1) != color){
+                    break L;
+                }
+            }
+        }
+        
+        int y2 = height-1;       
+        L: for(; y2 >=0; y2--){
+            for(int x = 0; x < width; x++){
+                if(img.getRGB(x, y2) != color){
+                    break L;
+                }
+            }
+        }
+        
+        int x1 = 0;       
+        L: for(; x1 < width; x1++){
+            for(int y = 0; y < height; y++){
+                if(img.getRGB(x1, y) != color){
+                    break L;
+                }
+            }
+        }
+        
+        int x2 = width - 1;       
+        L: for(; x2 >= 0; x2--){
+            for(int y = 0; y < height; y++){
+                if(img.getRGB(x2, y) != color){
+                    break L;
+                }
+            }
+        }
+
+        Assert.assertTrue( "Object not found x", x1 <= x2 );
+        Assert.assertTrue( "Object not found y", y1 <= y2 );
+        assertEquals( key, new Rectangle( x1, y1, x2 - x1, y2 - y1 ) );
     }
 
 }
