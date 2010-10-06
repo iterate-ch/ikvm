@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -54,7 +54,28 @@ public class FontStrikeTest{
     private FontStrike getFontStrike(Font font, FontRenderContext frc){
         return FontManager.getFont2D(font).getStrike(font, frc);
     }
+
+    @Test
+    public void getCharMetrics() throws Exception {
+        Font font = new Font( "Dialog", 0, 12 );
+        FontRenderContext frc = new FontRenderContext( null, false, false );
+        FontStrike strike = getFontStrike( font, frc );
+        Method method = strike.getClass().getDeclaredMethod( "getCharMetrics", Character.TYPE );
+        method.setAccessible( true );
+        Point2D.Float value = (Point2D.Float)method.invoke( strike, 'a' );
+        reference.assertEquals( "getCharMetrics", value );
+    }
     
+    @Test
+    public void getCodePointAdvance() throws Exception {
+        Font font = new Font( "Dialog", 0, 12 );
+        FontRenderContext frc = new FontRenderContext( null, false, false );
+        FontStrike strike = getFontStrike( font, frc );
+        Method method = strike.getClass().getDeclaredMethod( "getCodePointAdvance", Integer.TYPE );
+        method.setAccessible( true );
+        Float value = (Float)method.invoke( strike, 'a' );
+        reference.assertEquals( "getCodePointAdvance", value );
+    }
     
     @Test
     public void getGlyphMetrics() throws Exception{
