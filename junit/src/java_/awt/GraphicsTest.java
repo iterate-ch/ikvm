@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -29,6 +29,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
+import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
@@ -133,5 +135,21 @@ public class GraphicsTest{
         g.drawGlyphVector( gv, 10, 20 );
         g.dispose();
         reference.assertEqualsMetrics( "drawGlyphVector", img );
+    }
+    
+    @Test
+    public void setLinearGradientPaint() throws Exception{
+        setLinearGradientPaint( CycleMethod.NO_CYCLE );
+        setLinearGradientPaint( CycleMethod.REFLECT );
+        setLinearGradientPaint( CycleMethod.REPEAT );
+    }
+    
+    private void setLinearGradientPaint( CycleMethod cycle ) throws Exception{
+        BufferedImage img = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setPaint( new LinearGradientPaint(0,0, 40, 80, new float[]{0.0F, 0.2F, 0.7F, 1.0F}, new Color[]{Color.GREEN, Color.RED, Color.YELLOW, Color.GREEN}, cycle ) );
+        g.fillRect( 0, 0, 100, 100 );
+        g.dispose();
+        reference.assertEquals( "setLinearGradientPaint " + cycle, img, 0.05 );
     }
 }

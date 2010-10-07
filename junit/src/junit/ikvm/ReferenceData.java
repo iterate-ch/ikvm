@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -23,6 +23,7 @@
  */
 package junit.ikvm;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -137,7 +138,23 @@ public class ReferenceData{
      *            difference occur then a second png file will be saved which ended with _ikvm. This make it easer to
      *            see the image differences.
      */
-    public void assertEquals(String key, BufferedImage img) throws Exception{
+    public void assertEquals( String key, BufferedImage img ) throws Exception {
+        assertEquals( key, img, 0.0 );
+    }
+    
+    /**
+     * Asserts that two images are equal which come from Sun VM and IKVM run.
+     * 
+     * @param key
+     *            The key in the reference data. It must be unique for the class that create this ReferenceData
+     * @param value
+     *            the value will be saved in Sun VM and compared in IKVM. The value will be saved as png image. If a
+     *            difference occur then a second png file will be saved which ended with _ikvm. This make it easer to
+     *            see the image differences.
+     * @param delta
+     *            The maximum difference between hue, saturation and brightness of every pixel
+     */
+    public void assertEquals( String key, BufferedImage img, double delta ) throws Exception {
         if(key == null){
             fail("Key is null.");
         }
@@ -156,9 +173,33 @@ public class ReferenceData{
             try{
                 Assert.assertEquals(key + " width", expected.getWidth(), img.getWidth());
                 Assert.assertEquals(key + " height", expected.getHeight(), img.getHeight());
+                float[] hsbExpected = null;
+                float[] hsbCurrent = null;
                 for(int x = 0; x < expected.getWidth(); x++){
-                    for(int y = 0; y < expected.getHeight(); y++){
-                        Assert.assertEquals(key + " pixel " + x + "," + y, expected.getRGB(x, y), img.getRGB(x, y));
+                    for( int y = 0; y < expected.getHeight(); y++ ) {
+                        int rgbExpected = expected.getRGB( x, y );
+                        int rgbCurrent = img.getRGB( x, y );
+                        if( delta > 0 ) {
+                            hsbExpected =
+                                            Color.RGBtoHSB( (rgbExpected >> 16) & 0xFF, (rgbExpected >> 8) & 0xFF, (rgbExpected) & 0xFF, hsbExpected );
+                            hsbCurrent =
+                                            Color.RGBtoHSB( (rgbCurrent >> 16) & 0xFF, (rgbCurrent >> 8) & 0xFF, (rgbCurrent) & 0xFF, hsbCurrent );
+                            try {
+                                Assert.assertEquals( key + " pixel hue " + x + "," + y, hsbExpected[0], hsbCurrent[0], delta );
+                            } catch( Error e ) {
+                                try {
+                                    float newCurrent = hsbCurrent[0] + hsbCurrent[0] < 0.5F ? 1 : -1;
+                                    Assert.assertEquals( key + " pixel hue " + x + "," + y, hsbExpected[0], newCurrent, delta );
+                                } catch( Exception e1 ) {
+                                    // throw the first exception
+                                    throw e;
+                                }
+                            }
+                            Assert.assertEquals( key + " pixel saturation " + x + "," + y, hsbExpected[1], hsbCurrent[1], delta );
+                            Assert.assertEquals( key + " pixel brightness " + x + "," + y, hsbExpected[2], hsbCurrent[2], delta );
+                        } else {
+                            Assert.assertEquals( key + " pixel " + x + "," + y, rgbExpected, rgbCurrent );
+                        }
                     }
                 }
             }catch(Error ex){
