@@ -25,7 +25,9 @@ package sun.font;
 
 import java.awt.*;
 import java.awt.font.*;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 import junit.ikvm.ReferenceData;
 
@@ -34,6 +36,8 @@ import org.junit.*;
 public class StandardGlyphVectorTest {
 
     private static ReferenceData reference;
+
+    private static int           FONT_SIZE = 36;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -49,7 +53,7 @@ public class StandardGlyphVectorTest {
     }
 
     private StandardGlyphVector create( String text, boolean antialias, boolean useFractional ) {
-        Font font = new Font( "Arial", 0, 12 );
+        Font font = new Font( "Arial", 0, FONT_SIZE );
         FontRenderContext frc = new FontRenderContext( null, antialias, useFractional );
         return new StandardGlyphVector( font, text, frc );
     }
@@ -73,7 +77,7 @@ public class StandardGlyphVectorTest {
         StandardGlyphVector sgv = create( "any Text", false, true );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
         reference.assertEquals( "getLogicalBounds_Fractional", bounds );
-        
+
         sgv = create( "any large Text with many fffffffffffffffffffffffffffffff's and some spaces    ", false, true );
         bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
         reference.assertEquals( "getLogicalBounds_Fractional large", bounds );
@@ -91,7 +95,7 @@ public class StandardGlyphVectorTest {
         StandardGlyphVector sgv = create( "any Text", true, true );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
         reference.assertEquals( "getLogicalBounds_Antialias_Fractional", bounds );
-        
+
         sgv = create( "any large Text with many fffffffffffffffffffffffffffffff's and some spaces    ", true, true );
         bounds = (Rectangle2D.Float)sgv.getLogicalBounds();
         reference.assertEquals( "getLogicalBounds_Antialias_Fractional large", bounds );
@@ -101,13 +105,28 @@ public class StandardGlyphVectorTest {
     public void getVisualBounds_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getVisualBounds();
-        reference.assertEquals( "getgetVisualBounds_Fractional", bounds );
+        reference.assertEquals( "getVisualBounds_Fixed", bounds );
     }
 
     @Test
     public void getVisualBounds_Fractional() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, true );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getVisualBounds();
-        reference.assertEquals( "getgetVisualBounds_Fractional", bounds );
+        reference.assertEquals( "getVisualBounds_Fractional", bounds );
+    }
+
+    @Test
+    public void getOutline() throws Exception {
+        StandardGlyphVector sgv = create( "some Text", false, true );
+        GeneralPath shape = (GeneralPath)sgv.getOutline( 0, FONT_SIZE );
+        BufferedImage img = new BufferedImage( FONT_SIZE * 5, FONT_SIZE + 10, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setColor( Color.WHITE );
+        g.fillRect( 0, 0, img.getWidth(), img.getHeight() );
+        g.setColor( Color.BLUE.darker() );
+        g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+        g.fill( shape );
+        g.dispose();
+        reference.assertEquals( "getOutline_img", img, 0.17, true );
     }
 }

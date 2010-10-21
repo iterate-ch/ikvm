@@ -139,7 +139,7 @@ public class ReferenceData{
      *            see the image differences.
      */
     public void assertEquals( String key, BufferedImage img ) throws Exception {
-        assertEquals( key, img, 0.0 );
+        assertEquals( key, img, 0.0, false );
     }
     
     /**
@@ -153,70 +153,152 @@ public class ReferenceData{
      *            see the image differences.
      * @param delta
      *            The maximum difference between hue, saturation and brightness of every pixel
+     * @param useMediumValue
+     *            if true then compare the medium value of 9 pixel instead of every pixel
      */
-    public void assertEquals( String key, BufferedImage img, double delta ) throws Exception {
-        if(key == null){
-            fail("Key is null.");
+    public void assertEquals( String key, BufferedImage img, double delta, boolean useMediumValue ) throws Exception {
+        if( key == null ) {
+            fail( "Key is null." );
         }
-        File imgFile = new File(file.getParent(), key + ".png");
-        if(IKVM){
-            if( imgFile.length() == 0 ){
+        File imgFile = new File( file.getParent(), key + ".png" );
+        if( IKVM ) {
+            if( imgFile.length() == 0 ) {
                 Assert.assertEquals( key, null, img );
             }
             BufferedImage expected = ImageIO.read( imgFile );
-            File file_ikvm = new File(file.getParent(), key + "_ikvm.png");
+            File file_ikvm = new File( file.getParent(), key + "_ikvm.png" );
             file_ikvm.delete();
-            if(expected == null){
-                fail("No Reference value for key:" + key + NO_DATA_MSG);
+            if( expected == null ) {
+                fail( "No Reference value for key:" + key + NO_DATA_MSG );
                 return;
             }
-            try{
-                Assert.assertEquals(key + " width", expected.getWidth(), img.getWidth());
-                Assert.assertEquals(key + " height", expected.getHeight(), img.getHeight());
+            try {
+                Assert.assertEquals( key + " width", expected.getWidth(), img.getWidth() );
+                Assert.assertEquals( key + " height", expected.getHeight(), img.getHeight() );
                 float[] hsbExpected = null;
                 float[] hsbCurrent = null;
-                for(int x = 0; x < expected.getWidth(); x++){
+                for( int x = 0; x < expected.getWidth(); x++ ) {
                     for( int y = 0; y < expected.getHeight(); y++ ) {
                         int rgbExpected = expected.getRGB( x, y );
                         int rgbCurrent = img.getRGB( x, y );
+                        String pixelName = key + " pixel " + x + "," + y;
                         if( delta > 0 ) {
-                            hsbExpected =
-                                            Color.RGBtoHSB( (rgbExpected >> 16) & 0xFF, (rgbExpected >> 8) & 0xFF, (rgbExpected) & 0xFF, hsbExpected );
-                            hsbCurrent =
-                                            Color.RGBtoHSB( (rgbCurrent >> 16) & 0xFF, (rgbCurrent >> 8) & 0xFF, (rgbCurrent) & 0xFF, hsbCurrent );
+                            hsbExpected = rgbToHSB( rgbExpected, hsbExpected );
+                            hsbCurrent = rgbToHSB( rgbCurrent, hsbCurrent );
                             try {
-                                Assert.assertEquals( key + " pixel hue " + x + "," + y, hsbExpected[0], hsbCurrent[0], delta );
+                                assertEqualsColor( pixelName, hsbExpected, hsbCurrent, delta );
                             } catch( Error e ) {
-                                try {
-                                    float newCurrent = hsbCurrent[0] + hsbCurrent[0] < 0.5F ? 1 : -1;
-                                    Assert.assertEquals( key + " pixel hue " + x + "," + y, hsbExpected[0], newCurrent, delta );
-                                } catch( Exception e1 ) {
-                                    // throw the first exception
+                                if( useMediumValue ){
+                                    getMediumHSB( expected, x, y, hsbExpected );
+                                    getMediumHSB( img, x, y, hsbCurrent );
+                                    try {
+                                        assertEqualsColor( pixelName, hsbExpected, hsbCurrent, delta );
+                                    } catch( Error e1 ) {
+                                        // throw the first exception
+                                        throw e;
+                                    }
+                                } else {
                                     throw e;
                                 }
                             }
-                            Assert.assertEquals( key + " pixel saturation " + x + "," + y, hsbExpected[1], hsbCurrent[1], delta );
-                            Assert.assertEquals( key + " pixel brightness " + x + "," + y, hsbExpected[2], hsbCurrent[2], delta );
                         } else {
                             Assert.assertEquals( key + " pixel " + x + "," + y, rgbExpected, rgbCurrent );
                         }
                     }
                 }
-            }catch(Error ex){
+            } catch( Error ex ) {
                 // save the IKVM result for better compare the differences
-                ImageIO.write(img, "png", file_ikvm);
+                ImageIO.write( img, "png", file_ikvm );
                 throw ex;
             }
-        }else{
-        	file.getParentFile().mkdirs();
-        	if( img == null ){
-        	    // create a empty file
-        	    imgFile.delete();
-        	    imgFile.createNewFile();
-        	} else {
-        	    ImageIO.write( img, "png", imgFile );
-        	}
+        } else {
+            file.getParentFile().mkdirs();
+            if( img == null ) {
+                // create a empty file
+                imgFile.delete();
+                imgFile.createNewFile();
+            } else {
+                ImageIO.write( img, "png", imgFile );
+            }
         }
+    }
+    
+    /**
+     * Compare 2 HSB color values with a delta
+     * 
+     * @param key
+     *            message for assert
+     * @param hsbExpected
+     *            expected value
+     * @param hsbCurrent
+     *            current value
+     * @param delta
+     *            the delta
+     */
+    public static void assertEqualsColor( String key, float[] hsbExpected, float[] hsbCurrent, double delta ) {
+        try {
+            Assert.assertEquals( key + " hue", hsbExpected[0], hsbCurrent[0], delta );
+        } catch( Error e ) {
+            try {
+                float newCurrent = hsbCurrent[0] + hsbCurrent[0] < 0.5F ? 1 : -1;
+                Assert.assertEquals( key + " hue", hsbExpected[0], newCurrent, delta );
+            } catch( Error e1 ) {
+                // throw the first exception
+                throw e;
+            }
+        }
+        Assert.assertEquals( key + " saturation", hsbExpected[1], hsbCurrent[1], delta );
+        Assert.assertEquals( key + " brightness", hsbExpected[2], hsbCurrent[2], delta );
+    }
+    
+    /**
+     * Calculate the medium of 9 pixel
+     * 
+     * @param img
+     *            the pixel source
+     * @param x
+     *            the x position of the middle
+     * @param y
+     *            the y position of the middle
+     * @param hsb
+     *            the array used to return the three HSB values, or null
+     * @return the hsb value
+     */
+    private float[] getMediumHSB( BufferedImage img, int x, int y, float[] hsb ) {
+        int r = 0, g = 0, b = 0;
+        int count = 0;
+
+        int minX = Math.max( x - 1, 0 );
+        int maxX = Math.min( x + 1, img.getWidth() - 1 );
+        int minY = Math.max( 0, y - 1 );
+        int maxY = Math.min( y + 1, img.getHeight() - 1 );
+        for( int i = minX; i <= maxX; i++ ) {
+            for( int j = minY; j <= maxY; j++ ) {
+                int rgb = img.getRGB( i, j );
+                r += (rgb >> 16) & 0xFF;
+                g += (rgb >> 8) & 0xFF;
+                b += (rgb >> 0) & 0xFF;
+                count++;
+            }
+        }
+        return Color.RGBtoHSB( r / count, g / count, b / count, hsb );
+    }
+    
+    /**
+     * Converts the rgb color to an equivalent set of values for hue, saturation, and brightness that are the three
+     * components of the HSB model.
+     * 
+     * If the hsb argument is null, then a new array is allocated to return the result. Otherwise, the method returns
+     * the array hsb, with the values put into that array.
+     * 
+     * @param rgb
+     *            the rgb value
+     * @param hsb
+     *            the array used to return the three HSB values, or null
+     * @return the the hsb value
+     */
+    private float[] rgbToHSB( int rgb, float[] hsb ) {
+        return Color.RGBtoHSB( (rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, (rgb) & 0xFF, hsb );
     }
     
     /**

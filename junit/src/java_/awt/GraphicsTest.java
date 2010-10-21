@@ -150,6 +150,6 @@ public class GraphicsTest{
         g.setPaint( new LinearGradientPaint(0,0, 40, 80, new float[]{0.0F, 0.2F, 0.7F, 1.0F}, new Color[]{Color.GREEN, Color.RED, Color.YELLOW, Color.GREEN}, cycle ) );
         g.fillRect( 0, 0, 100, 100 );
         g.dispose();
-        reference.assertEquals( "setLinearGradientPaint " + cycle, img, 0.05 );
+        reference.assertEquals( "setLinearGradientPaint " + cycle, img, 0.05, false );
     }
 }
