@@ -12,7 +12,7 @@ IKVM:
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
 		IPv6Test.udp: IPv6 problem
-	Failures: 23
+	Failures: 22
 	    java.awt.GraphicsTest.setComposite_Alpha_SRC_OVER: Composite not implemented and will be ignored
 	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
 		java.awt.GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
@@ -26,8 +26,7 @@ IKVM:
 		....
 		sun.font.FontDesignMetricsTest.stringWidth: rounding problem, one pixel 269 but was 268
 		sun.font.StandardGlyphVectorTest.getGlyphInfo: arrays first differed at element [4]; expected:<0.4375> but was:<0.0>
-		sun.font.StandardGlyphVectorTest.getVisualBounds_Fixed: returns Logical Bounds
-		sun.font.StandardGlyphVectorTest.getVisualBounds_Fractional: returns Logical Bounds
+		sun.font.StandardGlyphVectorTest.getVisualBounds_Fixed: There seems spaces on start and ending
 
 
 		
