@@ -26,6 +26,7 @@ package java_.awt;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -38,6 +39,7 @@ import java.awt.image.*;
 import junit.ikvm.ReferenceData;
 
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import sun.font.StandardGlyphVector;
 
@@ -101,13 +103,50 @@ public class GraphicsTest{
     }
     
     @Test
-    public void setComposite_Alpha_SRC_OVER() throws Exception {
+    public void setComposite_Null() throws Exception {
         BufferedImage img = createTestImage();
         Graphics2D g = (Graphics2D)img.getGraphics();
-        g.setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 0.5F ) );
-        g.setColor( Color.BLUE );
+        try {
+            g.setComposite(null);
+            fail("Exception expected");
+        } catch( Exception e ) {
+            reference.assertEquals( "setComposite_Null", e.toString() );;
+        }
+    }
+
+    @Test
+    public void setComposite_Alpha_CLEAR() throws Exception {
+        setComposite( "setComposite_Alpha_CLEAR", AlphaComposite.getInstance( AlphaComposite.CLEAR, 128F/255F ) );
+    }
+    
+    @Test
+    public void setComposite_Alpha_SRC() throws Exception {
+        setComposite( "setComposite_Alpha_SRC", AlphaComposite.getInstance( AlphaComposite.SRC, 128F/255F ) );
+    }
+    
+    @Test
+    public void setComposite_Alpha_SRC_OVER() throws Exception {
+        setComposite( "setComposite_Alpha_SRC_OVER", AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 128F/255F ) );
+    }
+    
+    @Test
+    public void setComposite_Alpha_DST() throws Exception {
+        setComposite( "setComposite_Alpha_DST", AlphaComposite.getInstance( AlphaComposite.DST, 128F/255F ) );
+    }
+    
+    private void setComposite(String key, Composite composite) throws Exception{
+        BufferedImage img = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setColor( Color.RED );
+        g.drawLine( 0, 5, 100, 5 ); // line in the background
+        
+        g.setColor( Color.BLUE ); // set the color before composite
+        g.setComposite( composite );
+        g.drawImage( createTestImage(), 0, 0, null );
         g.fillRect( 30, 0, 40, 100 );
-        reference.assertEquals( "setComposite_Alpha_SRC_OVER", img );
+        g.setColor( Color.GREEN );
+        g.fillRect( 0, 70, 100, 30 );
+        reference.assertEquals( key, img, 0.005, false );
         g.dispose();
     }
     
