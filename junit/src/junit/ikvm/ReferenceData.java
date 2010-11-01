@@ -213,6 +213,7 @@ public class ReferenceData{
                             hsbCurrent = rgbToHSB( rgbCurrent, hsbCurrent );
                             try {
                                 assertEqualsColor( pixelName, hsbExpected, hsbCurrent, delta );
+                                Assert.assertEquals( pixelName + " alpha", ((rgbExpected >> 24) & 0xFF)/255.0, ((rgbCurrent >> 24) & 0xFF)/255.0, delta);
                             } catch( Error e ) {
                                 if( useMediumValue ){
                                     getMediumHSB( expected, x, y, hsbExpected );
