@@ -1,4 +1,4 @@
-Test Count: 125
+Test Count: 138
 
 Java 6 VM:
 	Errors: 1
@@ -12,7 +12,7 @@ IKVM:
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
 		IPv6Test.udp: IPv6 problem
-	Failures: 21
+	Failures: 26
 	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
 		java.awt.GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
 		java.awt.GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
@@ -24,8 +24,13 @@ IKVM:
 		sun.awt.shell.ShellFolderTest.getRoots(): Java list also files for "C:\Users\Public" for the Desktop
 		....
 		sun.font.FontDesignMetricsTest.stringWidth: rounding problem, one pixel 269 but was 268
-		sun.font.StandardGlyphVectorTest.getGlyphInfo: arrays first differed at element [4]; expected:<0.4375> but was:<0.0>
+		sun.font.StandardGlyphVectorTest.getGlyphInfo_Fixed: rounding problem in width
+		sun.font.StandardGlyphVectorTest.getGlyphLogicalBounds_Fixed: rounding problem in width
 		sun.font.StandardGlyphVectorTest.getVisualBounds_Fixed: There seems spaces on start and ending
+		sun.font.StandardGlyphVectorTest.getGlyphPosition_Fixed: rounding problem in width
+		sun.font.StandardGlyphVectorTest.getGlyphPositions_Fixed: rounding problem in width
+		sun.font.StandardGlyphVectorTest.getGlyphPositions_sub_Fixed: rounding problem in width
+		sun.font.StandardGlyphVectorTest.getGlyphMetrics_Fixed: rounding problem in width
 
 
 		

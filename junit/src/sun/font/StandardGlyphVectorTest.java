@@ -26,6 +26,7 @@ package sun.font;
 import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -60,10 +61,23 @@ public class StandardGlyphVectorTest {
     }
 
     @Test
-    public void getGlyphInfo() throws Exception {
+    public void getGlyphInfo_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
         float[] info = sgv.getGlyphInfo();
-        reference.assertEquals( "getGlyphInfo", info );
+        reference.assertEquals( "getGlyphInfo_Fixed", info );
+    }
+
+    @Test
+    public void getGlyphInfo_Fractional() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, true );
+        float[] info = sgv.getGlyphInfo();
+
+        reference.assertEquals( "getGlyphInfo_Fractional.length", info.length );
+        for( int i = 0; i < info.length; i++ ) {
+            float value = info[i];
+            float delta = i % 8 >= 4 ? Math.abs( value / 100 ) : 0;
+            reference.assertEquals( "getGlyphInfo_Fractional " + i, value, delta );
+        }
     }
 
     @Test
@@ -103,6 +117,26 @@ public class StandardGlyphVectorTest {
     }
 
     @Test
+    public void getGlyphLogicalBounds_Fixed() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, false );
+        for( int i = 0; i < sgv.getNumGlyphs(); i++ ) {
+            Shape shape = sgv.getGlyphLogicalBounds( i );
+            Rectangle2D.Float bounds = (Rectangle2D.Float)shape.getBounds2D();
+            reference.assertEquals( "getGlyphLogicalBounds_Fixed " + i, bounds );
+        }
+    }
+
+    @Test
+    public void getGlyphLogicalBounds_Fractional() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, true );
+        for( int i = 0; i < sgv.getNumGlyphs(); i++ ) {
+            Shape shape = sgv.getGlyphLogicalBounds( i );
+            Rectangle2D.Float bounds = (Rectangle2D.Float)shape.getBounds2D();
+            reference.assertEquals( "getGlyphLogicalBounds_Fractional " + i, bounds );
+        }
+    }
+
+    @Test
     public void getVisualBounds_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getVisualBounds();
@@ -118,7 +152,7 @@ public class StandardGlyphVectorTest {
     public void getVisualBounds_Fractional() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, true );
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getVisualBounds();
-        
+
         reference.assertEquals( "getVisualBounds_Fractional.x", bounds.x, bounds.x / 100 );
         reference.assertEquals( "getVisualBounds_Fractional.y", bounds.y, -bounds.y / 100 );
         reference.assertEquals( "getVisualBounds_Fractional.width", bounds.width, bounds.width / 100 );
@@ -127,11 +161,37 @@ public class StandardGlyphVectorTest {
     }
 
     @Test
+    public void getGlyphVisualBounds_Fixed() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, true );
+        for( int i = 0; i < sgv.getNumGlyphs(); i++ ) {
+            Shape shape = sgv.getGlyphVisualBounds( i );
+            Rectangle2D.Float bounds = (Rectangle2D.Float)shape.getBounds2D();
+            reference.assertEquals( "getGlyphVisualBounds_Fixed.x " + i, bounds.x, bounds.x / 100 );
+            reference.assertEquals( "getGlyphVisualBounds_Fixed.y " + i, bounds.y, -bounds.y / 100 );
+            reference.assertEquals( "getGlyphVisualBounds_Fixed.width " + i, bounds.width, bounds.width / 100 );
+            reference.assertEquals( "getGlyphVisualBounds_Fixed.height " + i, bounds.height, bounds.height / 100 );
+        }
+    }
+
+    @Test
+    public void getGlyphVisualBounds_Fractional() throws Exception {
+        StandardGlyphVector sgv = create( "any Text", false, true );
+        for( int i = 0; i < sgv.getNumGlyphs(); i++ ) {
+            Shape shape = sgv.getGlyphVisualBounds( i );
+            Rectangle2D.Float bounds = (Rectangle2D.Float)shape.getBounds2D();
+            reference.assertEquals( "getGlyphVisualBounds_Fractional.x " + i, bounds.x, bounds.x / 100 );
+            reference.assertEquals( "getGlyphVisualBounds_Fractional.y " + i, bounds.y, -bounds.y / 100 );
+            reference.assertEquals( "getGlyphVisualBounds_Fractional.width " + i, bounds.width, bounds.width / 100 );
+            reference.assertEquals( "getGlyphVisualBounds_Fractional.height " + i, bounds.height, bounds.height / 100 );
+        }
+    }
+
+    @Test
     public void getOutline() throws Exception {
         StandardGlyphVector sgv = create( " ", false, true );
         GeneralPath shape = (GeneralPath)sgv.getOutline( 0, FONT_SIZE );
         assertTrue( "empty shape", shape.getPathIterator( null ).isDone() );
-        
+
         sgv = create( "some Text", false, true );
         shape = (GeneralPath)sgv.getOutline( 0, FONT_SIZE );
         BufferedImage img = new BufferedImage( FONT_SIZE * 5, FONT_SIZE + 10, BufferedImage.TYPE_INT_ARGB );
@@ -143,5 +203,105 @@ public class StandardGlyphVectorTest {
         g.fill( shape );
         g.dispose();
         reference.assertEquals( "getOutline_img", img, 0.17, true );
+    }
+
+    @Test
+    public void getGlyphPosition_Fixed() {
+        StandardGlyphVector sgv = create( "my Text", false, false );
+        for( int i = 0; i <= sgv.getNumGlyphs(); i++ ) {
+            Point2D.Float point = (Point2D.Float)sgv.getGlyphPosition( i );
+            reference.assertEquals( "getGlyphPosition_Fixed " + i, point );
+            try {
+                sgv.getGlyphPosition( sgv.getNumGlyphs() + 1 );
+                fail( "ArrayIndexOutOfBoundsException expected" );
+            } catch( ArrayIndexOutOfBoundsException e ) {
+                // expected
+            }
+        }
+    }
+
+    @Test
+    public void getGlyphPosition_Fractional() {
+        StandardGlyphVector sgv = create( "my Text", false, true );
+        for( int i = 0; i <= sgv.getNumGlyphs(); i++ ) {
+            Point2D.Float point = (Point2D.Float)sgv.getGlyphPosition( i );
+            reference.assertEquals( "getGlyphPosition_Fractional " + i, point );
+        }
+        try {
+            sgv.getGlyphPosition( sgv.getNumGlyphs() + 1 );
+            fail( "ArrayIndexOutOfBoundsException expected" );
+        } catch( ArrayIndexOutOfBoundsException e ) {
+            // expected
+        }
+    }
+
+    @Test
+    public void getGlyphPositions_Fixed() {
+        StandardGlyphVector sgv = create( "bla bla", false, false );
+        float[] positions = sgv.getGlyphPositions( null );
+        reference.assertEquals( "getGlyphPositions_Fixed", positions );
+    }
+
+    @Test
+    public void getGlyphPositions_Fractional() {
+        StandardGlyphVector sgv = create( "bla bla", false, true );
+        float[] positions = sgv.getGlyphPositions( null );
+        reference.assertEquals( "getGlyphPositions_Fractional", positions );
+    }
+
+    @Test
+    public void getGlyphPositions_sub_Fixed() {
+        StandardGlyphVector sgv = create( "bla bla", false, false );
+        float[] positions = sgv.getGlyphPositions( 1, 3, null );
+        reference.assertEquals( "getGlyphPositions_sub_Fixed", positions );
+    }
+
+    @Test
+    public void getGlyphPositions_sub_Fractional() {
+        StandardGlyphVector sgv = create( "bla bla", false, true );
+        float[] positions = sgv.getGlyphPositions( 1, 3, null );
+        reference.assertEquals( "getGlyphPositions_sub_Fractional", positions );
+    }
+
+    @Test
+    public void getGlyphMetrics_Fixed() {
+        StandardGlyphVector sgv = create( "xyz asd", false, false );
+        for( int i = 0; i < sgv.getNumGlyphs(); i++ ) {
+            GlyphMetrics metrics = sgv.getGlyphMetrics( i );
+                reference.assertEquals( "getGlyphMetrics_Fixed " + i + " advance", metrics.getAdvance() );
+                reference.assertEquals( "getGlyphMetrics_Fixed " + i + " type", metrics.getType() );
+                Rectangle2D.Float bounds = (Rectangle2D.Float)metrics.getBounds2D();
+                reference.assertEquals( "getGlyphMetrics_Fixed " + i + " bounds.x", bounds.x, bounds.x/100 );
+                reference.assertEquals( "getGlyphMetrics_Fixed " + i + " bounds.y", bounds.y, -bounds.y/100 );
+                reference.assertEquals( "getGlyphMetrics_Fixed " + i + " bounds.width", bounds.width, bounds.width/100 );
+                reference.assertEquals( "getGlyphMetrics_Fixed " + i + " bounds.height", bounds.height, bounds.height/100 );
+        }
+        try {
+            sgv.getGlyphMetrics( sgv.getNumGlyphs() );
+            fail( "IndexOutOfBoundsException expected" );
+        } catch( IndexOutOfBoundsException e ) {
+            // expected
+        }
+    }
+
+    @Test
+    public void getGlyphMetrics_Fractional() {
+        StandardGlyphVector sgv = create( "xyz asd", false, true );
+        for( int i = 0; i < sgv.getNumGlyphs(); i++ ) {
+            GlyphMetrics metrics = sgv.getGlyphMetrics( i );
+                reference.assertEquals( "getGlyphMetrics_Fractional " + i + " advance", metrics.getAdvance() );
+                reference.assertEquals( "getGlyphMetrics_Fractional " + i + " type", metrics.getType() );
+                Rectangle2D.Float bounds = (Rectangle2D.Float)metrics.getBounds2D();
+                reference.assertEquals( "getGlyphMetrics_Fractional " + i + " bounds.x", bounds.x, bounds.x/100 );
+                reference.assertEquals( "getGlyphMetrics_Fractional " + i + " bounds.y", bounds.y, -bounds.y/100 );
+                reference.assertEquals( "getGlyphMetrics_Fractional " + i + " bounds.width", bounds.width, bounds.width/100 );
+                reference.assertEquals( "getGlyphMetrics_Fractional " + i + " bounds.height", bounds.height, bounds.height/100 );
+        }
+        try {
+            sgv.getGlyphMetrics( sgv.getNumGlyphs() );
+            fail( "IndexOutOfBoundsException expected" );
+        } catch( IndexOutOfBoundsException e ) {
+            // expected
+        }
     }
 }
