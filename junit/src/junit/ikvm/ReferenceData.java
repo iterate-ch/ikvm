@@ -120,6 +120,7 @@ public class ReferenceData{
             }
             if(expected instanceof float[]){
                 Assert.assertArrayEquals(key, (float[])expected, (float[])value, 0.0F);
+                return;
             }
             Assert.assertEquals(key, expected, value);
         }else{
