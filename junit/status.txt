@@ -12,7 +12,7 @@ IKVM:
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
 		IPv6Test.udp: IPv6 problem
-	Failures: 26
+	Failures: 22
 	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
 		java.awt.GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
 		java.awt.GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
@@ -21,8 +21,11 @@ IKVM:
 		javax.print.PrintServiceTest.getAttributes: null versus unknown
 		javax.print.PrintServiceTest.getDefaultAttributeValue: JobName expected:<[Java Printing]> but was:<[null]>
 		javax.print.PrintServiceTest.getSupportedAttributeValues: JobName expected:<[Java Printing]> but was:<[null]>
-		sun.awt.shell.ShellFolderTest.getRoots(): Java list also files for "C:\Users\Public" for the Desktop
-		....
+		sun.awt.shell.ShellFolderTest.fileChooserIcon_ListView:
+		sun.awt.shell.ShellFolderTest.fileChooserIcon_DetailsView:
+		sun.awt.shell.ShellFolderTest.fileChooserIcon_UpFolder:
+		sun.awt.shell.ShellFolderTest.fileChooserIcon_NewFolder:
+		sun.awt.shell.ShellFolderTest.fileChooserIcon_nn:
 		sun.font.FontDesignMetricsTest.stringWidth: rounding problem, one pixel 269 but was 268
 		sun.font.StandardGlyphVectorTest.getGlyphInfo_Fixed: rounding problem in width
 		sun.font.StandardGlyphVectorTest.getGlyphLogicalBounds_Fixed: rounding problem in width

@@ -26,23 +26,39 @@ package sun.awt.shell;
 
 import static sun.awt.shell.Win32ShellFolder2.DRIVES;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.Permission;
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileSystemView;
 
+import junit.framework.JUnit4TestAdapter;
+import junit.framework.TestCase;
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
 import junit.ikvm.ReferenceData;
+import junit.textui.TestRunner;
 
 import org.junit.*;
 
-public class ShellFolderTest{
+public class ShellFolderTest {
 
     private static ReferenceData reference;
 
@@ -78,24 +94,66 @@ public class ShellFolderTest{
         }
     }
 
+    private String objectToString( Object obj ){
+    	if( !obj.getClass().isArray() ){
+    		return String.valueOf( obj );
+    	} else {
+    		Object[] array = (Object[])obj;
+    		String[] toString = new String[array.length];
+    		for( int i=0; i < array.length; i++ ){
+    			toString[i] = String.valueOf( array[i] );
+    		}
+    		return Arrays.toString(toString);
+    	}
+    }
+    
 
     @Test
     public void fileChooserDefaultFolder() throws Exception{
-        String folder = String.valueOf(ShellFolder.get("fileChooserDefaultFolder"));
+        String folder = objectToString(ShellFolder.get("fileChooserDefaultFolder"));
         reference.assertEquals("fileChooserDefaultFolder", folder);
     }
 
 
     @Test
-    public void fileChooserComboBoxFolders() throws Exception{
-        String folder = String.valueOf(ShellFolder.get("fileChooserComboBoxFolders"));
+    public void fileChooserComboBoxFolders() throws Exception{    	
+    	// Desktop
+    	// Computer
+    	// Drives
+    	// Network
+    	// home
+    	// public
+    	ShellFolder desktop = (ShellFolder)((File[])ShellFolder.get("roots"))[0];
+    	ShellFolder drives = (ShellFolder)((File[])ShellFolder.get("fileChooserShortcutPanelFolders"))[3];
+
+    	ArrayList<File> folders = new ArrayList<File>();
+        folders.add(desktop);
+        // Add all second level folders
+        File[] secondLevelFolders = drives.listFiles();
+        Arrays.sort(secondLevelFolders);
+        for (File secondLevelFolder : secondLevelFolders) {
+        	ShellFolder folder = (ShellFolder) secondLevelFolder;
+            if (!folder.isFileSystem() || folder.isDirectory()) {
+                folders.add(folder);
+                // Add third level for "My Computer"
+                if (folder.equals(drives)) {
+                    File[] thirdLevelFolders = folder.listFiles();
+                    if (thirdLevelFolders != null) {
+                        for (File thirdLevelFolder : thirdLevelFolders) {
+                            folders.add(thirdLevelFolder);
+                        }
+                    }
+                }
+            }
+        }
+        String folder = objectToString(ShellFolder.get("fileChooserComboBoxFolders"));
         reference.assertEquals("fileChooserComboBoxFolders", folder);
     }
 
 
     @Test
     public void fileChooserShortcutPanelFolders() throws Exception{
-        String folder = String.valueOf(ShellFolder.get("fileChooserShortcutPanelFolders"));
+        String folder = objectToString(ShellFolder.get("fileChooserShortcutPanelFolders"));
         reference.assertEquals("fileChooserShortcutPanelFolders", folder);
     }
 
@@ -153,7 +211,7 @@ public class ShellFolderTest{
     }
 
 
-    private String toString(File[] files){
+    private static String toString(File[] files){
         String[] names = new String[files.length];
         for(int i = 0; i < files.length; i++){
             File file = files[i];
