@@ -156,6 +156,32 @@ public class ReferenceData{
     }
     
     /**
+     * Asserts that two objects are equal which come from Sun VM and IKVM run.
+     * 
+     * @param key
+     *            The key in the reference data. It must be unique for the class that create this ReferenceData
+     * @param values
+     *            the values will be saved in Sun VM and compared in IKVM. It must be Serializable that it can be saved
+     *            and loaded on hard disk.
+     * @param delta
+     *            The maximum difference
+     */
+    public void assertEquals( String key, float[] values, float delta ) {
+        if( key == null ) {
+            fail( "Key is null." );
+        }
+        if( IKVM ) {
+            float[] expected = (float[])data.get( key );
+            if( expected == null && !data.containsKey( key ) ) {
+                fail( "No Reference value for key:" + key + NO_DATA_MSG );
+            }
+            Assert.assertArrayEquals( key, expected, values, delta );
+        } else {
+            data.put( key, values );
+        }
+    }
+    
+    /**
      * Asserts that two images are equal which come from Sun VM and IKVM run.
      * 
      * @param key
