@@ -1,17 +1,15 @@
 Test Count: 140
 
 Java 6 VM:
-	Errors: 1
-		IPv6Test.udp
+	Errors: 0
 	Failures: 0
 
 
 IKVM:
-	Errors: 4
+	Errors: 3
 		FontTest.createFontFromFile: not implemented 
 		FontTest.createFontFromStream: not implemented
 		PrinterJobTest.print: ???
-		IPv6Test.udp: IPv6 problem
 	Failures: 22
 	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
 		java.awt.GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list

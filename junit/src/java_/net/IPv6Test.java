@@ -32,7 +32,7 @@ public class IPv6Test extends IPTest{
 
     @Override
     String getLocalIP(){
-        return "::0";
+        return "::1";
     }
 
     @Override
