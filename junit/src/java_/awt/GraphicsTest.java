@@ -110,7 +110,7 @@ public class GraphicsTest{
             g.setComposite(null);
             fail("Exception expected");
         } catch( Exception e ) {
-            reference.assertEquals( "setComposite_Null", e.toString() );;
+            reference.assertEquals( "setComposite_Null", e.toString() );
         }
     }
 
@@ -190,5 +190,25 @@ public class GraphicsTest{
         g.fillRect( 0, 0, 100, 100 );
         g.dispose();
         reference.assertEquals( "setLinearGradientPaint " + cycle, img, 0.05, false );
+    }
+    
+    @Test
+    public void transform() throws Exception{
+        BufferedImage img = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setTransform( g.getTransform() );
+        g.scale( 0.5, 0.5 );
+        g.translate( -10, -10 );
+
+        BufferedImage testImg = createTestImage();
+        
+        g.drawImage( testImg, 30, 30, null );
+        AffineTransform tx = g.getTransform();
+        g.scale( 0.5, 0.5 );
+        g.setTransform( tx );
+        
+        g.drawImage( testImg, 130, 130, null );
+        
+        reference.assertEquals( "transform", img, 0.05, false );
     }
 }
