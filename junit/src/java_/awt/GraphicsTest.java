@@ -25,6 +25,7 @@ package java_.awt;
 
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
@@ -210,5 +211,32 @@ public class GraphicsTest{
         g.drawImage( testImg, 130, 130, null );
         
         reference.assertEquals( "transform", img, 0.05, false );
+    }
+    
+    @Test
+    public void setStroke() throws Exception{
+        BufferedImage img = new BufferedImage( 100, 20, BufferedImage.TYPE_INT_ARGB );
+        
+        BasicStroke stroke1 = new BasicStroke(0.01F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{1,3}, 0);
+        BasicStroke stroke2 = new BasicStroke(0.01F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{1,1}, 1);
+        BasicStroke stroke3 = new BasicStroke(0.01F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{1,3}, 2);
+
+        int x1 = 0;
+        int x2 = 100;
+        int y = 10;
+        //draw a red zig zag line
+        Graphics2D g2 = (Graphics2D)img.getGraphics();
+        g2.setColor(Color.RED);
+        g2.setStroke(stroke1);
+        g2.drawLine(x1, y, x2, y);
+        y--;
+        g2.setStroke(stroke2);
+        g2.drawLine(x1, y, x2, y);
+        y--;
+        g2.setStroke(stroke3);
+        g2.drawLine(x1, y, x2, y);
+        g2.dispose();
+        
+        reference.assertEquals( "setStroke", img );
     }
 }
