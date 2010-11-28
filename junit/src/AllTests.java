@@ -25,12 +25,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * To run this test cases you need call first the follow line to create the reference data: <br>
+ * To run this compatibility test suite you need to call first the follow line to create the reference data: <br>
  *      java -cp junit.jar;. org.junit.runner.JUnitCore AllTests
  * <p> and then call: <br>
  *      ikvm -cp junit.jar;. org.junit.runner.JUnitCore AllTests
  *      
- * <p> Of course you can also run this in an IDE like Eclipse.     
+ * <p> Of course you can also run this in an IDE like Eclipse. If you want run this compatibility test suite
+ * with any other Java VM as the Java SE and the IKVM then you can use the command line parameter
+ * -Dreference=true and reference=false to mark the one Java VM as reference VM and the other as to test Java VM.  
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

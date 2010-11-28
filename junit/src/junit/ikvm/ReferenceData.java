@@ -40,7 +40,13 @@ import static org.junit.Assert.fail;
  */
 public class ReferenceData{
 
-    private static final boolean IKVM = System.getProperty("java.vm.name").equals("IKVM.NET");
+    private static final boolean IKVM;
+    static{
+        String referenceProp = System.getProperty( "reference" );
+        IKVM = referenceProp == null ? 
+                System.getProperty( "java.vm.name" ).equals( "IKVM.NET" ) :
+                    !Boolean.parseBoolean( referenceProp );
+    }
 
     private static final String NO_DATA_MSG = " Please run the test first with a Sun Java VM to create reference data for your system.";
 
