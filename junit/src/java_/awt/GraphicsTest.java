@@ -33,6 +33,7 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 
@@ -40,8 +41,6 @@ import junit.ikvm.ReferenceData;
 
 import org.junit.*;
 import static org.junit.Assert.*;
-
-import sun.font.StandardGlyphVector;
 
 public class GraphicsTest{
 
@@ -176,7 +175,7 @@ public class GraphicsTest{
     public void drawGlyphVector() throws Exception{
         Font font = new Font("Arial", 0, 12);
         FontRenderContext frc = new FontRenderContext(null, true, true);
-        StandardGlyphVector gv = new StandardGlyphVector(font, "any text", frc);
+        GlyphVector gv = font.createGlyphVector(frc, "any text");
 
         BufferedImage img = new BufferedImage(100, 25, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D)img.getGraphics();
