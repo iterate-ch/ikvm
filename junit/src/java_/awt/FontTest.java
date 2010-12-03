@@ -25,14 +25,9 @@ package java_.awt;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
-import java.awt.font.TextAttribute;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.text.AttributedCharacterIterator.Attribute;
-import java.util.HashMap;
-import java.util.Map;
 
 import junit.ikvm.ReferenceData;
 
@@ -81,7 +76,7 @@ public class FontTest{
     	String windir = System.getenv("windir");
     	File file = new File(windir + "/fonts/Arial.ttf");
     	Font font = Font.createFont(Font.TRUETYPE_FONT, file);
-    	assertEquals( 1, font.getSize());
+    	testCreatedFont( font );
     }
 
 
@@ -90,7 +85,12 @@ public class FontTest{
     	String windir = System.getenv("windir");
     	File file = new File(windir + "/fonts/Arial.ttf");
     	Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(file));
-    	assertEquals( 1, font.getSize());
+    	testCreatedFont( font );
+    }
+    
+    private void testCreatedFont(Font font) throws Exception{
+        assertEquals( 1, font.getSize());
+        reference.assertEquals("testCreatedFont.bounds", (Rectangle2D.Float)font.getStringBounds("any text", new FontRenderContext(null, false, true) ) );
     }
     
     @Test
