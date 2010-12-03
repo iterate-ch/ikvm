@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -31,73 +31,97 @@ import junit.ikvm.ReferenceData;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-public class PreferencesTest{
+public class UserPreferencesTest{
 
-    protected static ReferenceData reference;
+    private static ReferenceData reference;
+    
+    private static Preferences rootPreferences;
 
-    private static final String PATH_NAME = "ikvm preferences test/sub folder";
-
+    private static final String PATH_NAME = "/ikvm preferences test/sub folder";
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception{
-        reference = new ReferenceData();
+        setReferenceData( new ReferenceData() );
+        setRootPreferences( Preferences.userRoot() );
     }
 
 
     @AfterClass
     public static void tearDownAfterClass() throws Exception{
+        try {
+            Preferences root = rootPreferences;
+            Preferences node = root.node(PATH_NAME);
+            node.parent().removeNode();
+            reference.assertEquals( "tearDownAfterClass", "" );
+        } catch( Exception ex ) {
+            reference.assertEquals( "tearDownAfterClass", ex.toString() );
+        }
         if(reference != null){
             reference.save();
+            reference = null;
         }
-        Preferences user = Preferences.userRoot();
-        Preferences node = user.node(PATH_NAME);
-        node.parent().removeNode();
+    }
+    
+    protected static void setReferenceData( ReferenceData reference ) {
+        UserPreferencesTest.reference = reference;
     }
 
+    protected static void setRootPreferences( Preferences rootPreferences ) {
+        UserPreferencesTest.rootPreferences = rootPreferences;
+    }
+
+    private Preferences getRoot(){
+        return rootPreferences;
+    }
 
     @Test
     public void absolutePath(){
-        Preferences user = Preferences.userRoot();
-        Preferences node = user.node(PATH_NAME);
+        Preferences root = getRoot();
+        Preferences node = root.node(PATH_NAME);
         reference.assertEquals("absolutePath", node.absolutePath());
     }
 
 
     @Test
     public void childrenNames() throws BackingStoreException{
-        Preferences user = Preferences.userRoot();
-        reference.assertEquals("childrenNames", toString(user.childrenNames()));
+        Preferences root = getRoot();
+        reference.assertEquals("childrenNames", toString(root.childrenNames()));
     }
 
 
     @Test
     public void getXXX(){
-        Preferences user = Preferences.userRoot();
-        assertEquals("def", user.get("A Key that not exist", "def"));
-        assertArrayEquals("def".getBytes(), user.getByteArray("A Key that not exist", "def".getBytes()));
-        assertEquals(true, user.getBoolean("A Key that not exist", true));
-        assertEquals(false, user.getBoolean("A Key that not exist", false));
-        assertEquals(25.5, user.getDouble("A Key that not exist", 25.5), 0.0);
-        assertEquals(25.5F, user.getFloat("A Key that not exist", 25.5F), 0.0);
-        assertEquals(-234, user.getInt("A Key that not exist", -234));
-        assertEquals(1234567890L, user.getLong("A Key that not exist", 1234567890L));
+        Preferences root = getRoot();
+        assertEquals("def", root.get("A Key that not exist", "def"));
+        assertArrayEquals("def".getBytes(), root.getByteArray("A Key that not exist", "def".getBytes()));
+        assertEquals(true, root.getBoolean("A Key that not exist", true));
+        assertEquals(false, root.getBoolean("A Key that not exist", false));
+        assertEquals(25.5, root.getDouble("A Key that not exist", 25.5), 0.0);
+        assertEquals(25.5F, root.getFloat("A Key that not exist", 25.5F), 0.0);
+        assertEquals(-234, root.getInt("A Key that not exist", -234));
+        assertEquals(1234567890L, root.getLong("A Key that not exist", 1234567890L));
     }
 
 
     @Test
     public void name(){
-        Preferences user = Preferences.userRoot();
-        Preferences node = user.node(PATH_NAME);
+        Preferences root = getRoot();
+        Preferences node = root.node(PATH_NAME);
         reference.assertEquals("name", node.name());
     }
 
     @Test
     public void putXXX() throws BackingStoreException{
-        Preferences user = Preferences.userRoot();
-        Preferences node = user.node(PATH_NAME);
-
+        Preferences root = getRoot();
+        Preferences node = root.node(PATH_NAME);
         node.put("key", "value");
-        node.flush();
+        try {
+            node.flush();
+            reference.assertEquals( "putXXX.value", "" );
+        } catch( Exception ex ) {
+            reference.assertEquals( "putXXX.value", ex.toString() );
+            return;
+        }
         assertEquals("value", node.get("key", "default"));
 
         node.putBoolean("key", true);
@@ -133,8 +157,14 @@ public class PreferencesTest{
 
     @Test
     public void remove(){
-        Preferences user = Preferences.userRoot();
-        user.remove("A Key that not exist");
+        Preferences root = getRoot();
+        try {
+            root.remove("A Key that not exist");
+            reference.assertEquals( "remove", "" );
+        } catch( Exception ex ) {
+            reference.assertEquals( "remove", ex.toString() );
+            return;
+        }
     }
 
 

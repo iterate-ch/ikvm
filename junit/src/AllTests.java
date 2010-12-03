@@ -43,7 +43,7 @@ import org.junit.runners.Suite;
     java_.awt.print.AllTests.class,
     java_.net.AllTests.class,
     java_.text.AllTests.class,
-    java_.util.prefs.PreferencesTest.class,
+    java_.util.prefs.AllTests.class,
     javax.imageio.ImageIOTest.class,
     javax.print.AllTests.class,
     javax.swing.AllTests.class,
