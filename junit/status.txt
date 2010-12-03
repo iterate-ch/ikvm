@@ -1,4 +1,4 @@
-Test Count: 142
+Test Count: 148
 
 Java 6 VM:
 	Errors: 0
@@ -6,9 +6,7 @@ Java 6 VM:
 
 
 IKVM:
-	Errors: 3
-		FontTest.createFontFromFile: not implemented 
-		FontTest.createFontFromStream: not implemented
+	Errors: 1
 		PrinterJobTest.print: ???
 	Failures: 22
 	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
