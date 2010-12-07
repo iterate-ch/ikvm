@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2010 Karsten Heinrich (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -25,6 +26,7 @@ package java_.awt.font;
 
 import java.awt.*;
 import java.awt.font.*;
+import java.awt.image.BufferedImage;
 
 import junit.ikvm.ReferenceData;
 
@@ -58,5 +60,42 @@ public class TextLayoutTest{
         TextLayout layout = new TextLayout(text, font, frc);
         Shape highlight = layout.getLogicalHighlightShape(0, text.length());
         reference.assertEquals("getLogicalHighlightShape", highlight.getBounds());
+    }
+    
+    @Test
+    public void testDrawConsistency() throws InterruptedException{
+    	String text = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
+    	BufferedImage im = new BufferedImage(500, 50, BufferedImage.TYPE_INT_ARGB);
+    	Graphics2D g = (Graphics2D) im.getGraphics();
+    	Font font = new Font("Arial", 0, 12);
+    	g.setFont(font);
+    	FontRenderContext frc = g.getFontRenderContext();
+    	TextLayout layout = new TextLayout(text, font, frc);
+    	// calculated size
+        Shape highlight = layout.getLogicalHighlightShape(0, text.length());
+        int calculated = highlight.getBounds().width;
+        // determine size of the drawing
+        g.setColor( Color.WHITE );
+        g.fillRect( 0, 0, im.getWidth(), im.getHeight() );
+        g.setColor( Color.BLACK );
+        g.drawString(text, 10, 30 );
+        int start = Integer.MAX_VALUE;
+        int end = Integer.MIN_VALUE;
+        for( int x = 0; x<im.getWidth(); x++ ){
+        	for( int y = 0; y < im.getHeight(); y++ ){
+        		if( im.getRGB(x, y) != Color.WHITE.getRGB() ){
+        			if( x < start ){
+        				start = x;
+        			}
+        			if( x > end ){
+        				end = x;
+        			}
+        		}
+        	}
+        }
+        int byDrawing = end - start;
+        reference.assertEquals("widthByTextLayout", calculated );
+        reference.assertEquals("widthByDrawing", byDrawing );
+        Assert.assertTrue( Math.abs( byDrawing - calculated ) <= 1 );
     }
 }

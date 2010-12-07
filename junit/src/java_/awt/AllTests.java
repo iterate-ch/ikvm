@@ -24,6 +24,9 @@
 */
 package java_.awt;
 
+import java_.awt.font.LineMetricsTest;
+import java_.awt.font.TextLayoutTest;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -40,7 +43,9 @@ import org.junit.runners.Suite;
     ToolkitTest.class,
     WindowTest.class,
     LabelTest.class,
-    ButtonTest.class
+    ButtonTest.class,
+    LineMetricsTest.class,
+    TextLayoutTest.class
 })
 public class AllTests{
     //Nothing

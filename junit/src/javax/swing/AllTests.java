@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2010 Volker Berlin (i-net software)
+  Copyright (C) 2010 Karsten Heinrich (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -30,6 +31,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     JButtonTest.class,
+    ClipTest.class,
 })
 public class AllTests{
     //Nothing

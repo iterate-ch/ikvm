@@ -1,4 +1,4 @@
-Test Count: 148
+Test Count: 167
 
 Java 6 VM:
 	Errors: 0
@@ -8,15 +8,24 @@ Java 6 VM:
 IKVM:
 	Errors: 1
 		PrinterJobTest.print: ???
-	Failures: 22
+	Failures: 32
 	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
 		java.awt.GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
 		java.awt.GraphicsEnvironmentTest.getAvailabaleFontFamilyNames: Java has one font name more "Lucida Sans Typewriter"
+		java.awt.font.TextLayoutTest.widthByTextLayout expected:<440> but was:<455>
 		java.awt.print.PrinterJobTest.defaultPage: integer instead floats
 		javax.print.PrintServiceTest.getAttribute: expected:<null> but was:<unknown>
 		javax.print.PrintServiceTest.getAttributes: null versus unknown
 		javax.print.PrintServiceTest.getDefaultAttributeValue: JobName expected:<[Java Printing]> but was:<[null]>
 		javax.print.PrintServiceTest.getSupportedAttributeValues: JobName expected:<[Java Printing]> but was:<[null]>
+		javax.swing.ClipTest.testSmallHorizontal
+		javax.swing.ClipTest.testSmallVertical
+		javax.swing.ClipTest.testSmallHorizontalShape
+		javax.swing.ClipTest.testSmallVerticalShape
+		javax.swing.ClipTest.testSmallHorizontalClipped
+		javax.swing.ClipTest.testSmallVerticalClipped
+		javax.swing.ClipTest.testSmallHorizontalShapeClipped
+		javax.swing.ClipTest.testSmallVerticalShapeClipped
 		sun.awt.shell.ShellFolderTest.fileChooserIcon_ListView:
 		sun.awt.shell.ShellFolderTest.fileChooserIcon_DetailsView:
 		sun.awt.shell.ShellFolderTest.fileChooserIcon_UpFolder:
