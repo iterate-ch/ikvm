@@ -26,6 +26,10 @@ package java_.awt.datatransfer;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.swing.ImageIcon;
 
 import junit.ikvm.ReferenceData;
 
@@ -51,6 +55,25 @@ public class ClipboardTest{
             reference.save();
         }
         reference = null;
+    }
+    
+    @Test
+    public void copyPasteImage() throws Exception{
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Image copyData = new ImageIcon(getClass().getResource("/javax/swing/icon.gif")).getImage();
+        Transferable data = new GenericTransferable(copyData, new DataFlavor[]{DataFlavor.imageFlavor});
+        clipboard.setContents(data, null);
+        
+        
+        Transferable transferable = clipboard.getContents(null);
+        checkDataFlavorClass(transferable);
+        assertTrue(transferable.isDataFlavorSupported(DataFlavor.imageFlavor));
+        DataFlavor[] flavors = transferable.getTransferDataFlavors();
+        reference.assertEquals( "copyPasteImage.flavor count", flavors.length );
+
+        Object pasteData = transferable.getTransferData(DataFlavor.imageFlavor);
+        assertEquals( copyData, pasteData );
+        assertSame( copyData, pasteData );
     }
     
     @Test
@@ -100,7 +123,43 @@ public class ClipboardTest{
         for(DataFlavor dataFlavor : flavors){
             Class clazz = dataFlavor.getRepresentationClass();
             Object pasteData = transferable.getTransferData(dataFlavor);
-            assertTrue(dataFlavor.toString(), clazz.isInstance(pasteData));
+            if( dataFlavor == DataFlavor.plainTextFlavor){
+                // backward compatible hack
+                clazz = StringReader.class;
+            }
+            assertTrue(pasteData.getClass().getName() + " is not instanceof " + dataFlavor, clazz.isInstance(pasteData));
         }
     }
+    
+    // This class is used to hold an object while on the clipboard.
+    private static class GenericTransferable implements Transferable {
+        private final Object data;
+        private final DataFlavor[] flavors;
+
+        GenericTransferable( Object data, DataFlavor[] flavors ) {
+            this.data = data;
+            this.flavors = flavors;
+        }
+
+        // Returns supported flavors
+        public DataFlavor[] getTransferDataFlavors() {
+            return flavors.clone();
+        }
+
+        // Returns true if flavor is supported
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            return DataFlavor.imageFlavor.equals(flavor);
+        }
+
+        // Returns the data
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            for(DataFlavor fl : flavors){
+                if (fl.equals(flavor)) {
+                    return data;                    
+                }
+            }
+            throw new UnsupportedFlavorException(flavor);
+        }
+    }
+
 }
