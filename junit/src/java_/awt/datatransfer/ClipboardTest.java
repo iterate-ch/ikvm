@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -50,23 +50,57 @@ public class ClipboardTest{
         if(reference != null){
             reference.save();
         }
+        reference = null;
     }
-
+    
     @Test
-    public void copyPaste() throws Exception{
+    public void copyPasteJavaObject() throws Exception{
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        //StringSelection data = new StringSelection("Any Text");
         Object copyData = new Object();
-        Transferable data = new JavaTransferable(copyData);
-        clipboard.setContents(data, null);
+        Transferable data = new JavaTransferable( copyData );
+        clipboard.setContents( data, null );
         
         
         Transferable transferable = clipboard.getContents(null);
-        assertTrue(transferable.isDataFlavorSupported(JavaTransferable.DATA_FLAVOR));
+        checkDataFlavorClass(transferable);
+        assertTrue( transferable.isDataFlavorSupported( JavaTransferable.DATA_FLAVOR ) );
         DataFlavor[] flavors = transferable.getTransferDataFlavors();
         assertEquals(1, flavors.length);
 
         Object pasteData = transferable.getTransferData(JavaTransferable.DATA_FLAVOR);
-        assertTrue( copyData == pasteData );
+        assertSame( copyData, pasteData );
+    }
+    
+    @Test
+    public void copyPasteString() throws Exception{
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        String copyData = "Any Text";
+        StringSelection data = new StringSelection("Any Text");
+        clipboard.setContents(data, null);
+        
+        
+        Transferable transferable = clipboard.getContents(null);
+        checkDataFlavorClass(transferable);
+        assertTrue(transferable.isDataFlavorSupported(DataFlavor.stringFlavor));
+        DataFlavor[] flavors = transferable.getTransferDataFlavors();
+        reference.assertEquals( "copyPasteString.flavor count", flavors.length );
+
+        Object pasteData = transferable.getTransferData(DataFlavor.stringFlavor);
+        assertEquals( copyData, pasteData );
+        assertNotSame( copyData, pasteData );
+    }
+    
+    /**
+     * Check if the transfer data can be cast the class of the DataFlavor.
+     * @param transferable a transferable from the clipboard
+     * @throws Exception should never occur
+     */
+    private void checkDataFlavorClass(Transferable transferable) throws Exception{
+        DataFlavor[] flavors = transferable.getTransferDataFlavors();
+        for(DataFlavor dataFlavor : flavors){
+            Class clazz = dataFlavor.getRepresentationClass();
+            Object pasteData = transferable.getTransferData(dataFlavor);
+            assertTrue(dataFlavor.toString(), clazz.isInstance(pasteData));
+        }
     }
 }
