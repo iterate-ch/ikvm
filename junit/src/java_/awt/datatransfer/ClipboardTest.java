@@ -26,10 +26,7 @@ package java_.awt.datatransfer;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.io.IOException;
 import java.io.StringReader;
-
-import javax.swing.ImageIcon;
 
 import junit.ikvm.ReferenceData;
 
@@ -60,12 +57,10 @@ public class ClipboardTest{
     @Test
     public void copyPasteImage() throws Exception{
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        Image copyData = new ImageIcon(getClass().getResource("/javax/swing/icon.gif")).getImage();
-        Transferable data = new GenericTransferable(copyData, new DataFlavor[]{DataFlavor.imageFlavor});
-        clipboard.setContents(data, null);
+        Transferable transferable = SetClipboardContent.copyLocal(SetClipboardContent.IMAGE, "/javax/swing/icon.gif");
+        Object copyData = transferable.getTransferData(DataFlavor.imageFlavor);
         
-        
-        Transferable transferable = clipboard.getContents(null);
+        transferable = clipboard.getContents(null);
         checkDataFlavorClass(transferable);
         assertTrue(transferable.isDataFlavorSupported(DataFlavor.imageFlavor));
         DataFlavor[] flavors = transferable.getTransferDataFlavors();
@@ -74,23 +69,36 @@ public class ClipboardTest{
         Object pasteData = transferable.getTransferData(DataFlavor.imageFlavor);
         assertEquals( copyData, pasteData );
         assertSame( copyData, pasteData );
+        
+        
+        SetClipboardContent.copyExternal(SetClipboardContent.IMAGE, "/javax/swing/icon.gif");
+        
+        transferable = clipboard.getContents(null);
+        checkDataFlavorClass(transferable);
+        assertTrue(transferable.isDataFlavorSupported(DataFlavor.imageFlavor));
+        transferable.getTransferDataFlavors();
+        reference.assertEquals( "copyPasteImage.flavor count", flavors.length );
+
+        pasteData = transferable.getTransferData(DataFlavor.imageFlavor);
+        assertEquals( copyData, pasteData );
+        assertSame( copyData, pasteData );
+
     }
     
     @Test
     public void copyPasteJavaObject() throws Exception{
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Object copyData = new Object();
-        Transferable data = new JavaTransferable( copyData );
-        clipboard.setContents( data, null );
+        SetClipboardContent.copyLocal(SetClipboardContent.JAVA_OBJECT, copyData);
         
         
         Transferable transferable = clipboard.getContents(null);
         checkDataFlavorClass(transferable);
-        assertTrue( transferable.isDataFlavorSupported( JavaTransferable.DATA_FLAVOR ) );
+        assertTrue( transferable.isDataFlavorSupported( SetClipboardContent.DATA_FLAVOR ) );
         DataFlavor[] flavors = transferable.getTransferDataFlavors();
         assertEquals(1, flavors.length);
 
-        Object pasteData = transferable.getTransferData(JavaTransferable.DATA_FLAVOR);
+        Object pasteData = transferable.getTransferData(SetClipboardContent.DATA_FLAVOR);
         assertSame( copyData, pasteData );
     }
     
@@ -98,10 +106,8 @@ public class ClipboardTest{
     public void copyPasteString() throws Exception{
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         String copyData = "Any Text";
-        StringSelection data = new StringSelection("Any Text");
-        clipboard.setContents(data, null);
-        
-        
+        SetClipboardContent.copyLocal(SetClipboardContent.STRING, copyData);
+       
         Transferable transferable = clipboard.getContents(null);
         checkDataFlavorClass(transferable);
         assertTrue(transferable.isDataFlavorSupported(DataFlavor.stringFlavor));
@@ -109,6 +115,20 @@ public class ClipboardTest{
         reference.assertEquals( "copyPasteString.flavor count", flavors.length );
 
         Object pasteData = transferable.getTransferData(DataFlavor.stringFlavor);
+        assertEquals( copyData, pasteData );
+        assertNotSame( copyData, pasteData );
+        
+        
+        copyData = "Other text";
+        SetClipboardContent.copyExternal( SetClipboardContent.STRING, copyData );
+        
+        transferable = clipboard.getContents(null);
+        checkDataFlavorClass(transferable);
+        assertTrue(transferable.isDataFlavorSupported(DataFlavor.stringFlavor));
+        flavors = transferable.getTransferDataFlavors();
+        reference.assertEquals( "copyPasteString.flavor count", flavors.length );
+
+        pasteData = transferable.getTransferData(DataFlavor.stringFlavor);
         assertEquals( copyData, pasteData );
         assertNotSame( copyData, pasteData );
     }
@@ -120,45 +140,20 @@ public class ClipboardTest{
      */
     private void checkDataFlavorClass(Transferable transferable) throws Exception{
         DataFlavor[] flavors = transferable.getTransferDataFlavors();
-        for(DataFlavor dataFlavor : flavors){
-            Class clazz = dataFlavor.getRepresentationClass();
-            Object pasteData = transferable.getTransferData(dataFlavor);
-            if( dataFlavor == DataFlavor.plainTextFlavor){
-                // backward compatible hack
-                clazz = StringReader.class;
-            }
-            assertTrue(pasteData.getClass().getName() + " is not instanceof " + dataFlavor, clazz.isInstance(pasteData));
-        }
-    }
-    
-    // This class is used to hold an object while on the clipboard.
-    private static class GenericTransferable implements Transferable {
-        private final Object data;
-        private final DataFlavor[] flavors;
-
-        GenericTransferable( Object data, DataFlavor[] flavors ) {
-            this.data = data;
-            this.flavors = flavors;
-        }
-
-        // Returns supported flavors
-        public DataFlavor[] getTransferDataFlavors() {
-            return flavors.clone();
-        }
-
-        // Returns true if flavor is supported
-        public boolean isDataFlavorSupported(DataFlavor flavor) {
-            return DataFlavor.imageFlavor.equals(flavor);
-        }
-
-        // Returns the data
-        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-            for(DataFlavor fl : flavors){
-                if (fl.equals(flavor)) {
-                    return data;                    
+        for( DataFlavor dataFlavor : flavors ){
+            try{
+                Class clazz = dataFlavor.getRepresentationClass();
+                Object pasteData = transferable.getTransferData( dataFlavor );
+                if( dataFlavor == DataFlavor.plainTextFlavor ){
+                    // backward compatible hack
+                    clazz = StringReader.class;
                 }
+                assertTrue( pasteData.getClass().getName() + " is not instanceof " + dataFlavor, clazz.isInstance( pasteData ) );
+            } catch( AssertionError ex ) {
+                throw ex;
+            } catch( Exception ex ) {
+                throw (AssertionError)new AssertionError( dataFlavor ).initCause( ex );
             }
-            throw new UnsupportedFlavorException(flavor);
         }
     }
 
