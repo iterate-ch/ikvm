@@ -64,7 +64,13 @@ public class StandardGlyphVectorTest {
     public void getGlyphInfo_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
         float[] info = sgv.getGlyphInfo();
-        reference.assertEquals( "getGlyphInfo_Fixed", info );
+        
+        reference.assertEquals( "getGlyphInfo_Fixed.length", info.length );
+        for( int i = 0; i < info.length; i++ ) {
+            float value = info[i];
+            float delta = i % 8 >= 4 ? Math.abs( value / 100 ) : 0;
+            reference.assertEquals( "getGlyphInfo_Fixed " + i, value, delta );
+        }
     }
 
     @Test
@@ -142,10 +148,9 @@ public class StandardGlyphVectorTest {
         Rectangle2D.Float bounds = (Rectangle2D.Float)sgv.getVisualBounds();
 
         reference.assertEquals( "getVisualBounds_Fixed.x", bounds.x, bounds.x / 100 );
-        reference.assertEquals( "getVisualBounds_Fixed.y", bounds.y, bounds.y / 100 );
+        reference.assertEquals( "getVisualBounds_Fixed.y", bounds.y, -bounds.y / 100 );
         reference.assertEquals( "getVisualBounds_Fixed.width", bounds.width, bounds.width / 100 );
         reference.assertEquals( "getVisualBounds_Fixed.height", bounds.height, bounds.height / 100 );
-        //reference.assertEquals( "getVisualBounds_Fixed", bounds );
     }
 
     @Test
@@ -157,7 +162,6 @@ public class StandardGlyphVectorTest {
         reference.assertEquals( "getVisualBounds_Fractional.y", bounds.y, -bounds.y / 100 );
         reference.assertEquals( "getVisualBounds_Fractional.width", bounds.width, bounds.width / 100 );
         reference.assertEquals( "getVisualBounds_Fractional.height", bounds.height, bounds.height / 100 );
-        //reference.assertEquals( "getVisualBounds_Fractional", bounds );
     }
 
     @Test
