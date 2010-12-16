@@ -82,8 +82,14 @@ public class ColorSpaceTest {
         // Reloading a profile from the profile data
         ICC_Profile profile = ICC_Profile.getInstance(ColorSpace.CS_GRAY);
         profile = ICC_Profile.getInstance( profile.getData() );
-        ICC_ColorSpace cs = new ICC_ColorSpace (profile);;
+        ICC_ColorSpace cs = new ICC_ColorSpace (profile);
         java.awt.image.ColorModel model = new java.awt.image.ComponentColorModel( cs, new int[]{1}, false, false, 1, 0 );
         reference.assertEquals( "customColorModel.getPixelSize", model.getPixelSize() );
+    }
+    
+    @Test
+    public void isCS_sRGB(){
+        assertTrue( ColorSpace.getInstance( ColorSpace.CS_sRGB ).isCS_sRGB() );
+        assertFalse( ColorSpace.getInstance( ColorSpace.CS_GRAY ).isCS_sRGB() );
     }
 }
