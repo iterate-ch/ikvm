@@ -23,6 +23,7 @@
  */
 package java_.awt.color;
 
+import java.awt.Color;
 import java.awt.color.*;
 
 import junit.ikvm.ReferenceData;
@@ -91,5 +92,14 @@ public class ColorSpaceTest {
     public void isCS_sRGB(){
         assertTrue( ColorSpace.getInstance( ColorSpace.CS_sRGB ).isCS_sRGB() );
         assertFalse( ColorSpace.getInstance( ColorSpace.CS_GRAY ).isCS_sRGB() );
+    }
+    
+    @Test 
+    public void newColor(){
+        Color c = new Color( ColorSpace.getInstance( ColorSpace.CS_sRGB ), new float[] { 0.2f, 0.4f, 0.6f }, 0.8f );
+        reference.assertEquals( "color.red", c.getRed() );
+        reference.assertEquals( "color.blue", c.getBlue() );
+        reference.assertEquals( "color.green", c.getGreen() );
+        reference.assertEquals( "color.alpha", c.getAlpha() );
     }
 }
