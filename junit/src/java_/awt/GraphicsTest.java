@@ -23,18 +23,12 @@
  */
 package java_.awt;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.LinearGradientPaint;
+import java.awt.*;
 import java.awt.MultipleGradientPaint.CycleMethod;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.*;
 
 import junit.ikvm.ReferenceData;
@@ -164,8 +158,16 @@ public class GraphicsTest{
         BufferedImage img = new BufferedImage(100, 25, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D)img.getGraphics();
         g.setFont(font);
-        g.drawString("any text", 10, 20);
+        try {
+            g.drawString( (String)null, 10, 10 );
+            fail("NullPointerException expected");
+        } catch( NullPointerException npe ) {
+            // expected;
+        }
+        g.drawString( "", 10, 20 );
+        g.drawString( "any text", 10, 20 );
         g.dispose();
+        reference.assertEquals( "drawString_", img );
         reference.assertEqualsMetrics("drawString", img);
 
     }
@@ -272,5 +274,37 @@ public class GraphicsTest{
         
         g.dispose();
         reference.assertEquals("setStroke", img);
+    }
+    
+    @Test
+    public void clearRect() throws Exception {
+        BufferedImage img = new BufferedImage( 20, 20, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+
+        // clearRect should ignore color, composite, and paint
+        g.setColor( new Color( 200, 200, 200, 50 ) );
+        g.setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 0.5f ) );
+        g.setPaint( new GradientPaint( new Point2D.Float( 0, 0 ), new Color( 10, 10, 10 ), new Point2D.Float( 20, 20 ), new Color( 80, 80, 80 ), true ) );
+        g.fillRect( 0, 0, 20, 20 );
+
+        Color c = new Color( 5, 255, 6 ); // green
+        g.setBackground( c );
+        g.clearRect( 0, 0, 10, 10 ); // left top corner
+
+        c = new Color( 255, 0, 0, 51 ); // red with alpha
+        g.setBackground( c );
+        g.clearRect( 10, 0, 10, 10 ); // right top corner
+
+        g.setComposite( AlphaComposite.getInstance( AlphaComposite.SRC, 0.5f ) );
+
+        c = new Color( 0, 0, 255 ); // blue
+        g.setBackground( c );
+        g.clearRect( 0, 10, 10, 10 ); // left bottom corner
+
+        c = new Color( 254, 254, 0, 52 ); // yellow with alpha
+        g.setBackground( c );
+        g.clearRect( 10, 10, 10, 10 ); // right bottom corner
+
+        reference.assertEquals( "clearRect", img );
     }
 }
