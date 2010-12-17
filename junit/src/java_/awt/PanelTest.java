@@ -1,6 +1,5 @@
 /*
-  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
-  Copyright (C) 2010 Karsten Heinrich (i-net software)
+  Copyright (C) 2010 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -21,33 +20,50 @@
   Jeroen Frijters
   jeroen@frijters.net
   
-*/
+ */
 package java_.awt;
 
-import java_.awt.font.LineMetricsTest;
-import java_.awt.font.TextLayoutTest;
+import java.awt.*;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import junit.ikvm.ReferenceData;
+
+import org.junit.*;
 
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-    ButtonTest.class,
-    DialogTest.class,
-    FontMetricsTest.class,
-    FontTest.class,
-    FrameTest.class,
-    GraphicsTest.class,
-    GraphicsDeviceTest.class,
-    GraphicsEnvironmentTest.class,
-    LabelTest.class,
-    LineMetricsTest.class,
-    PanelTest.class,
-    TextLayoutTest.class,
-    ToolkitTest.class,
-    WindowTest.class
-})
-public class AllTests{
-    //Nothing
+
+/**
+ * @author Volker Berlin
+ */
+public class PanelTest{
+
+    protected static ReferenceData reference;
+
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception{
+        reference = new ReferenceData();
+    }
+
+
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception{
+        if(reference != null){
+            reference.save();
+        }
+        reference = null;
+    }
+    
+
+    @Test
+    public void create(){
+        Frame f = new Frame();
+        Panel p = new Panel();
+        f.add(p);
+        try{
+            f.addNotify(); // creates the peer
+            reference.assertEquals("isLightweight", p.isLightweight()); // should be false
+        }finally{
+            f.removeNotify();
+        }
+    }
 }
