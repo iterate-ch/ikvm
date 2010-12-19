@@ -119,4 +119,33 @@ public class WindowTest{
         window.setMinimumSize( new Dimension(100,100) );
         reference.assertEquals("setMinimumSize100_100", window.getMinimumSize());
     }
+    
+    @Test
+    public void getComponentAt() throws Exception{
+        Window window = createWindow();
+        try{
+            List list = new List( 10 );
+            TextArea textArea = new TextArea( 10, 10 );
+            window.setSize( 300, 300 );
+            textArea.setBounds( 10, 10, 100, 100 );
+            list.setBounds( 1, 1, 100, 100 );
+
+            textArea.setVisible( true );
+            list.setVisible( false );
+            window.add( list );
+            window.add( textArea );
+            window.setVisible( true );
+
+            assertEquals( textArea.isVisible(), true );
+            assertEquals( window.isVisible(), true );
+            assertEquals( list.isVisible(), false );
+            assertSame( list, window.getComponentAt( list.getLocation() ) );
+            assertFalse( textArea.equals( window.getComponentAt( textArea.getLocation() ) ) );
+            assertSame( textArea, window.getComponentAt( textArea.getX() + textArea.getWidth() - 1, textArea.getY() + textArea.getHeight() - 1 ) );
+            assertSame( window, window.getComponentAt( 0, 0 ) );
+        }finally{
+            window.dispose();
+        }
+    }
+
 }
