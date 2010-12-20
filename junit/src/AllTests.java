@@ -40,6 +40,7 @@ import org.junit.runners.Suite;
     java_.awt.datatransfer.AllTests.class,
     java_.awt.color.AllTests.class,
     java_.awt.font.AllTests.class,
+    java_.awt.image.AllTests.class,
     java_.awt.print.AllTests.class,
     java_.net.AllTests.class,
     java_.text.AllTests.class,
