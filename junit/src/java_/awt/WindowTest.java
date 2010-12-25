@@ -124,6 +124,7 @@ public class WindowTest{
     public void getComponentAt() throws Exception{
         Window window = createWindow();
         try{
+            window.setLayout( null ); // with a Window this test work only without a layout manager. It is unclear why.
             List list = new List( 10 );
             TextArea textArea = new TextArea( 10, 10 );
             window.setSize( 300, 300 );
