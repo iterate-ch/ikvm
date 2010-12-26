@@ -30,7 +30,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     IPv4Test.class,
-    IPv6Test.class
+    IPv6Test.class,
+    URLConnectionTest.class
 })
 public class AllTests{
     //Nothing
