@@ -24,6 +24,8 @@
 package junit.ikvm;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -206,7 +208,7 @@ public class ReferenceData{
      * 
      * @param key
      *            The key in the reference data. It must be unique for the class that create this ReferenceData
-     * @param value
+     * @param img
      *            the value will be saved in Sun VM and compared in IKVM. The value will be saved as png image. If a
      *            difference occur then a second png file will be saved which ended with _ikvm. This make it easer to
      *            see the image differences.
@@ -232,40 +234,7 @@ public class ReferenceData{
                 return;
             }
             try {
-                Assert.assertEquals( key + " width", expected.getWidth(), img.getWidth() );
-                Assert.assertEquals( key + " height", expected.getHeight(), img.getHeight() );
-                float[] hsbExpected = null;
-                float[] hsbCurrent = null;
-                for( int x = 0; x < expected.getWidth(); x++ ) {
-                    for( int y = 0; y < expected.getHeight(); y++ ) {
-                        int rgbExpected = expected.getRGB( x, y );
-                        int rgbCurrent = img.getRGB( x, y );
-                        String pixelName = key + " pixel " + x + "," + y;
-                        if( delta > 0 ) {
-                            hsbExpected = rgbToHSB( rgbExpected, hsbExpected );
-                            hsbCurrent = rgbToHSB( rgbCurrent, hsbCurrent );
-                            try {
-                                assertEqualsColor( pixelName, hsbExpected, hsbCurrent, delta );
-                                Assert.assertEquals( pixelName + " alpha", ((rgbExpected >> 24) & 0xFF)/255.0, ((rgbCurrent >> 24) & 0xFF)/255.0, delta);
-                            } catch( Error e ) {
-                                if( useMediumValue ){
-                                    getMediumHSB( expected, x, y, hsbExpected );
-                                    getMediumHSB( img, x, y, hsbCurrent );
-                                    try {
-                                        assertEqualsColor( pixelName, hsbExpected, hsbCurrent, delta );
-                                    } catch( Error e1 ) {
-                                        // throw the first exception
-                                        throw e;
-                                    }
-                                } else {
-                                    throw e;
-                                }
-                            }
-                        } else {
-                            Assert.assertEquals( key + " pixel " + x + "," + y, rgbExpected, rgbCurrent );
-                        }
-                    }
-                }
+                assertEquals( key, expected, img , delta, useMediumValue );
             } catch( Error ex ) {
                 // save the IKVM result for better compare the differences
                 ImageIO.write( img, "png", file_ikvm );
@@ -281,6 +250,77 @@ public class ReferenceData{
                 ImageIO.write( img, "png", imgFile );
             }
         }
+    }
+    
+    /**
+     * Asserts that two images are equal.
+     * 
+     * @param baseMsg
+     *            The base message in asserts
+     * @param expected
+     *            The expected image
+     * @param img
+     *            the value will be saved in Sun VM and compared in IKVM. The value will be saved as png image. If a
+     *            difference occur then a second png file will be saved which ended with _ikvm. This make it easer to
+     *            see the image differences.
+     * @param delta
+     *            The maximum difference between hue, saturation and brightness of every pixel
+     * @param useMediumValue
+     *            if true then compare the medium value of 9 pixel instead of every pixel
+     */
+    public static void assertEquals( String baseMsg, Image expected, Image img, double delta, boolean useMediumValue ) throws Exception {
+        BufferedImage bExpected = toBufferedImage( expected );
+        BufferedImage bImg = toBufferedImage( img );
+        Assert.assertEquals( baseMsg + " width", bExpected.getWidth(), bImg.getWidth() );
+        Assert.assertEquals( baseMsg + " height", bExpected.getHeight(), bImg.getHeight() );
+        float[] hsbExpected = null;
+        float[] hsbCurrent = null;
+        for( int x = 0; x < bExpected.getWidth(); x++ ) {
+            for( int y = 0; y < bExpected.getHeight(); y++ ) {
+                int rgbExpected = bExpected.getRGB( x, y );
+                int rgbCurrent = bImg.getRGB( x, y );
+                String pixelName = baseMsg + " pixel " + x + "," + y;
+                if( delta > 0 ) {
+                    hsbExpected = rgbToHSB( rgbExpected, hsbExpected );
+                    hsbCurrent = rgbToHSB( rgbCurrent, hsbCurrent );
+                    try {
+                        assertEqualsColor( pixelName, hsbExpected, hsbCurrent, delta );
+                        Assert.assertEquals( pixelName + " alpha", ((rgbExpected >> 24) & 0xFF)/255.0, ((rgbCurrent >> 24) & 0xFF)/255.0, delta);
+                    } catch( Error e ) {
+                        if( useMediumValue ){
+                            getMediumHSB( bExpected, x, y, hsbExpected );
+                            getMediumHSB( bImg, x, y, hsbCurrent );
+                            try {
+                                assertEqualsColor( pixelName, hsbExpected, hsbCurrent, delta );
+                            } catch( Error e1 ) {
+                                // throw the first exception
+                                throw e;
+                            }
+                        } else {
+                            throw e;
+                        }
+                    }
+                } else {
+                    Assert.assertEquals( baseMsg + " pixel " + x + "," + y, rgbExpected, rgbCurrent );
+                }
+            }
+        }     
+    }
+    
+    /**
+     * COnvert any Image to a BufferedImage
+     * @param img base image
+     * @return a BufferedImage
+     */
+    public static BufferedImage toBufferedImage( Image img ){
+        if( img instanceof BufferedImage ){
+            return (BufferedImage)img;
+        }
+        BufferedImage bufImg = new BufferedImage( img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB );
+        Graphics g = bufImg.getGraphics();
+        g.drawImage( img, 0, 0, null );
+        g.dispose();
+        return bufImg;
     }
     
     /**
@@ -324,7 +364,7 @@ public class ReferenceData{
      *            the array used to return the three HSB values, or null
      * @return the hsb value
      */
-    private float[] getMediumHSB( BufferedImage img, int x, int y, float[] hsb ) {
+    private static float[] getMediumHSB( BufferedImage img, int x, int y, float[] hsb ) {
         int r = 0, g = 0, b = 0;
         int count = 0;
 
@@ -357,7 +397,7 @@ public class ReferenceData{
      *            the array used to return the three HSB values, or null
      * @return the the hsb value
      */
-    private float[] rgbToHSB( int rgb, float[] hsb ) {
+    private static float[] rgbToHSB( int rgb, float[] hsb ) {
         return Color.RGBtoHSB( (rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, (rgb) & 0xFF, hsb );
     }
     

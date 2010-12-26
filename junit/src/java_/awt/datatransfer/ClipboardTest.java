@@ -27,6 +27,7 @@ package java_.awt.datatransfer;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 
 import junit.ikvm.ReferenceData;
 
@@ -58,7 +59,7 @@ public class ClipboardTest{
     public void copyPasteImage() throws Exception{
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Transferable transferable = SetClipboardContent.copyLocal(SetClipboardContent.IMAGE, "/javax/swing/icon.gif");
-        Object copyData = transferable.getTransferData(DataFlavor.imageFlavor);
+        Image copyData = (Image)transferable.getTransferData(DataFlavor.imageFlavor);
         
         transferable = clipboard.getContents(null);
         checkDataFlavorClass(transferable);
@@ -66,8 +67,7 @@ public class ClipboardTest{
         DataFlavor[] flavors = transferable.getTransferDataFlavors();
         reference.assertEquals( "copyPasteImage.flavor count", flavors.length );
 
-        Object pasteData = transferable.getTransferData(DataFlavor.imageFlavor);
-        assertEquals( copyData, pasteData );
+        Image pasteData = (Image)transferable.getTransferData(DataFlavor.imageFlavor);
         assertSame( copyData, pasteData );
         
         
@@ -79,9 +79,9 @@ public class ClipboardTest{
         transferable.getTransferDataFlavors();
         reference.assertEquals( "copyPasteImage.flavor count", flavors.length );
 
-        pasteData = transferable.getTransferData(DataFlavor.imageFlavor);
-        assertEquals( copyData, pasteData );
-        assertSame( copyData, pasteData );
+        pasteData = (Image)transferable.getTransferData(DataFlavor.imageFlavor);
+        ReferenceData.assertEquals( "copyPasteImage", copyData, pasteData, 0, false );
+        assertNotSame( copyData, pasteData );
 
     }
     
@@ -151,6 +151,8 @@ public class ClipboardTest{
                 assertTrue( pasteData.getClass().getName() + " is not instanceof " + dataFlavor, clazz.isInstance( pasteData ) );
             } catch( AssertionError ex ) {
                 throw ex;
+            } catch( MalformedURLException ex ) {
+                // ignore it, http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7006460
             } catch( Exception ex ) {
                 throw (AssertionError)new AssertionError( dataFlavor ).initCause( ex );
             }
