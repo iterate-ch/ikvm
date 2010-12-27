@@ -151,14 +151,19 @@ public class SignalTest{
 
                 @Override
                 public void handle(Signal arg0){
-                    handleResult.setLength(0);
-                    handleResult.append(name);
+                    synchronized(handleResult){
+                        handleResult.setLength(0);
+                        handleResult.append(name);
+                        handleResult.notifyAll();
+                    }
                 }
             };
             try{
                 SignalHandler oldHandler = Signal.handle(signal, handler);
-                Signal.raise(signal);
-                Thread.sleep(5);
+                synchronized(handleResult){
+                    Signal.raise(signal);
+                    handleResult.wait(100);
+                }
                 Signal.handle(signal, oldHandler);
                 assertEquals(name, handleResult.toString());
                 reference.assertEquals(name + "_handle", "true");
