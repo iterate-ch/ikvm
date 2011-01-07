@@ -23,12 +23,22 @@
 */
 package java_.net;
 
+import junit.ikvm.ReferenceData;
+
+import org.junit.BeforeClass;
+
 
 
 /**
  * @author Volker Berlin
  */
 public class IPv4Test extends IPTest{
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception{
+        IPTest.setUpBeforeClass();
+        reference = new ReferenceData();
+    }
 
     @Override
     String getLocalIP(){

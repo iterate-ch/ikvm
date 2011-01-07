@@ -26,6 +26,8 @@ package java_.net;
 import java.io.*;
 import java.net.*;
 
+import junit.ikvm.ReferenceData;
+
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -35,6 +37,8 @@ import static org.junit.Assert.*;
  */
 public abstract class IPTest{
 
+    protected static ReferenceData reference;
+    
     private final static int PORT = 32119;
 
 
@@ -45,6 +49,10 @@ public abstract class IPTest{
 
     @AfterClass
     public static void tearDownAfterClass() throws Exception{
+        if(reference != null){
+            reference.save();
+        }
+        reference = null;
     }
 
 
@@ -79,6 +87,7 @@ public abstract class IPTest{
                     OutputStream output = socket.getOutputStream();
                     output.write("Any Text".getBytes());
                     output.flush();
+                    reference.assertEquals( "tcp.accept.remote.hostname", ((InetSocketAddress)socket.getRemoteSocketAddress()).getAddress().getHostAddress() );
                     socket.close();
                 }catch(Throwable ex){
                     ex.printStackTrace();
@@ -95,9 +104,11 @@ public abstract class IPTest{
         byte[] buffer = new byte[1024];
         int count = input.read(buffer);
         assertEquals("Any Text", new String(buffer, 0, count));
+        reference.assertEquals( "tcp.remote.hostname", ((InetSocketAddress)socket.getRemoteSocketAddress()).getAddress().getHostAddress() );
         socket.close();
         ss.close();
         
+        thread.join();
         if( throwable[0] != null ){
             throw throwable[0];
         }
