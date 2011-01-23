@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2010 Volker Berlin (i-net software)
+  Copyright (C) 2010, 2011 Volker Berlin (i-net software)
   Copyright (C) 2010 Karsten Heinrich (i-net software)
 
   This software is provided 'as-is', without any express or implied
