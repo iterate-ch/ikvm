@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2010 Volker Berlin (i-net software)
+  Copyright (C) 2011 Karsten Heinrich (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +30,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    BufferedImageTest.class
+    BufferedImageTest.class,
+    ImageRepresentationTest.class
 })
 public class AllTests{
     //Nothing
