@@ -30,7 +30,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     PrintServiceTest.class,
-    PrintServiceLookupTest.class
+    PrintServiceLookupTest.class,
+    PageRangeTest.class
 })
 public class AllTests{
     //Nothing
