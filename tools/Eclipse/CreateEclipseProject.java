@@ -83,6 +83,7 @@ public class CreateEclipseProject{
         String allSourcesName = new URL(openjdk, "allsources.gen.lst").getFile();
         File allSourcesFile = new File(allSourcesName);
         if(!allSourcesFile.exists()){
+        	System.out.println( "File '" + allSourcesName + "' does not exist. You need to build the project first.");
             usage();
         }
 
@@ -195,7 +196,7 @@ public class CreateEclipseProject{
      */
     private String findPackage(byte[] data){
         String fileData = new String(data, 0);
-        Pattern pattern = Pattern.compile("(?<!//\\s)package\\s.*?;");
+        Pattern pattern = Pattern.compile("(?<!// )package\\s.*?;");
         Matcher matcher = pattern.matcher(fileData);
         if(matcher.find()){
             String match = fileData.substring(matcher.start(), matcher.end() - 1);
