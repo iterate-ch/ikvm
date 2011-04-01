@@ -98,4 +98,12 @@ public class TextLayoutTest{
         reference.assertEquals("widthByDrawing", byDrawing );
         Assert.assertTrue( Math.abs( byDrawing - calculated ) <= 1 );
     }
+    
+    @Test
+	public void getAdvance() {
+		Font font = new Font("Arial", 0, 10);
+		FontRenderContext frc = new FontRenderContext(null, false, false);
+		TextLayout layout = new TextLayout("some LTR chars-שּׁבֿוּשּׂﬠהּﭏהּצ", font, frc); //RTL and LTR characters. This will be split internally
+		reference.assertEquals("getAdvance", layout.getAdvance() );
+	}
 }
