@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
+  Copyright (C) 2009 - 2011 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -306,5 +306,34 @@ public class GraphicsTest{
         g.clearRect( 10, 10, 10, 10 ); // right bottom corner
 
         reference.assertEquals( "clearRect", img );
+    }
+    
+    @Test
+    public void getFontRenderContext(){
+        BufferedImage img = new BufferedImage( 20, 20, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        FontRenderContext frc = g.getFontRenderContext();
+        assertFalse( "AntiAliased", frc.isAntiAliased() );
+        assertFalse( "Fractional", frc.usesFractionalMetrics() );
+        
+		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+		frc = g.getFontRenderContext();
+        assertFalse( "AntiAliased", frc.isAntiAliased() );
+        assertTrue( "Fractional", frc.usesFractionalMetrics() );
+
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		frc = g.getFontRenderContext();
+        assertTrue( "AntiAliased", frc.isAntiAliased() );
+        assertTrue( "Fractional", frc.usesFractionalMetrics() );
+
+		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+		frc = g.getFontRenderContext();
+        assertTrue( "AntiAliased", frc.isAntiAliased() );
+        assertFalse( "Fractional", frc.usesFractionalMetrics() );
+
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+		frc = g.getFontRenderContext();
+        assertFalse( "AntiAliased", frc.isAntiAliased() );
+        assertFalse( "Fractional", frc.usesFractionalMetrics() );
     }
 }
