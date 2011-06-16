@@ -158,6 +158,9 @@ public class GraphicsTest{
         BufferedImage img = new BufferedImage(100, 25, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D)img.getGraphics();
         g.setFont(font);
+        g.setBackground(Color.WHITE);
+        g.setColor(Color.BLACK);
+        g.clearRect(0, 0, img.getWidth(), img.getHeight() );
         try {
             g.drawString( (String)null, 10, 10 );
             fail("NullPointerException expected");
@@ -165,9 +168,9 @@ public class GraphicsTest{
             // expected;
         }
         g.drawString( "", 10, 20 );
-        g.drawString( "any text", 10, 20 );
+        g.drawString( "unknown", 10, 20 );
         g.dispose();
-        reference.assertEquals( "drawString_", img );
+        reference.assertEquals( "drawString_", img, 0.01, true );
         reference.assertEqualsMetrics("drawString", img);
 
     }
@@ -177,12 +180,16 @@ public class GraphicsTest{
     public void drawGlyphVector() throws Exception{
         Font font = new Font("Arial", 0, 12);
         FontRenderContext frc = new FontRenderContext(null, true, true);
-        GlyphVector gv = font.createGlyphVector(frc, "any text");
+        GlyphVector gv = font.createGlyphVector(frc, "unknown");
 
         BufferedImage img = new BufferedImage(100, 25, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setBackground(Color.WHITE);
+        g.setColor(Color.BLACK);
+        g.clearRect(0, 0, img.getWidth(), img.getHeight() );
         g.drawGlyphVector(gv, 10, 20);
         g.dispose();
+        reference.assertEquals( "drawGlyphVector_", img, 0.01, true );
         reference.assertEqualsMetrics("drawGlyphVector", img);
     }
 

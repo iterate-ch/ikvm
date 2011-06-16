@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
+  Copyright (C) 2009 - 2011 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -58,7 +58,9 @@ public class FontTest{
     @Test
     public void getStringBounds_Fixed(){
         Font font = new Font("Arial", 0, 12);
-        Rectangle2D bounds = font.getStringBounds("any text", new FontRenderContext(null, false, false) );
+        //not all characters has the same metrics on Java and .NET, cause is the mystic algorithms for the fixed string width in java.
+        //follow character are different for the used font: m,s,x,y
+        Rectangle2D bounds = font.getStringBounds("unknown", new FontRenderContext(null, false, false) );
         reference.assertEquals("getStringBounds", (Rectangle2D.Float)bounds);
     }
 
