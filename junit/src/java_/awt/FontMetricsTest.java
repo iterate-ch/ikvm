@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2010 Volker Berlin (i-net software)
+  Copyright (C) 2010, 2011 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -25,10 +25,6 @@ package java_.awt;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
 
 import junit.ikvm.ReferenceData;
 
