@@ -27,6 +27,7 @@ import java.awt.Font;
 import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.lang.reflect.Method;
 
 import junit.ikvm.ReferenceData;
 
@@ -45,7 +46,9 @@ public class Font2DTest{
     public static void setUpBeforeClass() throws Exception{
         reference = new ReferenceData();
         font = new Font("Arial", 0, 12);
-        font2D = FontManager.getFont2D(font);
+        Method getFont2D = font.getClass().getDeclaredMethod( "getFont2D" );
+        getFont2D.setAccessible( true );
+        font2D = (Font2D)getFont2D.invoke( font );
     }
 
 

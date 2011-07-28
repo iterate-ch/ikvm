@@ -51,8 +51,11 @@ public class FontStrikeTest{
     }
 
 
-    private FontStrike getFontStrike(Font font, FontRenderContext frc){
-        return FontManager.getFont2D(font).getStrike(font, frc);
+    private FontStrike getFontStrike(Font font, FontRenderContext frc) throws Exception{
+        Method getFont2D = font.getClass().getDeclaredMethod( "getFont2D" );
+        getFont2D.setAccessible( true );
+        Font2D font2D = (Font2D)getFont2D.invoke( font );
+        return font2D.getStrike(font, frc);
     }
 
     @Test
