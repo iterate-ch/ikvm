@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009-2011 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -227,8 +227,9 @@ public class CreateEclipseProject{
     /**
      * Create the .classpath file of the Eclipse project.
      * @return the content of the file
+     * @throws IOException
      */
-    private String createClasspathFile(){
+    private String createClasspathFile() throws IOException{
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         builder.append("<classpath>\n");
@@ -239,25 +240,18 @@ public class CreateEclipseProject{
         }
         builder.append("<classpathentry kind=\"src\" path=\"src\"/>\n");
         
-        String baseDir = src + "classpath/";
+        String baseDir = src + "openjdk/";
         String[] files = new File(baseDir).list();
         for(int i = 0; i < files.length; i++){
-            String file = files[i];
-            if(file.endsWith(".jar")){
+            String fileName = files[i];
+            if(fileName.endsWith(".jar")){
+            	File file = new File(baseDir + '/' + fileName);
+                byte[] data = readFile(file);
+                String destFileName = dest + file.getName();
+                saveFile( data, destFileName, file);
+
                 builder.append("<classpathentry kind=\"lib\" path=\"");
-                builder.append(baseDir);
-                builder.append(file);
-                builder.append("\"/>\n");
-            }
-        }
-        baseDir = src + "openjdk/";
-        files = new File(baseDir).list();
-        for(int i = 0; i < files.length; i++){
-            String file = files[i];
-            if(file.endsWith(".jar")){
-                builder.append("<classpathentry kind=\"lib\" path=\"");
-                builder.append(baseDir);
-                builder.append(file);
+                builder.append(destFileName);
                 builder.append("\"/>\n");
             }
         }
