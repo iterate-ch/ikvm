@@ -35,6 +35,10 @@ lib\sa-jdi.jar
 # is not part of OpenJDK
 com.sun.management.jmx
 
+# The core of SNMP is not part of the OpenJDK
+com.sun.jmx.snmp
+sun.management.snmp
+
 # IKVM use the jpeg support of .NET because the Java implementation use native code
 com.sun.image.codec.jpeg
 com.sun.imageio.plugins.jpeg
@@ -86,6 +90,9 @@ sun.font
 # This package is used from the hotspot JVM self
 sun.jvm
 
+# IKVM has wrapper to .NET for this features which use other classnames
+sun.nio
+
 sun.instrument
 sun.launcher
 sun.management.snmp.jvminstr
@@ -96,7 +103,9 @@ sun.reflect
 
 sun.security.smartcardio
 
-# Tools that are currently not part of IKVM
+# This Tools that are currently not part of IKVM
+sun.security.tools.policytool
+com.sun.demo.jvmti.hprof
 com.sun.tools.example.debug
 com.sun.tools.extcheck
 com.sun.tools.hat
@@ -112,27 +121,57 @@ sun.jvmstat
 
 
 -class
-com.sun.jmx.snmp.SnmpOidDatabase
-com.sun.jmx.snmp.SnmpOidDatabaseSupport
-com.sun.jmx.snmp.Timestamp
-com.sun.jmx.snmp.daemon.SendQ
-com.sun.jmx.snmp.daemon.SnmpQManager
-com.sun.jmx.snmp.daemon.SnmpRequestCounter
-com.sun.jmx.snmp.daemon.SnmpResponseHandler
-com.sun.jmx.snmp.daemon.SnmpSendServer
-com.sun.jmx.snmp.daemon.SnmpSocket
-com.sun.jmx.snmp.daemon.SnmpTimerServer
-com.sun.jmx.snmp.daemon.WaitQ
+com.oracle.net.Sdp
 com.sun.tools.jdi.SharedMemoryAttachingConnector
 com.sun.tools.jdi.SharedMemoryConnection
 com.sun.tools.jdi.SharedMemoryListeningConnector
 com.sun.tools.jdi.SharedMemoryTransportService
 com.sun.tools.jdi.SharedMemoryTransportServiceCapabilities
 com.sun.tools.jdi.SunSDK
+java.io.WinNTFileSystem
 java.lang.ref.Finalizer
 java.util.zip.ZStreamRef
+sun.awt.DebugSettings
+sun.awt.DefaultMouseInfoPeer
+sun.awt.HToolkit
+sun.awt.image.BadDepthException
+sun.awt.image.BufImgSurfaceManager
+sun.awt.image.BufImgVolatileSurfaceManager
+sun.awt.image.BufImgSurfaceData
+sun.awt.image.ByteArrayImageSource
+sun.awt.image.DataBufferNative
+sun.awt.image.FileImageSource
+sun.awt.image.GifFrame
+sun.awt.image.ImageAccessException
+sun.awt.image.NativeLibLoader
+sun.awt.image.OffScreenImage
+sun.awt.image.WritableRasterNative
+sun.awt.image.VolatileSurfaceManager
+sun.awt.image.SurfaceManager
+sun.awt.image.SunVolatileImage
+sun.awt.PlatformFont
+sun.awt.Win32GraphicsConfig
+sun.awt.Win32GraphicsDevice
+sun.awt.Win32GraphicsEnvironment
+sun.io.Win32ErrorMode
+sun.java2d.DestSurfaceProvider
 sun.java2d.NullSurfaceData
+sun.java2d.ScreenUpdateManager
+sun.java2d.SurfaceDataProxy
 sun.java2d.SurfaceManagerFactory
+sun.java2d.WindowsSurfaceManagerFactory
+sun.management.ClassLoadingImpl
+sun.management.Flag
+sun.management.GarbageCollectorImpl
+sun.management.HotSpotDiagnostic
+sun.management.HotspotThread
+sun.management.ManagementFactory
+sun.management.MemoryImpl
+sun.management.MemoryManagerImpl
+sun.management.MemoryPoolImpl
+sun.management.ThreadImpl
+sun.misc.PostVMInitHook
+sun.net.www.protocol.http.ntlm.NTLMAuthSequence
 sun.security.ec.ECDHKeyAgreement
 sun.security.ec.ECDSASignature
 sun.security.ec.ECKeyPairGenerator
@@ -141,5 +180,10 @@ sun.security.jgss.wrapper.GSSLibStub
 sun.security.jgss.wrapper.GSSNameElement
 sun.security.jgss.wrapper.Krb5Util
 sun.security.jgss.wrapper.NativeGSSContext
+
+# Why this files are not part of the OpenJDK?
+sun.misc.resources.Messages_zh_HK
+sun.security.util.AuthResources_zh_HK
+sun.security.util.Resources_zh_HK
 
 
