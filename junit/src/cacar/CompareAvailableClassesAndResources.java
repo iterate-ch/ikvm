@@ -20,8 +20,9 @@
   Jeroen Frijters
   jeroen@frijters.net
   
-*/
+ */
 package cacar;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -39,8 +40,11 @@ public class CompareAvailableClassesAndResources {
 	private ArrayList<Pattern> skipFiles = new ArrayList<>();
 	private ArrayList<String> skipPackages = new ArrayList<>();
 	private HashSet<String> skipClasses = new HashSet<>();
+	private HashSet<String> skipResources = new HashSet<>();
 
 	private String javaRootName;
+	
+	private static final String META_INF_SERVICES = "META-INF/services/";
 
 	/**
 	 * @param args
@@ -71,11 +75,11 @@ public class CompareAvailableClassesAndResources {
 			usage();
 			return;
 		}
-		
+
 		URL skipUrl;
 		if (args.length < 2) {
 			skipUrl = getClass().getResource("skip.txt");
-			if( skipUrl == null ){
+			if (skipUrl == null) {
 				System.err.println("No Skip file was set.");
 				usage();
 				return;
@@ -89,8 +93,8 @@ public class CompareAvailableClassesAndResources {
 			}
 			skipUrl = skipFile.toURI().toURL();
 		}
-		
-		DataInputStream dis = new DataInputStream( skipUrl.openStream() );
+
+		DataInputStream dis = new DataInputStream(skipUrl.openStream());
 		String line = dis.readLine();
 		while (line != null) {
 			switch (line) {
@@ -99,8 +103,9 @@ public class CompareAvailableClassesAndResources {
 			case "-file":
 				line = dis.readLine();
 				do {
-					if (!line.isEmpty() && !line.startsWith("#")){
-						String sf = line.replace("\\", "\\\\").replace("?", ".?").replace("*", ".*?");
+					if (!line.isEmpty() && !line.startsWith("#")) {
+						String sf = line.replace("\\", "\\\\")
+								.replace("?", ".?").replace("*", ".*?");
 						skipFiles.add(Pattern.compile(sf));
 					}
 					line = dis.readLine();
@@ -109,7 +114,7 @@ public class CompareAvailableClassesAndResources {
 			case "-package":
 				line = dis.readLine();
 				do {
-					if (!line.isEmpty() && !line.startsWith("#")){
+					if (!line.isEmpty() && !line.startsWith("#")) {
 						skipPackages.add(line + '.');
 					}
 					line = dis.readLine();
@@ -118,14 +123,23 @@ public class CompareAvailableClassesAndResources {
 			case "-class":
 				line = dis.readLine();
 				do {
-					if (!line.isEmpty() && !line.startsWith("#")){
+					if (!line.isEmpty() && !line.startsWith("#")) {
 						skipClasses.add(line);
 					}
 					line = dis.readLine();
 				} while (line != null && !line.startsWith("-"));
 				continue;
+			case "-resource":
+				line = dis.readLine();
+				do {
+					if (!line.isEmpty() && !line.startsWith("#")) {
+						skipResources.add(line);
+					}
+					line = dis.readLine();
+				} while (line != null && !line.startsWith("-"));
+				continue;
 			default:
-				if (!line.isEmpty() && !line.startsWith("#")){
+				if (!line.isEmpty() && !line.startsWith("#")) {
 					System.err.println("Wrong Skip file format: " + line);
 					usage();
 					return;
@@ -185,10 +199,15 @@ public class CompareAvailableClassesAndResources {
 		Enumeration<JarEntry> entries = jarFile.entries();
 		while (entries.hasMoreElements()) {
 			JarEntry entry = entries.nextElement();
+			if( entry.isDirectory() ){
+				continue;
+			}
 			String name = entry.getName();
 			if (name.endsWith(".class")) {
-				String className = name.substring(0, name.length() - 6).replace('/', '.');
-				if (!isSkipPackage(className) && !className.contains("$") && !skipClasses.contains(className)) {
+				String className = name.substring(0, name.length() - 6)
+						.replace('/', '.');
+				if (!isSkipPackage(className) && !className.contains("$")
+						&& !skipClasses.contains(className)) {
 					try {
 						Class.forName(className, false, null);
 					} catch (ClassNotFoundException e) {
@@ -199,9 +218,21 @@ public class CompareAvailableClassesAndResources {
 					}
 				}
 			} else {
-				// System.err.println(name);
+				URL resource = getClass().getResource('/' + name);
+				if (resource == null){
+					if( isSkipPackage(name.replace('/', '.'))) {
+						continue;					
+					}
+					if( name.startsWith(META_INF_SERVICES) && isSkipPackage(name.substring(META_INF_SERVICES.length()).replace('/', '.'))){
+						continue;	
+					}
+					if( skipResources.contains(name)){
+						continue;
+					}
+					System.err.println("Missing resource: " + name
+							+ " from jar file: " + jarFile.getName());
+				}
 			}
 		}
 	}
-
 }

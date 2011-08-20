@@ -31,6 +31,11 @@ lib\jconsole.jar
 lib\dt.jar
 lib\sa-jdi.jar
 
+# this jar files are self resources
+jre\lib\security\local_policy.jar
+jre\lib\security\US_export_policy.jar
+
+
 -package
 # is not part of OpenJDK
 com.sun.management.jmx
@@ -186,4 +191,8 @@ sun.misc.resources.Messages_zh_HK
 sun.security.util.AuthResources_zh_HK
 sun.security.util.Resources_zh_HK
 
+-resource
+META-INF/services/javax.script.ScriptEngineFactory
+META-INF/ORACLE_J.RSA
+META-INF/ORACLE_J.SF
 
