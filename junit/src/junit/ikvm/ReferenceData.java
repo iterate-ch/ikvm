@@ -107,6 +107,23 @@ public class ReferenceData{
         return IKVM;
     }
 
+    
+	/**
+	 * Get a saved object from serialized data cache.
+	 * 
+	 * @param key
+	 *            The key in the reference data. It must be unique for the class
+	 *            that create this ReferenceData
+	 * @return the value if exists
+	 */
+	public Object get(String key) {
+		Object expected = data.get(key);
+		if (expected == null && !data.containsKey(key)) {
+			fail("No Reference value for key:" + key + NO_DATA_MSG);
+		}
+		return expected;
+	}
+	
 
     /**
      * Asserts that two objects are equal which come from Sun VM and IKVM run.
@@ -122,10 +139,7 @@ public class ReferenceData{
             fail("Key is null.");
         }
         if(IKVM){
-            Object expected = data.get(key);
-            if(expected == null && !data.containsKey(key)){
-                fail("No Reference value for key:" + key + NO_DATA_MSG);
-            }
+            Object expected = get(key);
             if(expected instanceof float[]){
                 Assert.assertArrayEquals(key, (float[])expected, (float[])value, 0.0F);
                 return;
@@ -153,10 +167,7 @@ public class ReferenceData{
             fail( "Key is null." );
         }
         if( IKVM ) {
-            Float expected = (Float)data.get( key );
-            if( expected == null && !data.containsKey( key ) ) {
-                fail( "No Reference value for key:" + key + NO_DATA_MSG );
-            }
+            Float expected = (Float)get( key );
             Assert.assertEquals( key, (float)expected, value, delta );
         } else {
             data.put( key, value );
@@ -179,10 +190,7 @@ public class ReferenceData{
             fail( "Key is null." );
         }
         if( IKVM ) {
-            float[] expected = (float[])data.get( key );
-            if( expected == null && !data.containsKey( key ) ) {
-                fail( "No Reference value for key:" + key + NO_DATA_MSG );
-            }
+            float[] expected = (float[])get( key );
             Assert.assertArrayEquals( key, expected, values, delta );
         } else {
             data.put( key, values );

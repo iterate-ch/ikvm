@@ -23,6 +23,7 @@
  */
 package cacar;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -35,30 +36,40 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
+import junit.ikvm.ReferenceData;
+
+import org.junit.*;
+import static org.junit.Assert.*;
+
 public class CompareAvailableClassesAndResources {
 
 	private ArrayList<Pattern> skipFiles = new ArrayList<>();
 	private ArrayList<String> skipPackages = new ArrayList<>();
 	private HashSet<String> skipClasses = new HashSet<>();
 	private HashSet<String> skipResources = new HashSet<>();
+	
+	ByteArrayOutputStream out = new ByteArrayOutputStream();
+	private PrintStream missing = new PrintStream(out);
 
 	private String javaRootName;
 	
 	private static final String META_INF_SERVICES = "META-INF/services/";
 
+    private static ReferenceData reference;
+    
 	/**
+	 * Command line start point
 	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		System.setErr(new PrintStream(new File("missing.txt")));
-
 		CompareAvailableClassesAndResources main = new CompareAvailableClassesAndResources();
 		main.start(args);
 	}
 
 	private void usage() {
-		System.err.println("usage todo");
+		System.err.println("Compare the classes and resources from IKVM with a Java VM from Oracle.");
+		System.err.println("ikvm -Xreference:%ikvm path%\\IKVM.OpenJDK.Tools.dll cacar.CompareAvailableClassesAndResources <java home> [<skip file>]");
 	}
 
 	private void start(String[] args) throws IOException {
@@ -93,6 +104,53 @@ public class CompareAvailableClassesAndResources {
 			}
 			skipUrl = skipFile.toURI().toURL();
 		}
+		
+		loadSkipData(skipUrl);
+
+		searchJarFiles(javaRoot);
+		
+		String missingStr = out.toString();
+		assertTrue( missingStr, missingStr.length() == 0 );
+	}
+	
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception{
+        reference = new ReferenceData();
+    }
+
+
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception{
+        if(reference != null){
+            reference.save();
+            reference = null;
+        }
+    }
+
+    
+	@Test
+	public void compare() throws IOException{
+		if( ReferenceData.isIkvm() ){
+			javaRootName = (String)reference.get("java.home");
+			File javaRoot = new File(javaRootName);
+			
+			URL skipUrl = getClass().getResource("skip.txt");
+			loadSkipData(skipUrl);
+			searchJarFiles(javaRoot);
+			
+			String missingStr = out.toString();
+			System.err.println(missingStr);
+			assertTrue( missingStr, missingStr.length() == 0 );
+		} else {
+			reference.assertEquals("java.home", System.getProperty("java.home"));
+		}
+	}
+	
+	/**
+	 * Load the skip.txt file from the given URL
+	 */
+	@SuppressWarnings("deprecation")
+	private void loadSkipData(URL skipUrl) throws IOException{
 
 		DataInputStream dis = new DataInputStream(skipUrl.openStream());
 		String line = dis.readLine();
@@ -147,10 +205,12 @@ public class CompareAvailableClassesAndResources {
 			}
 			line = dis.readLine();
 		}
-
-		searchJarFiles(javaRoot);
 	}
 
+	/**
+	 * Search for avaialable jar files in the Java Home directory and scan it.
+	 * @param javaRoot Java Home directory
+	 */
 	private void searchJarFiles(File javaRoot) throws IOException {
 		File[] files = javaRoot.listFiles();
 		for (File file : files) {
@@ -169,6 +229,10 @@ public class CompareAvailableClassesAndResources {
 		}
 	}
 
+	/**
+	 * Should the given jar file skip?
+	 * @return true, skip the jar file
+	 */
 	private boolean isSkipFile(File file) {
 		String name = file.getAbsolutePath();
 		if (!name.startsWith(javaRootName)) {
@@ -185,7 +249,6 @@ public class CompareAvailableClassesAndResources {
 	}
 
 	private boolean isSkipPackage(String className) {
-
 		for (String pack : skipPackages) {
 			if (className.startsWith(pack)) {
 				return true;
@@ -211,10 +274,10 @@ public class CompareAvailableClassesAndResources {
 					try {
 						Class.forName(className, false, null);
 					} catch (ClassNotFoundException e) {
-						System.err.println("Missing class: " + className
+						missing.println("Missing class: " + className
 								+ " from jar file: " + jarFile.getName());
 					} catch (Throwable th) {
-						System.err.println(th);
+						missing.println(th);
 					}
 				}
 			} else {
@@ -229,7 +292,7 @@ public class CompareAvailableClassesAndResources {
 					if( skipResources.contains(name)){
 						continue;
 					}
-					System.err.println("Missing resource: " + name
+					missing.println("Missing resource: " + name
 							+ " from jar file: " + jarFile.getName());
 				}
 			}
