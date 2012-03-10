@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010, 2012 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -75,6 +75,22 @@ public class WindowTest{
         window.dispose();
     }
 
+
+    @Test
+	public void setTransparentBackground() {
+		Window window = createWindow();
+		if( window instanceof Frame ) {
+			((Frame)window).setUndecorated(true);
+		}
+		if( window instanceof Dialog ) {
+			((Dialog)window).setUndecorated(true);
+		}
+		Color color = new Color(128, 128, 128, 128);
+		window.setBackground(color);
+		window.addNotify();
+		assertEquals(color, window.getBackground());
+		window.dispose();
+	}
 
     @Test
     public void getForeground(){
