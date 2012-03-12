@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009 - 2012 Volker Berlin (i-net software)
   Copyright (C) 2010 Karsten Heinrich (i-net software)
 
   This software is provided 'as-is', without any express or implied
@@ -59,7 +59,11 @@ public class TextLayoutTest{
         FontRenderContext frc = new FontRenderContext(null, false, false);
         TextLayout layout = new TextLayout(text, font, frc);
         Shape highlight = layout.getLogicalHighlightShape(0, text.length());
-        reference.assertEquals("getLogicalHighlightShape", highlight.getBounds());
+        Rectangle bounds = highlight.getBounds();
+		reference.assertEquals("getLogicalHighlightShape.x", bounds.x);
+		reference.assertEquals("getLogicalHighlightShape.y", bounds.y);
+		reference.assertEquals("getLogicalHighlightShape.width", bounds.width, 2 );
+		reference.assertEquals("getLogicalHighlightShape.height", bounds.height);
     }
     
     @Test
@@ -104,6 +108,6 @@ public class TextLayoutTest{
 		Font font = new Font("Arial", 0, 10);
 		FontRenderContext frc = new FontRenderContext(null, false, false);
 		TextLayout layout = new TextLayout("some LTR chars-שּׁבֿוּשּׂﬠהּﭏהּצ", font, frc); //RTL and LTR characters. This will be split internally
-		reference.assertEquals("getAdvance", layout.getAdvance() );
+		reference.assertEquals("getAdvance", layout.getAdvance(), 1 );
 	}
 }

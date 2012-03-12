@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009, 2010, 2012 Volker Berlin (i-net software)
+  Copyright (C) 2009 - 2012 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -169,6 +169,29 @@ public class ReferenceData{
         if( IKVM ) {
             Float expected = (Float)get( key );
             Assert.assertEquals( key, (float)expected, value, delta );
+        } else {
+            data.put( key, value );
+        }
+    }
+    
+    /**
+     * Asserts that two objects are equal which come from Sun VM and IKVM run.
+     * 
+     * @param key
+     *            The key in the reference data. It must be unique for the class that create this ReferenceData
+     * @param value
+     *            the value will be saved in Sun VM and compared in IKVM. It must be Serializable that it can be saved
+     *            and loaded on hard disk.
+     * @param delta
+     *            The maximum difference
+     */
+    public void assertEquals( String key, double value, double delta ) {
+        if( key == null ) {
+            fail( "Key is null." );
+        }
+        if( IKVM ) {
+        	Double expected = (Double)get( key );
+            Assert.assertEquals( key, (double)expected, value, delta );
         } else {
             data.put( key, value );
         }

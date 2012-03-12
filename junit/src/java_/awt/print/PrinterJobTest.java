@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 Volker Berlin (i-net software)
+  Copyright (C) 2009 - 2012 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -90,21 +90,17 @@ public class PrinterJobTest{
     }
     
     
-    private String toString(PageFormat pageFormat){
-        StringBuilder builder = new StringBuilder();
-        builder.append(pageFormat.getWidth()).append(':').append(pageFormat.getHeight());
-        builder.append(',').append(pageFormat.getImageableX()).append(':').append(pageFormat.getImageableY()).append(':');
-        builder.append(pageFormat.getImageableWidth()).append(':').append(pageFormat.getImageableHeight());
-        builder.append(',').append(pageFormat.getOrientation());
-        return builder.toString();
-    }
-    
-    
     @Test
     public void defaultPage(){
         PrinterJob job = PrinterJob.getPrinterJob();
         PageFormat pageFormat = job.defaultPage();
-        reference.assertEquals("defaultPage", toString(pageFormat) );
+        reference.assertEquals("defaultPage.width", pageFormat.getWidth(), 0.1 );
+        reference.assertEquals("defaultPage.height", pageFormat.getHeight(), 0.2 );
+        reference.assertEquals("defaultPage.ImageableX", pageFormat.getImageableX() );
+        reference.assertEquals("defaultPage.ImageableY", pageFormat.getImageableY() );
+        reference.assertEquals("defaultPage.getImageableWidth", pageFormat.getImageableWidth(), 0.1 );
+        reference.assertEquals("defaultPage.getImageableHeight", pageFormat.getImageableHeight(), 0.2 );
+        reference.assertEquals("defaultPage.Orientation", pageFormat.getOrientation() );
     }
 
     

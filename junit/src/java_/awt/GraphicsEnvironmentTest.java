@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2010 Karsten Heinrich (i-net software)
+  Copyright (C) 2012 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -23,9 +24,8 @@
  */
 package java_.awt;
 
-import static org.junit.Assert.*;
-
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import junit.ikvm.ReferenceData;
@@ -51,7 +51,7 @@ public class GraphicsEnvironmentTest {
         }
     }
     
-    
+    @Ignore("Java seems to have duplicates in the list with bold and styles")
     @Test
     public void getAllFonts(){
     	GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -64,11 +64,15 @@ public class GraphicsEnvironmentTest {
     	reference.assertEquals("getAllFonts", toString(families));
     }
 
-    
     @Test
     public void getAvailableFontFamilyNames(){
     	GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
     	String[] families = ge.getAvailableFontFamilyNames();
+    	ArrayList<String> list = new ArrayList<String>( Arrays.asList(families) );
+		list.remove("Lucida Sans Typewriter"); // a special font of the Sun Java VM
+		list.remove("Lucida Bright");
+		list.remove("Lucida Sans");
+    	families = list.toArray(new String[list.size()]);
     	reference.assertEquals("getAvailableFontFamilyNames", toString(families));
     }
 
