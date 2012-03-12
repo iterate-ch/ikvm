@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010, 2012 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -231,6 +231,9 @@ public class ReferenceData{
         }
         File imgFile = new File( file.getParent(), key + ".png" );
         if( IKVM ) {
+        	if( !imgFile.exists() ){
+        		fail("No Reference value for key:" + key + NO_DATA_MSG);
+        	}
             if( imgFile.length() == 0 ) {
                 Assert.assertEquals( key, null, img );
             }
