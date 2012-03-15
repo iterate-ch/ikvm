@@ -60,6 +60,7 @@ public class StandardGlyphVectorTest {
         return new StandardGlyphVector( font, text, frc );
     }
 
+    @Ignore
     @Test
     public void getGlyphInfo_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
@@ -86,6 +87,7 @@ public class StandardGlyphVectorTest {
         }
     }
 
+    @Ignore
     @Test
     public void getLogicalBounds_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
@@ -104,6 +106,7 @@ public class StandardGlyphVectorTest {
         reference.assertEquals( "getLogicalBounds_Fractional large", bounds );
     }
 
+    @Ignore
     @Test
     public void getLogicalBounds_Antialias() throws Exception {
         StandardGlyphVector sgv = create( "any Text", true, false );
@@ -122,6 +125,7 @@ public class StandardGlyphVectorTest {
         reference.assertEquals( "getLogicalBounds_Antialias_Fractional large", bounds );
     }
 
+    @Ignore
     @Test
     public void getGlyphLogicalBounds_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
@@ -142,6 +146,7 @@ public class StandardGlyphVectorTest {
         }
     }
 
+    @Ignore
     @Test
     public void getVisualBounds_Fixed() throws Exception {
         StandardGlyphVector sgv = create( "any Text", false, false );
@@ -209,6 +214,7 @@ public class StandardGlyphVectorTest {
         reference.assertEquals( "getOutline_img", img, 0.17, true );
     }
 
+    @Ignore
     @Test
     public void getGlyphPosition_Fixed() {
         StandardGlyphVector sgv = create( "my Text", false, false );
@@ -239,6 +245,7 @@ public class StandardGlyphVectorTest {
         }
     }
 
+    @Ignore
     @Test
     public void getGlyphPositions_Fixed() {
         StandardGlyphVector sgv = create( "bla bla", false, false );
@@ -253,6 +260,7 @@ public class StandardGlyphVectorTest {
         reference.assertEquals( "getGlyphPositions_Fractional", positions );
     }
 
+    @Ignore
     @Test
     public void getGlyphPositions_sub_Fixed() {
         StandardGlyphVector sgv = create( "bla bla", false, false );
@@ -267,6 +275,7 @@ public class StandardGlyphVectorTest {
         reference.assertEquals( "getGlyphPositions_sub_Fractional", positions );
     }
 
+    @Ignore
     @Test
     public void getGlyphMetrics_Fixed() {
         StandardGlyphVector sgv = create( "xyz asd", false, false );
