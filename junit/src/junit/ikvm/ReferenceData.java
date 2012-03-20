@@ -259,6 +259,7 @@ public class ReferenceData{
         	}
             if( imgFile.length() == 0 ) {
                 Assert.assertEquals( key, null, img );
+                return;
             }
             BufferedImage expected = ImageIO.read( imgFile );
             File file_ikvm = new File( file.getParent(), key + "_ikvm.png" );
