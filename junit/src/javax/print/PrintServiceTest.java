@@ -143,7 +143,7 @@ public class PrintServiceTest{
         reference.assertEquals("getSupportedAttributeCategories", builder.toString() );
     }
     
-    
+    @Ignore("javax.print.attribute.standard.MediaPrintableArea is not implemented")
     @Test
     public void getSupportedAttributeValues(){
         PrintService service = PrintServiceLookup.lookupDefaultPrintService();
