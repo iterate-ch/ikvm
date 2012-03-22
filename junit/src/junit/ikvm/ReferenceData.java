@@ -29,8 +29,9 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -53,7 +54,7 @@ public class ReferenceData{
 
     private static final String NO_DATA_MSG = " Please run the test first with a Sun Java VM to create reference data for your system.";
 
-    private final Hashtable<String, Serializable> data; // Hashtable for multi thread tests
+    private final Map<String, Serializable> data;
 
     private final File file;
 
@@ -77,10 +78,10 @@ public class ReferenceData{
             }
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            data = (Hashtable<String, Serializable>)ois.readObject();
+            data = (Map<String, Serializable>)ois.readObject();
             fis.close();
         }else{
-            data = new Hashtable<String, Serializable>();
+            data = Collections.synchronizedMap( new HashMap<String, Serializable>() );  // synchronized for multi thread tests
         }
     }
 
