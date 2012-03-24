@@ -23,7 +23,10 @@
  */
 package java_.awt.image;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 import junit.ikvm.ReferenceData;
 
@@ -69,4 +72,28 @@ public class BufferedImageTest{
             // normal case
         }
     }
+    
+    @Test
+	public void setRGB() throws Exception {
+		// test parallel use of Graphics and setRGB
+		BufferedImage img = new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = img.createGraphics();
+
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, 10, 50);
+
+		img.setRGB(0, 0, Color.BLACK.getRGB());
+
+		g.setColor(Color.GREEN);
+		g.fillRect(10, 0, 10, 50);
+
+		int[] rgbs = new int[10 * 50];
+		Arrays.fill(rgbs, Color.YELLOW.getRGB());
+		img.setRGB(20, 0, 10, 50, rgbs, 0, 10);
+
+		g.setColor(Color.LIGHT_GRAY);
+		g.fillRect(30, 0, 10, 50);
+		
+		reference.assertEquals("setRGB", img);
+	}
 }
