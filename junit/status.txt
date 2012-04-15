@@ -1,4 +1,4 @@
-Test Count: 194
+Test Count: 197
 
 Java 6 VM:
 	Errors: 0

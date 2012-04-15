@@ -26,9 +26,9 @@ import org.junit.runners.Suite;
 
 /**
  * To run this compatibility test suite you need to call first the follow line to create the reference data: <br>
- *      java -cp junit.jar;. org.junit.runner.JUnitCore AllTests
+ *      java -cp junit-4.7.jar;. org.junit.runner.JUnitCore AllTests
  * <p> and then call: <br>
- *      ikvm -cp junit.jar;. org.junit.runner.JUnitCore AllTests
+ *      ikvm -cp junit-4.7.jar;. org.junit.runner.JUnitCore AllTests
  *      
  * <p> Of course you can also run this in an IDE like Eclipse. If you want run this compatibility test suite
  * with any other Java VM as the Java SE and the IKVM then you can use the command line parameter
@@ -43,6 +43,7 @@ import org.junit.runners.Suite;
     java_.awt.font.AllTests.class,
     java_.awt.image.AllTests.class,
     java_.awt.print.AllTests.class,
+    java_.lang.management.ThreadInfoTest.class,
     java_.net.AllTests.class,
     java_.text.AllTests.class,
     java_.util.prefs.AllTests.class,
