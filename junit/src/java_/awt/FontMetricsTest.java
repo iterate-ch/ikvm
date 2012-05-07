@@ -72,6 +72,44 @@ public class FontMetricsTest {
             // expected;
         }
     }
+    
+    // test if the method is thread safe
+    @Test
+	public void getStringBoundsThreads() throws Throwable {
+		final FontMetrics fm = getFontMetrics();
+		final Throwable[] ex = new Throwable[1];
+		final int[] count = new int[1];
+
+		Thread[] threads = new Thread[5];
+		for (int i = 0; i < threads.length; i++) {
+			threads[i] = new Thread() {
+				public void run() {
+					try {
+						for (int i = 0; i < 500; i++) {
+							fm.getStringBounds("xyz", null);
+						}
+						synchronized (count) {
+							count[0]++;
+						}
+					} catch (Throwable th) {
+						th.printStackTrace();
+						ex[0] = th;
+					}
+				};
+			};
+		}
+		for (int i = 0; i < threads.length; i++) {
+			threads[i].start();
+		}
+		for (int i = 0; i < threads.length; i++) {
+			threads[i].join(1000);
+		}
+
+		if (ex[0] != null) {
+			throw ex[0];
+		}
+		assertEquals(threads.length, count[0]);
+	}
 
     @Test
     public void stringWidth() throws Exception {
