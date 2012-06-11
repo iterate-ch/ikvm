@@ -95,7 +95,7 @@ public class PrintServiceTest{
         Attribute[] attrs = service.getAttributes().toArray();
         String[] strings = new String[attrs.length];
         for(int i = 0; i < strings.length; i++){
-            strings[i] = attrs[i].toString();
+            strings[i] = attrs[i].getClass().getName() + ":" + attrs[i].toString();
         }
         Arrays.sort(strings);
         StringBuilder builder = new StringBuilder();
