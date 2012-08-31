@@ -31,6 +31,13 @@ lib\jconsole.jar
 # dt.jar include javax.swing.*BeanInfo which is not part of the OpenJDK
 lib\dt.jar
 lib\sa-jdi.jar
+# we don't want JavaFX
+lib\jfxrt.jar
+# we don't want JRocket stuff
+lib\jfr.jar
+# we don't have accessibility stuff
+lib\ext\access-bridge-64.jar
+lib\ext\jaccess.jar
 
 # this jar files are self resources
 *lib\security\local_policy.jar
@@ -80,6 +87,7 @@ sun.print
 com.sun.script
 sun.org.mozilla.classfile
 sun.org.mozilla.javascript
+netscape.javascript
 
 # IKVM has no AppletViewer
 sun.applet
@@ -107,6 +115,9 @@ sun.usagetracker
 # IKVM use its own implementation of reflection
 sun.reflect
 
+# IKVM use its own implementation of java.lang.invoke
+java.lang.invoke
+
 sun.security.smartcardio
 
 # This Tools that are currently not part of IKVM
@@ -128,6 +139,11 @@ sun.jvmstat
 
 -class
 com.oracle.net.Sdp
+com.oracle.nio.BufferSecrets
+com.oracle.nio.BufferSecretsPermission
+com.oracle.util.Checksums
+com.sun.management.MissionControl
+com.sun.management.MissionControlMXBean
 com.sun.tools.jdi.SharedMemoryAttachingConnector
 com.sun.tools.jdi.SharedMemoryConnection
 com.sun.tools.jdi.SharedMemoryListeningConnector
