@@ -316,6 +316,19 @@ public class GraphicsTest{
     }
     
     @Test
+    public void radialGradientPaint() throws Exception {
+        BufferedImage img = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        
+        Paint paint = new RadialGradientPaint( 30, 60, 40, new float[]{0.0F, 0.2F, 0.7F, 1.0F}, new Color[]{Color.GREEN, Color.RED, Color.YELLOW, Color.GREEN}, CycleMethod.REPEAT );
+        g.setPaint( paint );
+        g.fillRect(0, 0, 200, 200);
+        g.dispose();
+        
+        reference.assertEquals( "radialGradientPaint", img, 0.05, false );
+    }
+    
+    @Test
     public void getFontRenderContext(){
         BufferedImage img = new BufferedImage( 20, 20, BufferedImage.TYPE_INT_ARGB );
         Graphics2D g = (Graphics2D)img.getGraphics();
