@@ -111,6 +111,18 @@ public class GraphicsTest{
 
 
     @Test
+    public void setComposite_Alpha_CLEAR_FirstCall() throws Exception{
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setComposite(AlphaComposite.Clear); // first call before setColor or setPaint
+        g.drawImage(createTestImage(), 0, 0, null);
+        g.fillRect(0, 0, 100, 100);
+        reference.assertEquals("setComposite_Alpha_CLEAR_FirstCall", img, 0.005, false);
+        g.dispose();
+    }
+
+
+    @Test
     public void setComposite_Alpha_CLEAR() throws Exception{
         setComposite("setComposite_Alpha_CLEAR", AlphaComposite.getInstance(AlphaComposite.CLEAR, 128F / 255F));
     }
