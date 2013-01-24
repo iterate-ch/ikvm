@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009 - 2012 Volker Berlin (i-net software)
+  Copyright (C) 2009 - 2013 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -317,15 +317,21 @@ public class GraphicsTest{
     
     @Test
     public void radialGradientPaint() throws Exception {
+    	radialGradientPaint( CycleMethod.REPEAT );
+    	radialGradientPaint( CycleMethod.NO_CYCLE );
+    	radialGradientPaint( CycleMethod.REFLECT );
+    }
+    
+    private void radialGradientPaint( CycleMethod cycle ) throws Exception {
         BufferedImage img = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
         Graphics2D g = (Graphics2D)img.getGraphics();
         
-        Paint paint = new RadialGradientPaint( 30, 60, 40, new float[]{0.0F, 0.2F, 0.7F, 1.0F}, new Color[]{Color.GREEN, Color.RED, Color.YELLOW, Color.GREEN}, CycleMethod.REPEAT );
+        Paint paint = new RadialGradientPaint( 30, 60, 40, new float[]{0.0F, 0.2F, 0.7F, 1.0F}, new Color[]{Color.GREEN, Color.RED, Color.YELLOW, Color.GREEN}, cycle );
         g.setPaint( paint );
         g.fillRect(0, 0, 200, 200);
         g.dispose();
         
-        reference.assertEquals( "radialGradientPaint", img, 0.05, false );
+        reference.assertEquals( "radialGradientPaint " + cycle, img, 0.05, false );
     }
     
     @Test
