@@ -374,4 +374,16 @@ public class GraphicsTest{
         assertFalse( "AntiAliased", frc.isAntiAliased() );
         assertFalse( "Fractional", frc.usesFractionalMetrics() );
     }
+    
+    @Test
+	public void constructorWidthRaster() throws Exception {
+		BufferedImage img = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = img.createGraphics();
+		g.setPaint(new GradientPaint(new Point2D.Float(0, 0), Color.GREEN, new Point2D.Float(20, 20), Color.RED, true));
+		WritableRaster raster = img.getRaster();
+
+		BufferedImage img2 = new BufferedImage(img.getColorModel(), raster, true, null);
+		Graphics2D g2 = img2.createGraphics();
+		reference.assertEquals("constructorWidthRaster", img2);
+	}
 }
