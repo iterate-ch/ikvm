@@ -347,6 +347,21 @@ public class GraphicsTest{
     }
     
     @Test
+    public void texturePaint() throws Exception {   	
+        BufferedImage img = new BufferedImage( 200, 200, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        
+    	BufferedImage txtr = createTestImage();
+    	TexturePaint paint = new TexturePaint(txtr, new Rectangle(10,20,50,50));
+    	
+        g.setPaint( paint );
+        g.fillRect(0, 0, 200, 200);
+        g.dispose();
+        
+        reference.assertEquals( "texturePaint", img, 0.05, false );
+    }
+    
+    @Test
     public void getFontRenderContext(){
         BufferedImage img = new BufferedImage( 20, 20, BufferedImage.TYPE_INT_ARGB );
         Graphics2D g = (Graphics2D)img.getGraphics();
