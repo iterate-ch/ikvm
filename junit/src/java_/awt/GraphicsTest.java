@@ -29,6 +29,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.*;
 
 import junit.ikvm.ReferenceData;
@@ -359,6 +360,34 @@ public class GraphicsTest{
         g.dispose();
         
         reference.assertEquals( "texturePaint", img, 0.05, false );
+    }
+    
+    @Test
+    public void custemGradientPaint() throws Exception {
+        BufferedImage img = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        
+        
+        Paint paint = new Paint(){
+        	private Paint p = new RadialGradientPaint( 30, 60, 40, new float[]{0.0F, 0.2F, 0.7F, 1.0F}, new Color[]{Color.GREEN, Color.RED, Color.YELLOW, Color.GREEN}, CycleMethod.REPEAT );
+
+			@Override
+			public int getTransparency() {
+				return p.getTransparency();
+			}
+
+			@Override
+			public PaintContext createContext(ColorModel cm, Rectangle deviceBounds, Rectangle2D userBounds, AffineTransform xform, RenderingHints hints) {
+				return p.createContext(cm, deviceBounds, userBounds, xform, hints);
+			}
+        	
+        };
+        		
+        g.setPaint( paint );
+        g.fillRect(0, 0, 200, 200);
+        g.dispose();
+        
+        reference.assertEquals( "custemGradientPaint", img, 0.05, false );
     }
     
     @Test
