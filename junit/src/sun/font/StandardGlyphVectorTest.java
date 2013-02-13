@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2009, 2010 Volker Berlin (i-net software)
+  Copyright (C) 2009, 2010, 2013 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -212,6 +212,25 @@ public class StandardGlyphVectorTest {
         g.fill( shape );
         g.dispose();
         reference.assertEquals( "getOutline_img", img, 0.17, true );
+    }
+
+    @Test
+    public void getGlyphOutline() throws Exception {
+        StandardGlyphVector sgv = create( " ", false, true );
+        GeneralPath shape = (GeneralPath)sgv.getGlyphOutline( 0 );
+        assertTrue( "empty shape getGlyphOutline", shape.getPathIterator( null ).isDone() );
+
+        sgv = create( "some Text", false, true );
+        shape = (GeneralPath)sgv.getGlyphOutline( 5, 0, FONT_SIZE );
+        BufferedImage img = new BufferedImage( FONT_SIZE * 5, FONT_SIZE + 10, BufferedImage.TYPE_INT_ARGB );
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        g.setColor( Color.WHITE );
+        g.fillRect( 0, 0, img.getWidth(), img.getHeight() );
+        g.setColor( Color.BLUE.darker() );
+        g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+        g.fill( shape );
+        g.dispose();
+        reference.assertEquals( "getGlyphOutline_img", img, 0.17, true );
     }
 
     @Ignore
