@@ -79,43 +79,22 @@ public class PrintServiceLookupTest{
     
     
     @Test
-    public void lookupPrintServices1(){
+    public void lookupPrintServices(){
         PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
         assertNotNull( services );
         reference.assertEquals("lookupPrintServices1Count", services.length );
         reference.assertEquals("lookupPrintServices1Names", toString(services) );
-    }
-    
-    
-    @Test
-    public void lookupPrintServices2(){
-        PrintService[] services = PrintServiceLookup.lookupPrintServices(SERVICE_FORMATTED.PAGEABLE, new HashAttributeSet());
+
+        services = PrintServiceLookup.lookupPrintServices(SERVICE_FORMATTED.PAGEABLE, new HashAttributeSet());
         assertNotNull( services );
         reference.assertEquals("lookupPrintServices2Count", services.length );
         reference.assertEquals("lookupPrintServices2Names", toString(services) );
-    }
-    
-    
-    @Test
-    public void lookupPrintServices3(){
-        PrintService[] services = PrintServiceLookup.lookupPrintServices(SERVICE_FORMATTED.PRINTABLE, new HashAttributeSet());
+
+        services = PrintServiceLookup.lookupPrintServices(SERVICE_FORMATTED.PRINTABLE, new HashAttributeSet());
         assertNotNull( services );
         reference.assertEquals("lookupPrintServices3Count", services.length );
         reference.assertEquals("lookupPrintServices3Names", toString(services) );
-    }
-    
-    
-    @Test
-    public void lookupMultiDocPrintServices(){
-        MultiDocPrintService[] services = PrintServiceLookup.lookupMultiDocPrintServices(null, null);
-        assertNotNull( services );
-        reference.assertEquals("lookupMultiDocPrintServicesCount", services.length );
-        reference.assertEquals("lookupMultiDocPrintServicesNames", toString(services) );
-    }
-    
-    
-    @Test
-    public void registerService(){
+
         PrintService service = new DummyPrintService();
         PrintService[] oldServices = PrintServiceLookup.lookupPrintServices(null, null);
         boolean registered = PrintServiceLookup.registerService(service);
@@ -136,12 +115,15 @@ public class PrintServiceLookupTest{
     
     
     @Test
-    public void registerServiceProvider(){
-        MultiDocPrintService[] oldServices = PrintServiceLookup.lookupMultiDocPrintServices(null, null);
+    public void lookupMultiDocPrintServices(){
+        MultiDocPrintService[] services = PrintServiceLookup.lookupMultiDocPrintServices(null, null);
+        assertNotNull( services );
+        reference.assertEquals("lookupMultiDocPrintServicesCount", services.length );
+        reference.assertEquals("lookupMultiDocPrintServicesNames", toString(services) );
+        
         PrintServiceLookup.registerServiceProvider(new DummyPrintServiceLookup());
         
         MultiDocPrintService[] newServices = PrintServiceLookup.lookupMultiDocPrintServices(null, null);
-        assertEquals("Service count", oldServices.length + 1, newServices.length);
+        assertEquals("Service count", services.length + 1, newServices.length);
     }
-
 }
