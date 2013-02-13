@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2010 Volker Berlin (i-net software)
+  Copyright (C) 2010, 2013 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -27,6 +27,7 @@ import java.awt.*;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageConsumer;
 import java.awt.image.ImageProducer;
+import java.net.URL;
 
 import javax.swing.JPanel;
 
@@ -107,5 +108,29 @@ public class ToolkitTest{
         MediaTracker tracker = new MediaTracker(new JPanel());
         tracker.addImage(img, 0);
         tracker.waitForAll();
+    }
+    
+    @Test
+    public void createImage_URL() throws Exception {
+        Image img = Toolkit.getDefaultToolkit().createImage( new URL( "file:." ) );
+        assertEquals( -1, img.getWidth( null ) );
+        ImageProducer src = img.getSource();
+        assertNotNull( src );        
+    }
+    
+    @Test
+    public void createImage_String() throws Exception {
+        Image img = Toolkit.getDefaultToolkit().createImage( "." );
+        assertEquals( -1, img.getWidth( null ) );
+        ImageProducer src = img.getSource();
+        assertNotNull( src );        
+    }
+    
+    @Test
+    public void createImage_bytes() throws Exception {
+        Image img = Toolkit.getDefaultToolkit().createImage( new byte[5] );
+        assertEquals( -1, img.getWidth( null ) );
+        ImageProducer src = img.getSource();
+        assertNotNull( src );        
     }
 }
