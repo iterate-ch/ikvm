@@ -163,6 +163,29 @@ public class GraphicsTest{
         g.dispose();
     }
 
+    
+    @Test
+    public void setComposite_Alpha_SRCwithTextAntialias() throws Exception {
+        Font font = new Font("Arial", 0, 12);
+        BufferedImage img = new BufferedImage(100, 25, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D)img.getGraphics();
+        
+        g.setComposite( AlphaComposite.Src );
+        
+        g.setFont(font);
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, img.getWidth(), img.getHeight() );
+        g.setColor(Color.BLACK);
+        
+        g.setRenderingHint( RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON );
+        g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+        
+        g.drawString( "unknown", 1, 20 );
+        g.dispose();
+        
+        reference.assertEquals( "setComposite_Alpha_SRCwithTextAntialias", img, 0.27, true ); //TODO reduce delta if baseline is correct calculated
+    }
+    
 
     @Test
     public void drawString() throws Exception{
