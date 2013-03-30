@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2010 Volker Berlin (i-net software)
+  Copyright (C) 2010-2013 Volker Berlin (i-net software)
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -24,13 +24,26 @@
 package java_.awt.image;
 
 import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.event.IIOReadUpdateListener;
+import javax.imageio.stream.ImageInputStream;
 
 import junit.ikvm.ReferenceData;
 
 import org.junit.*;
+
 import static org.junit.Assert.*;
 
 
@@ -96,4 +109,67 @@ public class BufferedImageTest{
 		
 		reference.assertEquals("setRGB", img);
 	}
+    
+    @Ignore
+    @Test
+	public void accessOnImageOnLoading() throws Exception {
+		BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = img.createGraphics();
+		g.setPaint(new GradientPaint(0, 0, Color.RED, 100,100, Color.GREEN));
+		g.fillRect(0, 0, 100, 100);
+		g.dispose();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(img, "png", baos);
+		InputStream sourceStream = new ByteArrayInputStream(baos.toByteArray());
+		ImageInputStream stream = ImageIO.createImageInputStream(sourceStream);
+		Iterator<ImageReader> readers = ImageIO.getImageReaders(stream);
+		ImageReader reader = readers.next();
+
+		ImageNotifier notifier = new ImageNotifier();
+		reader.addIIOReadUpdateListener(notifier);
+		reader.setInput(stream, true, true);
+		ImageReadParam param = reader.getDefaultReadParam();
+		BufferedImage bi = reader.read(0, param);
+
+//		ImageIO.write(bi, "png", new File("c:/temp/accessOnImageOnLoading1.png"));
+//		ImageIO.write(img, "png", new File("c:/temp/accessOnImageOnLoading2.png"));
+		ReferenceData.assertEquals("accessOnImageOnLoading", img, bi, 0, false);
+    }
+    
+    private class ImageNotifier implements IIOReadUpdateListener {
+
+		@Override
+		public void passStarted(ImageReader source, BufferedImage theImage, int pass, int minPass, int maxPass, int minX, int minY, int periodX, int periodY,
+				int[] bands) {
+		}
+
+		@Override
+		public void imageUpdate(ImageReader source, BufferedImage theImage, int minX, int minY, int width, int height, int periodX, int periodY, int[] bands) {
+			if (minY == 0) {
+				Graphics g = theImage.getGraphics();
+				g.setColor(Color.WHITE);
+				g.fillRect(0, minY+height, theImage.getWidth(), theImage.getHeight());
+				g.dispose();
+			}
+		}
+
+		@Override
+		public void passComplete(ImageReader source, BufferedImage theImage) {
+		}
+
+		@Override
+		public void thumbnailPassStarted(ImageReader source, BufferedImage theThumbnail, int pass, int minPass, int maxPass, int minX, int minY, int periodX,
+				int periodY, int[] bands) {
+		}
+
+		@Override
+		public void thumbnailUpdate(ImageReader source, BufferedImage theThumbnail, int minX, int minY, int width, int height, int periodX, int periodY,
+				int[] bands) {
+		}
+
+		@Override
+		public void thumbnailPassComplete(ImageReader source, BufferedImage theThumbnail) {
+		}
+    }
 }

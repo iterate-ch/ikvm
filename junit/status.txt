@@ -1,4 +1,4 @@
-Test Count: 206
+Test Count: 207
 
 Java 6 VM:
 	Errors: 0
@@ -7,13 +7,14 @@ Java 6 VM:
 
 IKVM:
     Errors: 2 (Ignored)
-	Failures: 21 (Ignored)
+	Failures: 22 (Ignored)
 
 	    java.awt.GraphicsTest.drawGlyphVector: completely wrong
 		java.awt.GraphicsEnvironmentTest.getAllFonts: Java seems to have duplicates in the list
 		E java.awt.color.ColorSpaceTest.customColorModel: java.awt.color.CMMException: Not implemented
 		E java.awt.datatransfer.ClipboardTest.copyPasteImage: java.lang.Exception: External Clipboard was not set
 		java.awt.datatransfer.ClipboardTest.copyPasteString:  copyPasteString.flavor count expected:<47> but was:<2>
+		java.awt.image.BufferedImage.accessOnImageOnLoading: problem with synch of .NET and Java buffer
 		javax.print.PrintServiceTest.getSupportedAttributeValues: Media expected:<[16K (195 x 270 mm),Automatic-Feeder,Folio (210 x 330 mm),Foolscap (8 x 13 Zoll),Foto 10x15 (100 x 150 mm),Foto 4x6 (4 x 6 Zoll),Kai 16 (185 x 260 mm),Kai 32 (130 x 185 mm),Kuvert Chou #3 (120 x 235 mm),Kuvert Chou #4 (90 x 205 mm),Kuvert You #4 (105 x 235 mm),Letter (Behörden) (8 x 10,5 Zoll),Letter Plus (8,5 x 12,69 Zoll),executive,folio,invoice,iso-a4,iso-a5,iso-b5,iso-c5,iso-c6,iso-designated-long,japanese-postcard,jis-b5,monarch-envelope,na-8x10,na-legal,na-letter,na-number-10-envelope,oufuko-postcard],top,> but was:<[Automatic-Feeder,executive,folio,invoice,iso-a4,iso-a5,iso-b5,iso-c5,iso-c6,iso-designated-long,japanese-postcard,jis-b5,monarch-envelope,na-legal,na-letter,na-number-10-envelope],top,>
 		javax.swing.ClipTest.testSmallHorizontal
 		javax.swing.ClipTest.testSmallVertical
