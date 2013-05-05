@@ -110,7 +110,6 @@ public class BufferedImageTest{
 		reference.assertEquals("setRGB", img);
 	}
     
-    @Ignore
     @Test
 	public void accessOnImageOnLoading() throws Exception {
 		BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
@@ -119,8 +118,28 @@ public class BufferedImageTest{
 		g.fillRect(0, 0, 100, 100);
 		g.dispose();
 
+		accessOnImageOnLoading("png", img );
+		accessOnImageOnLoading("gif", img );
+		accessOnImageOnLoading("jpeg", img );
+		
+        BufferedImage imgRGB = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        g = imgRGB.createGraphics();
+        g.drawImage(img, 0, 0, null);
+        g.dispose();
+        accessOnImageOnLoading("bmp", imgRGB );
+
+        BufferedImage imgBinary = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+        g = imgBinary.createGraphics();
+        g.drawImage(img, 0, 0, null);
+        g.dispose();
+        accessOnImageOnLoading("wbmp", imgBinary );
+    }
+    
+    private void accessOnImageOnLoading( String format, BufferedImage img ) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(img, "png", baos);
+		ImageIO.write(img, format, baos);
+		img = ImageIO.read( new ByteArrayInputStream(baos.toByteArray()) );
+		
 		InputStream sourceStream = new ByteArrayInputStream(baos.toByteArray());
 		ImageInputStream stream = ImageIO.createImageInputStream(sourceStream);
 		Iterator<ImageReader> readers = ImageIO.getImageReaders(stream);
@@ -131,10 +150,9 @@ public class BufferedImageTest{
 		reader.setInput(stream, true, true);
 		ImageReadParam param = reader.getDefaultReadParam();
 		BufferedImage bi = reader.read(0, param);
-
-//		ImageIO.write(bi, "png", new File("c:/temp/accessOnImageOnLoading1.png"));
-//		ImageIO.write(img, "png", new File("c:/temp/accessOnImageOnLoading2.png"));
-		ReferenceData.assertEquals("accessOnImageOnLoading", img, bi, 0, false);
+//		ImageIO.write(bi, format, new File("c:/temp/accessOnImageOnLoading1." + format) );
+//		ImageIO.write(img, format, new File("c:/temp/accessOnImageOnLoading2." + format) );
+		ReferenceData.assertEquals("accessOnImageOnLoading_" + format , img, bi, 0, false);
     }
     
     private class ImageNotifier implements IIOReadUpdateListener {
@@ -149,7 +167,7 @@ public class BufferedImageTest{
 			if (minY == 0) {
 				Graphics g = theImage.getGraphics();
 				g.setColor(Color.WHITE);
-				g.fillRect(0, minY+height, theImage.getWidth(), theImage.getHeight());
+				g.fillRect(0, height, theImage.getWidth(), theImage.getHeight()-2*height);
 				g.dispose();
 			}
 		}
