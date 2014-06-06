@@ -108,7 +108,7 @@ public class ImageIOTest {
 
 		@Override
 		public void imageProgress(ImageReader arg0, float arg1) {
-			assertTrue("Wrong Event order:" + sequence, sequence == 2 || sequence == 4);
+			assertTrue("Wrong Event order:" + sequence, sequence == 1 || sequence == 2 || sequence == 4); // Java 8 does not start passStarted, passComplete for gif images
 			sequence = 3;
 		}
 
