@@ -33,6 +33,8 @@ lib\dt.jar
 lib\sa-jdi.jar
 # we don't want JavaFX
 lib\jfxrt.jar
+lib\jfxswt.jar
+lib\ext\jfxrt.jar
 # we don't want JRocket stuff
 lib\jfr.jar
 # we don't have accessibility stuff
