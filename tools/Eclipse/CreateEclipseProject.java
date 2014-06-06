@@ -281,9 +281,9 @@ public class CreateEclipseProject{
     private String createPrefsFile(){
         StringBuilder builder = new StringBuilder();
         builder.append("eclipse.preferences.version=1\n");
-        builder.append("org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.7\n");
-        builder.append("org.eclipse.jdt.core.compiler.compliance=1.7\n");
-        builder.append("org.eclipse.jdt.core.compiler.source=1.7\n");
+        builder.append("org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8\n");
+        builder.append("org.eclipse.jdt.core.compiler.compliance=1.8\n");
+        builder.append("org.eclipse.jdt.core.compiler.source=1.8\n");
         builder.append("org.eclipse.jdt.core.compiler.problem.autoboxing=ignore\n");
         return builder.toString();
     }
