@@ -94,11 +94,11 @@ public class PrinterJobTest{
     public void defaultPage(){
         PrinterJob job = PrinterJob.getPrinterJob();
         PageFormat pageFormat = job.defaultPage();
-        reference.assertEquals("defaultPage.width", pageFormat.getWidth(), 0.1 );
+        reference.assertEquals("defaultPage.width", pageFormat.getWidth(), 0.35 );
         reference.assertEquals("defaultPage.height", pageFormat.getHeight(), 0.25 );
         reference.assertEquals("defaultPage.ImageableX", pageFormat.getImageableX() );
         reference.assertEquals("defaultPage.ImageableY", pageFormat.getImageableY() );
-        reference.assertEquals("defaultPage.getImageableWidth", pageFormat.getImageableWidth(), 0.1 );
+        reference.assertEquals("defaultPage.getImageableWidth", pageFormat.getImageableWidth(), 0.35 );
         reference.assertEquals("defaultPage.getImageableHeight", pageFormat.getImageableHeight(), 0.25 );
         reference.assertEquals("defaultPage.Orientation", pageFormat.getOrientation() );
     }
