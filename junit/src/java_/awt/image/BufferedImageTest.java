@@ -169,6 +169,14 @@ public class BufferedImageTest{
 				g.setColor(Color.WHITE);
 				g.fillRect(0, height, theImage.getWidth(), theImage.getHeight()-2*height);
 				g.dispose();
+
+				if( source.getClass().getSimpleName().equals("BMPImageReader") ) {
+					// with Java 8 the BMPImageReader work directly with the byte array of the Java Raster
+					// that we can not switch back to the raster before changes occur.
+					// a call to getGraphics() switch to .NET Bitmap because we use .NET Graphics
+					// the follow call of getRaster() switch back to the Java Raster
+					theImage.getRaster();
+				}
 			}
 		}
 
