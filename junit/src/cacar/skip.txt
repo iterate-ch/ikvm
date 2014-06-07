@@ -32,7 +32,6 @@ lib\jconsole.jar
 lib\dt.jar
 lib\sa-jdi.jar
 # we don't want JavaFX
-lib\jfxrt.jar
 lib\jfxswt.jar
 lib\ext\jfxrt.jar
 # we don't want JRocket stuff
@@ -40,6 +39,8 @@ lib\jfr.jar
 # we don't have accessibility stuff
 lib\ext\access-bridge-64.jar
 lib\ext\jaccess.jar
+lib\ext\sunec.jar
+lib\ext\sunpkcs11.jar
 
 # this jar files are self resources
 *lib\security\local_policy.jar
@@ -70,9 +71,6 @@ com.sun.jmx.trace
 com.sun.tracing
 sun.tracing
 
-# IKVM use ADO.NET for the ODBC bridge because the Java implementation use native code
-sun.jdbc.odbc
-
 # IKVM use for Graphics2D a wrapper to the .NET Graphics. Many of this java classes use native code.
 sun.java2d.cmm.kcms
 sun.java2d.cmm.lcms
@@ -84,12 +82,6 @@ sun.java2d.windows
 
 # IKVM use for printing a wrapper to the .NET API
 sun.print
-
-# IKVM does not run as applet that we need no javascript support
-com.sun.script
-sun.org.mozilla.classfile
-sun.org.mozilla.javascript
-netscape.javascript
 
 # IKVM has no AppletViewer
 sun.applet
@@ -117,10 +109,9 @@ sun.usagetracker
 # IKVM use its own implementation of reflection
 sun.reflect
 
-# IKVM use its own implementation of java.lang.invoke
-java.lang.invoke
-
 sun.security.smartcardio
+
+com.sun.nio.sctp
 
 # This Tools that are currently not part of IKVM
 sun.security.tools.policytool
@@ -129,6 +120,7 @@ com.sun.tools.example.debug
 com.sun.tools.extcheck
 com.sun.tools.hat
 sun.tools.attach
+sun.tools.jar.resources
 sun.tools.jinfo
 sun.tools.jmap
 sun.tools.jps
@@ -185,6 +177,9 @@ sun.java2d.SurfaceDataProxy
 sun.java2d.SurfaceManagerFactory
 sun.java2d.WindowsSurfaceManagerFactory
 sun.management.ClassLoadingImpl
+sun.management.DiagnosticCommandArgumentInfo
+sun.management.DiagnosticCommandImpl
+sun.management.DiagnosticCommandInfo
 sun.management.Flag
 sun.management.GarbageCollectorImpl
 sun.management.HotSpotDiagnostic
@@ -205,13 +200,8 @@ sun.security.jgss.wrapper.GSSNameElement
 sun.security.jgss.wrapper.Krb5Util
 sun.security.jgss.wrapper.NativeGSSContext
 
-# Why this files are not part of the OpenJDK?
-sun.misc.resources.Messages_zh_HK
-sun.security.util.AuthResources_zh_HK
-sun.security.util.Resources_zh_HK
-
 -resource
-META-INF/services/javax.script.ScriptEngineFactory
+META-INF/services/com.sun.tools.internal.ws.wscompile.Plugin
 META-INF/ORACLE_J.RSA
 META-INF/ORACLE_J.SF
-
+source_tips
