@@ -240,12 +240,26 @@ public class CreateEclipseProject{
         }
         builder.append("<classpathentry kind=\"src\" path=\"src\"/>\n");
         
-        String baseDir = src + "openjdk/";
+        appendJarFiles( src + "openjdk/", builder );
+        appendJarFiles( src + "runtime/", builder );
+
+        builder.append("<classpathentry kind=\"output\" path=\"bin\"/>\n");
+        builder.append("</classpath>\n");
+        return builder.toString();
+    }
+    
+    /**
+     * Append the jar files of one directory to the classpath file.
+     * @param baseDir the directory
+     * @param builder the output of the classpath file
+     * @throws IOException if any I/O error occur
+     */
+    private void appendJarFiles( String baseDir, StringBuilder builder ) throws IOException {
         String[] files = new File(baseDir).list();
         for(int i = 0; i < files.length; i++){
             String fileName = files[i];
             if(fileName.endsWith(".jar")){
-            	File file = new File(baseDir + '/' + fileName);
+                File file = new File(baseDir + '/' + fileName);
                 byte[] data = readFile(file);
                 String destFileName = dest + file.getName();
                 saveFile( data, destFileName, file);
@@ -255,11 +269,8 @@ public class CreateEclipseProject{
                 builder.append("\"/>\n");
             }
         }
-        builder.append("<classpathentry kind=\"output\" path=\"bin\"/>\n");
-        builder.append("</classpath>\n");
-        return builder.toString();
     }
-    
+
     /**
      * Create the .project file of Eclipse project
      * @return the content of the file
