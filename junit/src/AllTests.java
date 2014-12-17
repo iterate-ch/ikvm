@@ -37,6 +37,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	cacar.CompareAvailableClassesAndResources.class,
+	com.sun.management.AllTests.class,
     java_.awt.AllTests.class,
     java_.awt.datatransfer.AllTests.class,
     java_.awt.color.AllTests.class,
