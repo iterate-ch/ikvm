@@ -756,7 +756,13 @@ namespace IKVM.Internal
 							}
 							continue;
 						}
-						ZipEntry zipEntry = item.ZipEntry;
+					    if (options.skipDuplicates && IsClass(item.Name))
+					    {
+					        var className = item.Name.Substring(0, item.Name.Length - 6).Replace('/', '.');
+					        if (classesToCompile.Contains(className))
+					            continue;
+					    }
+                        ZipEntry zipEntry = item.ZipEntry;
 						if (options.compressedResources || zipEntry.CompressionMethod != CompressionMethod.Stored)
 						{
 							zipEntry.CompressionMethod = CompressionMethod.Deflated;
@@ -2652,9 +2658,15 @@ namespace IKVM.Internal
 				compiler.Save();
 			}
 			return StaticCompiler.errorCount == 0 ? 0 : 1;
-		}
+	    }
 
-		private static int CreateCompiler(CompilerOptions options, ref CompilerClassLoader loader, ref bool compilingCoreAssembly)
+	    private static bool IsClass(string name)
+	    {
+	        return name.EndsWith(".class", StringComparison.Ordinal) && name.Length > 6 &&
+	               name.IndexOf('.') == name.Length - 6;
+	    }
+
+        private static int CreateCompiler(CompilerOptions options, ref CompilerClassLoader loader, ref bool compilingCoreAssembly)
 		{
 			Tracer.Info(Tracer.Compiler, "JVM.Compile path: {0}, assembly: {1}", options.path, options.assembly);
 			AssemblyName runtimeAssemblyName = StaticCompiler.runtimeAssembly.GetName();
@@ -2702,9 +2714,7 @@ namespace IKVM.Internal
 				foreach (Jar.Item item in jar)
 				{
 					string name = item.Name;
-					if (name.EndsWith(".class", StringComparison.Ordinal)
-						&& name.Length > 6
-						&& name.IndexOf('.') == name.Length - 6)
+					if (IsClass(name))
 					{
 						string className = name.Substring(0, name.Length - 6).Replace('/', '.');
 						if (h.ContainsKey(className))
@@ -3479,7 +3489,8 @@ namespace IKVM.Internal
 		internal string[] peerReferences;
 		internal bool crossReferenceAllPeers = true;
 		internal string[] classesToExclude;		// only used during command line parsing
-		internal FileInfo remapfile;
+	    internal bool skipDuplicates;
+        internal FileInfo remapfile;
 		internal Dictionary<string, string> props;
 		internal bool noglobbing;
 		internal CodeGenOptions codegenoptions;
