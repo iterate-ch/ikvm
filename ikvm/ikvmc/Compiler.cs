@@ -459,6 +459,7 @@ sealed class IkvmcCompiler
 		Console.Error.WriteLine("-reference:<filespec>          Reference an assembly (short form -r:<filespec>)");
 		Console.Error.WriteLine("-recurse:<filespec>            Recurse directory and include matching files");
 		Console.Error.WriteLine("-exclude:<filename>            A file containing a list of classes to exclude");
+		Console.Error.WriteLine("-skipDuplicates                Do not add duplicate classes as resources");
 		Console.Error.WriteLine();
 		Console.Error.WriteLine("                      - RESOURCES -");
 		Console.Error.WriteLine("-fileversion:<version>         File version");
@@ -787,6 +788,10 @@ sealed class IkvmcCompiler
 				else if(s.StartsWith("-exclude:"))
 				{
 					ProcessExclusionFile(ref options.classesToExclude, s.Substring(9));
+				}
+				else if(s == "-skipDuplicates")
+				{
+					options.skipDuplicates = true;
 				}
 				else if(s.StartsWith("-version:"))
 				{
