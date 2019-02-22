@@ -50,28 +50,26 @@ static class Java_java_net_SocketInputStream
 
 		if (timeout != 0)
 		{
-			if (timeout <= 5000 || !net_util_md.isRcvTimeoutSupported)
+			// Always use select to enforce timeout as setting SO_TIMEOUT on socket level does not work as expected
+			int ret = net_util_md.NET_Timeout(socket, timeout);
+
+			if (ret <= 0)
 			{
-				int ret = net_util_md.NET_Timeout(socket, timeout);
-
-				if (ret <= 0)
+				if (ret == 0)
 				{
-					if (ret == 0)
-					{
-						throw new SocketTimeoutException("Read timed out");
-					}
-					else
-					{
-						// [IKVM] the OpenJDK native code is broken and always throws this exception on any failure of NET_Timeout
-						throw new SocketException("socket closed");
-					}
+					throw new SocketTimeoutException("Read timed out");
 				}
-
-				/*check if the socket has been closed while we were in timeout*/
-				if (fd.getSocket() == null)
+				else
 				{
-					throw new SocketException("Socket Closed");
+					// [IKVM] the OpenJDK native code is broken and always throws this exception on any failure of NET_Timeout
+					throw new SocketException("socket closed");
 				}
+			}
+
+			/*check if the socket has been closed while we were in timeout*/
+			if (fd.getSocket() == null)
+			{
+				throw new SocketException("Socket Closed");
 			}
 		}
 
