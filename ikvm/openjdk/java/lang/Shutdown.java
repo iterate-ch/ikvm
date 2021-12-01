@@ -171,6 +171,10 @@ class Shutdown {
         }
     }
 
+    static void beforeHalt() {
+        // NOP
+    }
+
     /* The halt method is synchronized on the halt lock
      * to avoid corruption of the delete-on-shutdown file list.
      * It invokes the true native halt method.

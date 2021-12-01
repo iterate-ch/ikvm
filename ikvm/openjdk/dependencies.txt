@@ -18,6 +18,9 @@ IKVM.OpenJDK.Corba
 ->IKVM.OpenJDK.Remoting
 
 IKVM.OpenJDK.XML.API
+->IKVM.OpenJDK.XML.XPath
+->IKVM.OpenJDK.XML.Parse
+->IKVM.OpenJDK.XML.Transform
 
 IKVM.OpenJDK.XML.XPath
 ->IKVM.OpenJDK.XML.API
@@ -26,6 +29,7 @@ IKVM.OpenJDK.XML.XPath
 
 IKVM.OpenJDK.XML.Parse
 ->IKVM.OpenJDK.XML.API
+->IKVM.OpenJDK.XML.XPath
 ->IKVM.OpenJDK.Text
 ->IKVM.OpenJDK.Beans
 ->IKVM.OpenJDK.Util

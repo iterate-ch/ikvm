@@ -527,6 +527,10 @@ public class ProtectionDomain {
                         }
                     };
                 }
+
+                public boolean getStaticPermissionsField(ProtectionDomain pd) {
+                    return pd.staticPermissions;
+                }
             });
     }
 }

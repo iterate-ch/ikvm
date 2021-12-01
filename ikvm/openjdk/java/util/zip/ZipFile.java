@@ -42,14 +42,15 @@ package java.util.zip;
 import java.io.Closeable;
 import java.io.EOFException;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.jar.JarFile;
 import java.util.LinkedHashMap;
 import java.util.stream.Stream;
 import static java.util.zip.ZipConstants64.*;
@@ -97,6 +98,7 @@ public class ZipFile implements ZipConstants, Closeable
 
   private boolean closed = false;
   final boolean hasLocHeader;
+  private int manifestNum = 0;
 
   /**
    * Opens a Zip file with the given name for reading.
@@ -290,7 +292,7 @@ public class ZipFile implements ZipConstants, Closeable
         ZipEntry entry = new ZipEntry();
         entry.flag = flags;
         entry.method = method;
-        entry.dostime = inp.readLeUnsignedInt();
+        entry.xdostime = inp.readLeUnsignedInt();
         entry.crc = inp.readLeUnsignedInt();
         entry.csize = inp.readLeUnsignedInt();
         entry.size = inp.readLeUnsignedInt();
@@ -312,6 +314,9 @@ public class ZipFile implements ZipConstants, Closeable
           {
             entry.comment = inp.readString(commentLen, (flags & EFS) != 0);
           }
+        if (isManifestName(entry.name)) {
+          manifestNum++;
+        }
         entries.put(entry.name, entry);
       }
 
@@ -896,11 +901,32 @@ public class ZipFile implements ZipConstants, Closeable
     }
   }
 
+  private int getManifestNum() {
+    return manifestNum;
+  }
+
+  public static boolean isManifestName(String name) {
+    // remove leading /
+    if (name.charAt(0) == '/') {
+      name = name.substring(1, name.length());
+    }
+        // case insensitive
+    name = name.toUpperCase();
+
+    if (name.equals("META-INF/MANIFEST.MF")) {
+      return true;
+    }
+    return false;
+  }
+
   static {
     sun.misc.SharedSecrets.setJavaUtilZipFileAccess(
       new sun.misc.JavaUtilZipFileAccess() {
         public boolean startsWithLocHeader(ZipFile zip) {
           return zip.hasLocHeader;
+        }
+        public int getManifestNum(JarFile jar) {
+          return ((ZipFile)jar).getManifestNum();
         }
       }
     );

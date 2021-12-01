@@ -627,7 +627,49 @@ static class Java_sun_net_ExtendedOptionsImpl
 #endif
 	}
 
+	public static void setTcpKeepAliveProbes(java.io.FileDescriptor fd, int i)
+	{
+#if !FIRST_PASS
+		throw new java.lang.UnsupportedOperationException();
+#endif
+	}
+
+	public static void setTcpKeepAliveTime(java.io.FileDescriptor fd, int i)
+	{
+#if !FIRST_PASS
+		throw new java.lang.UnsupportedOperationException();
+#endif
+	}
+
+	public static void setTcpKeepAliveIntvl(java.io.FileDescriptor fd, int i)
+	{
+#if !FIRST_PASS
+		throw new java.lang.UnsupportedOperationException();
+#endif
+	}
+
+		public static int getTcpKeepAliveProbes(java.io.FileDescriptor fd)
+	{
+		return 0;
+	}
+
+	public static int getTcpKeepAliveTime(java.io.FileDescriptor fd)
+	{
+		return 0;
+	}
+
+	public static int getTcpKeepAliveIntvl(java.io.FileDescriptor fd)
+	{
+		return 0;
+	}
+
 	public static bool flowSupported()
+	{
+		// We don't support this. Solaris only functionality.
+		return false;
+	}
+
+	public static bool keepAliveOptionsSupported()
 	{
 		// We don't support this. Solaris only functionality.
 		return false;

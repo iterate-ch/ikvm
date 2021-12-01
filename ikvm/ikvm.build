@@ -50,7 +50,8 @@
         <copy file="CommonAssemblyInfo.cs.in" tofile="CommonAssemblyInfo.cs" overwrite="true">
             <filterchain>
                 <replacetokens>
-                    <token key="BUILD" value="${timespan::get-days(datetime::now() - datetime::parse('2000-01-01'))}" />
+                    <token key="UPDATE" value="312" />
+                    <token key="BUILD" value="07" />
                 </replacetokens>
             </filterchain>
         </copy>

@@ -257,6 +257,13 @@ class DualStackPlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl
 
     /* Native methods */
 
+    int dataAvailable() {
+        ikvm.internal.JNI.JNIEnv env = new ikvm.internal.JNI.JNIEnv();
+        int ret = DualStackPlainDatagramSocketImpl_c.dataAvailable(env, fd);
+        env.ThrowPendingException();
+        return ret;
+    }
+
     private static cli.System.Net.Sockets.Socket socketCreate(boolean v6Only) {
         ikvm.internal.JNI.JNIEnv env = new ikvm.internal.JNI.JNIEnv();
         cli.System.Net.Sockets.Socket ret = DualStackPlainDatagramSocketImpl_c.socketCreate(env, v6Only);

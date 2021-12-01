@@ -48,7 +48,7 @@
     </target>
 
     <target name="compile">
-        <csc target="library" output="../bin/IKVM.Reflection.dll" optimize="true" define="${defs}" noconfig="true" nostdlib="true">
+        <csc target="library" output="../bin/IKVM.Reflection.dll" optimize="true" define="${defs}" noconfig="true" nostdlib="true" debug="pdbonly">
             <sources>
                 <include name="../CommonAssemblyInfo.cs" />
                 <include name="AmbiguousMatchException.cs" />

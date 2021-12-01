@@ -486,4 +486,31 @@ static int socketGetIntOption
 
     return result[0];
 }
+
+/*
+ * Class:     java_net_DualStackPlainDatagramSocketImpl
+ * Method:    dataAvailable
+ * Signature: ()I
+ */
+static int dataAvailable
+(JNIEnv env, FileDescriptor fdObj) {
+    cli.System.Net.Sockets.Socket fd;
+    int  rv = -1;
+
+    if (fdObj != null) {
+        int[] retval = { 0 };
+        fd = fdObj.getSocket();
+        rv = ioctlsocket(fd, FIONREAD, retval);
+        if (retval[0] > 0) {
+            return retval[0];
+        }    
+    }
+    
+    if (rv < 0) {
+        JNU_ThrowByName(env, JNU_JAVANETPKG+"SocketException",
+                        "Socket closed");
+        return -1;
+    }
+    return 0;
+}
 }

@@ -23,9 +23,11 @@
  */
 package sun.font;
 
-import java.awt.Font;
 import java.awt.font.FontRenderContext;
+import java.awt.Font;
 import java.awt.geom.AffineTransform;
+import java.lang.ref.Reference;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Locale;
 
 import sun.awt.SunHints;
@@ -38,6 +40,9 @@ import sun.awt.SunHints;
 public abstract class Font2D{
 
     public Font2DHandle handle = new Font2DHandle(this);
+
+    protected ConcurrentHashMap<FontStrikeDesc, Reference>
+        strikeCache = new ConcurrentHashMap<FontStrikeDesc, Reference>();
 
     /* SunGraphics2D has font, tx, aa and fm. From this info
      * can get a Strike object from the cache, creating it if necessary.

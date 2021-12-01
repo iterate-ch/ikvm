@@ -27,11 +27,14 @@
     <property name="pathsep" value=":" />
     <property overwrite="false" name="signoption" value="" />
     <property overwrite="false" name="SkipSystemCoreDependency" value="false" />
-    <property name="OPENJDK_VERSION" value="OpenJDK 8u45 b14" />
+    <property name="OPENJDK_VERSION" value="OpenJDK 8u312 b07" />
     <property name="IMPLEMENTATION_VERSION" value="1.8.0" />
     <property name="SPECIFICATION_VERSION" value="1.8" />
-    <property name="FULL_VERSION" value="1.8.0_45-b14" />
-    <property name="OpenJDK.dir" value="${project::get-base-directory()}/../../openjdk-8u45-b14" />
+    <property name="FULL_VERSION" value="1.8.0_312-b07" />
+    <property name="OpenJDK.dir" value="${project::get-base-directory()}/../../jdk8u312-b07" />
+    <property overwrite="false" name="debug" value="false" />
+    <property name="BUILD_DEBUG" value="-debug" if="${debug}" />
+    <property overwrite="false" name="BUILD_DEBUG" value="" />
     <if test="${platform::is-win32()}">
         <property name="pathsep" value=";" />
     </if>
@@ -44,8 +47,8 @@
     </target>
 
     <target name="copyright" depends="allsources.gen.lst">
-        <exec program="${project::get-base-directory()}/../tools/SourceLicenseAnalyzer.exe" output="copyright.txt" useruntimeengine="true" />
-        <loadfile file="copyright.txt" property="COPYRIGHT" />
+        <!--NOP <exec program="${project::get-base-directory()}/../tools/SourceLicenseAnalyzer.exe" output="copyright.txt" useruntimeengine="true" />
+        <loadfile file="copyright.txt" property="COPYRIGHT" />-->
     </target>
 
     <target name="allsources.gen.lst">
@@ -268,7 +271,7 @@
                 instead we'll add a link in vfs from local_policy.jar to US_export_policy.jar
                 (because US_export_policy.jar is unrestricted)
                 -->
-                <include name="lib/security/US_export_policy.jar" />
+                <include name="lib/security/policy/*/*.jar" />
             </fileset>
             <fileset basedir="${OpenJDK.dir}/jdk/src/windows">
                 <include name="lib/flavormap.properties" />
@@ -322,6 +325,7 @@
         <copy file="response.txt" tofile="response.gen.txt" outputencoding="ascii" overwrite="true">
             <filterchain>
                 <replacetokens>
+                    <token key="DEBUGOPTIONS" value="${BUILD_DEBUG}" />
                     <token key="OPENJDK" value="${OpenJDK.dir}" />
                 </replacetokens>
             </filterchain>

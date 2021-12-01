@@ -770,11 +770,6 @@ namespace IKVM.Internal
 				AddZipEntry(zf, root, (java.util.zip.ZipEntry)e.nextElement());
 			}
 
-			// make "lib/security/local_policy.jar" point to "lib/security/US_export_policy.jar"
-			// to get the unrestricted crypto policy
-			VfsDirectory security = (VfsDirectory)((VfsDirectory)root.GetEntry("lib")).GetEntry("security");
-			security.Add("local_policy.jar", security.GetEntry("US_export_policy.jar"));
-
 			Interlocked.CompareExchange(ref VirtualFileSystem.root, root, null);
 		}
 

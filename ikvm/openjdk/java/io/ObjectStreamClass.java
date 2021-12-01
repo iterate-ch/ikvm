@@ -764,6 +764,15 @@ public class ObjectStreamClass implements Serializable {
     }
 
     /**
+     * Throws InvalidClassException if not initialized.
+     * To be called in cases where an uninitialized class descriptor indicates
+     * a problem in the serialization stream.
+     */
+    final void checkInitialized() throws InvalidClassException {
+        // NOP
+    }
+
+    /**
      * Throws an InvalidClassException if object instances referencing this
      * class descriptor should not be allowed to deserialize.  This method does
      * not apply to deserialization of enum constants.

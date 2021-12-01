@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2002, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,9 +25,13 @@
 
 package sun.misc;
 
+import javax.crypto.SealedObject;
 import java.util.jar.JarFile;
 import java.io.Console;
+import java.io.FileDescriptor;
+import java.io.ObjectInputStream;
 import java.security.ProtectionDomain;
+import java.security.Signature;
 
 import java.security.AccessController;
 
@@ -44,14 +48,21 @@ public class SharedSecrets {
     private static final Unsafe unsafe = Unsafe.getUnsafe();
     private static JavaUtilJarAccess javaUtilJarAccess;
     private static JavaLangAccess javaLangAccess = LangHelper.getJavaLangAccess();
+    private static JavaLangRefAccess javaLangRefAccess;
     private static JavaIOAccess javaIOAccess;
     private static JavaNetAccess javaNetAccess;
     private static JavaNetHttpCookieAccess javaNetHttpCookieAccess;
     private static JavaNioAccess javaNioAccess;
+    private static JavaIOFileDescriptorAccess javaIOFileDescriptorAccess;
     private static JavaSecurityProtectionDomainAccess javaSecurityProtectionDomainAccess;
     private static JavaSecurityAccess javaSecurityAccess;
     private static JavaUtilZipFileAccess javaUtilZipFileAccess;
     private static JavaAWTAccess javaAWTAccess;
+    private static JavaOISAccess javaOISAccess;
+    private static JavaxCryptoSealedObjectAccess javaxCryptoSealedObjectAccess;
+    private static JavaObjectInputStreamReadString javaObjectInputStreamReadString;
+    private static JavaObjectInputStreamAccess javaObjectInputStreamAccess;
+    private static JavaSecuritySignatureAccess javaSecuritySignatureAccess;
 
     public static JavaUtilJarAccess javaUtilJarAccess() {
         if (javaUtilJarAccess == null) {
@@ -66,8 +77,20 @@ public class SharedSecrets {
         javaUtilJarAccess = access;
     }
 
+    public static void setJavaLangAccess(JavaLangAccess jla) {
+        javaLangAccess = jla;
+    }
+
     public static JavaLangAccess getJavaLangAccess() {
         return javaLangAccess;
+    }
+
+    public static void setJavaLangRefAccess(JavaLangRefAccess jlra) {
+        javaLangRefAccess = jlra;
+    }
+
+    public static JavaLangRefAccess getJavaLangRefAccess() {
+        return javaLangRefAccess;
     }
 
     public static void setJavaNetAccess(JavaNetAccess jna) {
@@ -110,6 +133,29 @@ public class SharedSecrets {
         }
         return javaIOAccess;
     }
+
+    public static void setJavaIOFileDescriptorAccess(JavaIOFileDescriptorAccess jiofda) {
+        javaIOFileDescriptorAccess = jiofda;
+    }
+
+    public static JavaIOFileDescriptorAccess getJavaIOFileDescriptorAccess() {
+        if (javaIOFileDescriptorAccess == null)
+            unsafe.ensureClassInitialized(FileDescriptor.class);
+
+        return javaIOFileDescriptorAccess;
+    }
+
+    public static void setJavaOISAccess(JavaOISAccess access) {
+        javaOISAccess = access;
+    }
+
+    public static JavaOISAccess getJavaOISAccess() {
+        if (javaOISAccess == null)
+            unsafe.ensureClassInitialized(ObjectInputStream.class);
+
+        return javaOISAccess;
+    }
+
 
     public static void setJavaSecurityProtectionDomainAccess
         (JavaSecurityProtectionDomainAccess jspda) {
@@ -156,5 +202,49 @@ public class SharedSecrets {
             return null;
         }
         return javaAWTAccess;
+    }
+
+    public static JavaObjectInputStreamReadString getJavaObjectInputStreamReadString() {
+        if (javaObjectInputStreamReadString == null) {
+            unsafe.ensureClassInitialized(ObjectInputStream.class);
+        }
+        return javaObjectInputStreamReadString;
+    }
+
+    public static void setJavaObjectInputStreamReadString(JavaObjectInputStreamReadString access) {
+        javaObjectInputStreamReadString = access;
+    }
+
+    public static JavaObjectInputStreamAccess getJavaObjectInputStreamAccess() {
+        if (javaObjectInputStreamAccess == null) {
+            unsafe.ensureClassInitialized(ObjectInputStream.class);
+        }
+        return javaObjectInputStreamAccess;
+    }
+
+    public static void setJavaObjectInputStreamAccess(JavaObjectInputStreamAccess access) {
+        javaObjectInputStreamAccess = access;
+    }
+
+    public static void setJavaSecuritySignatureAccess(JavaSecuritySignatureAccess jssa) {
+        javaSecuritySignatureAccess = jssa;
+    }
+
+    public static JavaSecuritySignatureAccess getJavaSecuritySignatureAccess() {
+        if (javaSecuritySignatureAccess == null) {
+            unsafe.ensureClassInitialized(Signature.class);
+        }
+        return javaSecuritySignatureAccess;
+    }
+
+    public static void setJavaxCryptoSealedObjectAccess(JavaxCryptoSealedObjectAccess jcsoa) {
+        javaxCryptoSealedObjectAccess = jcsoa;
+    }
+
+    public static JavaxCryptoSealedObjectAccess getJavaxCryptoSealedObjectAccess() {
+        if (javaxCryptoSealedObjectAccess == null) {
+            unsafe.ensureClassInitialized(SealedObject.class);
+        }
+        return javaxCryptoSealedObjectAccess;
     }
 }

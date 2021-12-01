@@ -126,6 +126,14 @@ class FileDispatcherImpl extends FileDispatcher
         return totalWritten;
     }
 
+    long seek(FileDescriptor fd, long offset) throws IOException {
+        if (offset < 0) {
+            return 0;
+        }
+        fd.seek(offset);
+        return offset;
+    }
+
     int force(FileDescriptor fd, boolean metaData) throws IOException {
         fd.sync();
         return 0;
@@ -296,6 +304,14 @@ class FileDispatcherImpl extends FileDispatcher
         // we return a dummy FileDescriptor, because we don't need it for mapping operations
         // and we don't want the original to be closed
         return new FileDescriptor();
+    }
+
+    boolean canTransferToDirectly(java.nio.channels.SelectableChannel sc) {
+        return false;
+    }
+
+    boolean transferToDirectlyNeedsPositionLock() {
+        return true;
     }
 
     @DllImportAttribute.Annotation(value="kernel32", SetLastError=true)

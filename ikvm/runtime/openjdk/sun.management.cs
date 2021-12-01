@@ -134,42 +134,42 @@ static class Java_sun_management_OperatingSystemImpl
 		throw new System.NotImplementedException();
 	}
 
-	public static long getTotalSwapSpaceSize(object _this)
+	public static long getTotalSwapSpaceSize0(object _this)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public static long getFreeSwapSpaceSize(object _this)
+	public static long getFreeSwapSpaceSize0(object _this)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public static long getProcessCpuTime(object _this)
+	public static long getProcessCpuTime0(object _this)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public static long getFreePhysicalMemorySize(object _this)
+	public static long getFreePhysicalMemorySize0(object _this)
 	{
 		return getComputerInfo("AvailablePhysicalMemory");
 	}
 
-	public static long getTotalPhysicalMemorySize(object _this)
+	public static long getTotalPhysicalMemorySize0(object _this)
 	{
 	    return getComputerInfo("TotalPhysicalMemory");
 	}
 
-	public static double getSystemCpuLoad(object _this)
+	public static double getSystemCpuLoad0(object _this)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public static double getProcessCpuLoad(object _this)
+	public static double getProcessCpuLoad0(object _this)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public static void initialize()
+	public static void initialize0()
 	{
 	}
 }
@@ -307,6 +307,16 @@ static class Java_sun_management_ThreadImpl
 		throw new System.NotImplementedException();
 	}
 
+	public static long getThreadAllocatedMemory0(long l)
+	{
+		throw new System.NotImplementedException();
+	}
+
+	public static long getThreadAllocatedMemory0(object _this, long l)
+	{
+		throw new System.NotImplementedException();
+	}
+
 	public static void getThreadAllocatedMemory1(long[] ids, long[] result)
 	{
 		throw new System.NotImplementedException();
@@ -342,7 +352,7 @@ static class Java_sun_management_ThreadImpl
 		throw new System.NotImplementedException();
 	}
 
-	public static object dumpThreads0(long[] ids, bool lockedMonitors, bool lockedSynchronizers)
+	public static object dumpThreads0(long[] ids, bool lockedMonitors, bool lockedSynchronizers, int i)
 	{
 		throw new System.NotImplementedException();
 	}

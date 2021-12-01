@@ -2463,4 +2463,44 @@ static void leave(JNIEnv env, TwoStacksPlainDatagramSocketImpl _this, InetAddres
     mcast_join_leave(env, _this, inetaddr, netIf, false);
 }
 
+/*
+ * Class:     java_net_TwoStacksPlainDatagramSocketImpl
+ * Method:    dataAvailable
+ * Signature: ()I
+ */
+static int dataAvailable
+(JNIEnv env, TwoStacksPlainDatagramSocketImpl _this) {
+    FileDescriptor fdObj = _this.fd;
+    FileDescriptor fd1Obj = _this.fd1;
+    cli.System.Net.Sockets.Socket fd = null;
+    cli.System.Net.Sockets.Socket fd1 = null;
+    int rv = -1, rv1 = -1;
+
+    if (!IS_NULL(fdObj)) {
+        fd = fdObj.getSocket();
+        int[] retval = { 0 };
+        rv = ioctlsocket(fd, FIONREAD, retval);
+        if (retval[0] > 0) {
+            return retval[0];
+        }
+    }
+    if (!IS_NULL(fd1Obj)) {
+        fd1 = fd1Obj.getSocket();
+        int[] retval = { 0 };
+        rv1 = ioctlsocket(fd, FIONREAD, retval);
+        if (retval[0] > 0) {
+            return retval[0];
+        }
+    }
+
+    if (rv < 0 && rv1 < 0) {
+        JNU_ThrowByName(env, JNU_JAVANETPKG+"SocketException",
+                        "Socket closed");
+        return -1;
+    }
+
+    return 0;
+}
+
+
 }

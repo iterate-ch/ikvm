@@ -159,6 +159,13 @@ class TwoStacksPlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl
 
     /* Native methods */
 
+    int dataAvailable() {
+        ikvm.internal.JNI.JNIEnv env = new ikvm.internal.JNI.JNIEnv();
+        int ret = TwoStacksPlainDatagramSocketImpl_c.dataAvailable(env, this);
+        env.ThrowPendingException();
+        return ret;
+    }
+
     protected synchronized void bind0(int lport, InetAddress laddr,
                                              boolean exclBind) throws SocketException {
         ikvm.internal.JNI.JNIEnv env = new ikvm.internal.JNI.JNIEnv();
