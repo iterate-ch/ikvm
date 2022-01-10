@@ -47,6 +47,7 @@
     </target>
 
     <target name="copyright" depends="allsources.gen.lst">
+        <property name="COPYRIGHT" value="&quot;&quot;" />
         <!--NOP <exec program="${project::get-base-directory()}/../tools/SourceLicenseAnalyzer.exe" output="copyright.txt" useruntimeengine="true" />
         <loadfile file="copyright.txt" property="COPYRIGHT" />-->
     </target>

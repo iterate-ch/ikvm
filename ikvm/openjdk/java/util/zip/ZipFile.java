@@ -910,10 +910,8 @@ public class ZipFile implements ZipConstants, Closeable
     if (name.charAt(0) == '/') {
       name = name.substring(1, name.length());
     }
-        // case insensitive
-    name = name.toUpperCase();
 
-    if (name.equals("META-INF/MANIFEST.MF")) {
+    if (name.equalsIgnoreCase("META-INF/MANIFEST.MF")) {
       return true;
     }
     return false;
