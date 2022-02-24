@@ -153,7 +153,10 @@ static class Java_java_io_FileDescriptor
 						break;
 				}
 				NamedPipeClientStream stream = new NamedPipeClientStream(host, pipeName, pipeDirection);
-				stream.Connect(0);
+				// > [in] nDefaultTimeOut
+				// > A value of zero will result in a default time-out of 50 milliseconds.
+				// ref: https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
+				stream.Connect(50);
 				return stream;
 			}
 			else if (fileMode == FileMode.Append)
