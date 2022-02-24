@@ -24,6 +24,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Reflection;
 using System.Text;
 #if !NO_REF_EMIT
@@ -129,14 +130,44 @@ static class Java_java_io_FileDescriptor
 		{
 			return VirtualFileSystem.Open(name, fileMode, fileAccess);
 		}
-		else if (fileMode == FileMode.Append)
-		{
-			// this is the way to get atomic append behavior for all writes
-			return new FileStream(name, fileMode, FileSystemRights.AppendData, FileShare.ReadWrite, 1, FileOptions.None);
-		}
 		else
 		{
-			return new FileStream(name, fileMode, fileAccess, FileShare.ReadWrite, 1, false);
+			string root = Path.GetPathRoot(name);
+			if (root.StartsWith(@"\\") && root.EndsWith(@"\pipe"))
+			{
+				string host = root.Substring(2, root.Length - (5 + 2));
+				string pipeName = name.Substring(root.Length + 1);
+				PipeDirection pipeDirection = default(PipeDirection);
+				switch (fileAccess)
+				{
+					case FileAccess.Read:
+						pipeDirection = PipeDirection.In;
+						break;
+
+					case FileAccess.Write:
+						pipeDirection = PipeDirection.Out;
+						break;
+
+					case FileAccess.ReadWrite:
+						pipeDirection = PipeDirection.InOut;
+						break;
+				}
+				NamedPipeClientStream stream = new NamedPipeClientStream(host, pipeName, pipeDirection);
+				// > [in] nDefaultTimeOut
+				// > A value of zero will result in a default time-out of 50 milliseconds.
+				// ref: https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createnamedpipea
+				stream.Connect(50);
+				return stream;
+			}
+			else if (fileMode == FileMode.Append)
+			{
+				// this is the way to get atomic append behavior for all writes
+				return new FileStream(name, fileMode, FileSystemRights.AppendData, FileShare.ReadWrite, 1, FileOptions.None);
+			}
+			else
+			{
+				return new FileStream(name, fileMode, fileAccess, FileShare.ReadWrite, 1, false);
+			}
 		}
 	}
 

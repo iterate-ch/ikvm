@@ -220,6 +220,7 @@
                 <include name="${ReferencePath}/mscorlib.dll" />
                 <include name="${ReferencePath}/System.dll" />
                 <include name="${ReferencePath}/System.Configuration.dll" />
+                <include name="${ReferencePath}/System.Core.dll" />
             </references>
         </csc>
         <copy file="IKVM.Runtime.dll" todir="../bin" />
