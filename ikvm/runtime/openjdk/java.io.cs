@@ -162,7 +162,9 @@ static class Java_java_io_FileDescriptor
 				}
 				catch(System.Exception ex)
 				{
+#if !FIRST_PASS
 					throw new java.lang.Exception(ex);
+#endif
 				}
 				return stream;
 			}
