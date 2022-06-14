@@ -160,6 +160,12 @@ static class Java_java_io_FileDescriptor
 				{
 					stream.Connect(50);
 				}
+				catch(System.IO.IOException ioex)
+				{
+#if !FIRST_PASS
+					throw new java.io.IOException(ioex);
+#endif
+				}
 				catch(System.Exception ex)
 				{
 #if !FIRST_PASS
