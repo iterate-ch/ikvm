@@ -1202,6 +1202,10 @@ final class NetFileSystemProvider extends AbstractFileSystemProvider
             {
                 throw new IOException(x.getMessage());
             }
+            catch (cli.System.UnauthorizedAccessException _)
+            {
+                throw new AccessDeniedException(path);
+            }
         }
 
         public void setArchive(boolean value) throws IOException
