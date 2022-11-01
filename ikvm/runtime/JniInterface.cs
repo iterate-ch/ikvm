@@ -1527,8 +1527,7 @@ namespace IKVM.Runtime
 			{
 				if(psz[i] == 0)
 				{
-					int oem = System.Globalization.CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
-					return new String((sbyte*)psz, 0, i, Encoding.GetEncoding(oem));
+					return new String((sbyte*)psz, 0, i, Encoding.Default);
 				}
 			}
 		}
