@@ -1656,7 +1656,7 @@ namespace IKVM.Runtime
 		{
 			try
 			{
-				string name = StringFromOEM(pszName);
+				string name = StringFromUTF8(pszName);
 				// don't allow dotted names!
 				if(name.IndexOf('.') >= 0)
 				{
